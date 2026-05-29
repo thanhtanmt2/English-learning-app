@@ -94,7 +94,12 @@ private fun LoginScreen(navController: NavHostController) {
 private fun RegisterScreen(navController: NavHostController) {
     ScreenColumn(title = "Register Screen") {
         Button(
-            onClick = { navController.navigate("login") },
+            onClick = {
+                navController.navigate("login") {
+                    popUpTo("login") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Login")
@@ -182,7 +187,12 @@ private fun WordListScreen(navController: NavHostController) {
 private fun AddEditWordScreen(navController: NavHostController) {
     ScreenColumn(title = "Add/Edit Word Screen") {
         Button(
-            onClick = { navController.navigate("word_list") },
+            onClick = {
+                navController.navigate("word_list") {
+                    popUpTo("word_list") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Word List")
@@ -247,7 +257,12 @@ private fun GrammarListScreen(navController: NavHostController) {
 private fun AddEditGrammarScreen(navController: NavHostController) {
     ScreenColumn(title = "Add/Edit Grammar Screen") {
         Button(
-            onClick = { navController.navigate("grammar_list") },
+            onClick = {
+                navController.navigate("grammar_list") {
+                    popUpTo("grammar_list") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Grammar List")
@@ -259,7 +274,12 @@ private fun AddEditGrammarScreen(navController: NavHostController) {
 private fun GrammarQuizScreen(navController: NavHostController) {
     ScreenColumn(title = "Grammar Quiz Screen") {
         Button(
-            onClick = { navController.navigate("grammar_list") },
+            onClick = {
+                navController.navigate("grammar_list") {
+                    popUpTo("grammar_list") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Grammar List")
