@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 
 // Giao diện của màn hình Đăng ký
 @Composable
-fun RegisterScreen(viewModel: AuthViewModel) {
+fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,6 +67,13 @@ fun RegisterScreen(viewModel: AuthViewModel) {
             } else {
                 Text("Đăng ký")
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Nút quay lại màn hình Đăng nhập
+        TextButton(onClick = onNavigateToLogin) {
+            Text("Đã có tài khoản? Đăng nhập")
         }
     }
 }

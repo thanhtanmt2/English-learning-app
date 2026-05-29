@@ -9,10 +9,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// "Khuôn mặt" (Giao diện) của màn hình Đăng nhập
+// Giao diện màn hình Đăng nhập
 @Composable
-fun LoginScreen(viewModel: AuthViewModel) {
-    // Cột dọc để xếp các thành phần từ trên xuống
+fun LoginScreen(viewModel: AuthViewModel, onNavigateToRegister: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,6 +62,13 @@ fun LoginScreen(viewModel: AuthViewModel) {
             } else {
                 Text("Đăng nhập")
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Nút chuyển sang trang Đăng ký
+        TextButton(onClick = onNavigateToRegister) {
+            Text("Chưa có tài khoản? Đăng ký ngay")
         }
     }
 }

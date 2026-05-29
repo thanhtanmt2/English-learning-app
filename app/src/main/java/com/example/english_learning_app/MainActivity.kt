@@ -39,11 +39,17 @@ private fun AppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { 
             val authViewModel: AuthViewModel = viewModel()
-            LoginScreen(authViewModel) 
+            LoginScreen(
+                viewModel = authViewModel,
+                onNavigateToRegister = { navController.navigate("register") }
+            ) 
         }
         composable("register") { 
             val authViewModel: AuthViewModel = viewModel()
-            RegisterScreen(authViewModel) 
+            RegisterScreen(
+                viewModel = authViewModel,
+                onNavigateToLogin = { navController.popBackStack() }
+            ) 
         }
         composable("home") { HomeScreen(navController) }
         composable("word_set_list") { WordSetListScreen(navController) }
