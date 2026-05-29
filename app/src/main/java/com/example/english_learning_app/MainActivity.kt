@@ -77,7 +77,12 @@ private fun LoginScreen(navController: NavHostController) {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = {
+                navController.navigate("home") {
+                    popUpTo("home") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Login -> Home")
@@ -96,7 +101,12 @@ private fun RegisterScreen(navController: NavHostController) {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = {
+                navController.navigate("home") {
+                    popUpTo("home") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Register -> Home")
@@ -184,7 +194,12 @@ private fun AddEditWordScreen(navController: NavHostController) {
 private fun FlashcardScreen(navController: NavHostController) {
     ScreenColumn(title = "Flashcard Screen") {
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = {
+                navController.navigate("home") {
+                    popUpTo("home") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Home")
@@ -196,7 +211,12 @@ private fun FlashcardScreen(navController: NavHostController) {
 private fun DictationScreen(navController: NavHostController) {
     ScreenColumn(title = "Dictation Screen") {
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = {
+                navController.navigate("home") {
+                    popUpTo("home") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Home")
@@ -251,7 +271,12 @@ private fun GrammarQuizScreen(navController: NavHostController) {
 private fun ProgressScreen(navController: NavHostController) {
     ScreenColumn(title = "Progress Screen") {
         Button(
-            onClick = { navController.navigate("home") },
+            onClick = {
+                navController.navigate("home") {
+                    popUpTo("home") { inclusive = false }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Back to Home")
