@@ -159,7 +159,11 @@
       "word": "substantial",
       "pronunciation": "/səbˈstænʃəl/",
       "partOfSpeech": "adjective",
+<<<<<<< HEAD
       "meaning": "đáng kể, đáng kể",
+=======
+      "meaning": "đáng kể",
+>>>>>>> main
       "description": "Of considerable importance, size, or worth.",
       "example": "There has been a substantial increase in the number of online learners.",
       "collocation": "substantial evidence, substantial amount, substantial progress",
@@ -235,7 +239,11 @@
       "word": "deadline",
       "pronunciation": "/ˈdedlaɪn/",
       "partOfSpeech": "noun",
+<<<<<<< HEAD
       "meaning": "hạn chót, deadline",
+=======
+      "meaning": "hạn chót",
+>>>>>>> main
       "description": "The latest time or date by which something should be completed.",
       "example": "We must submit the proposal before the deadline on Friday.",
       "collocation": "meet a deadline, miss a deadline, tight deadline",
@@ -273,7 +281,11 @@
       "word": "hang out",
       "pronunciation": "/hæŋ aʊt/",
       "partOfSpeech": "phrasal verb",
+<<<<<<< HEAD
       "meaning": "đi chơi (cùng bạn bè)",
+=======
+      "meaning": "đi chơi cùng bạn bè",
+>>>>>>> main
       "description": "To spend time relaxing or doing something enjoyable with friends.",
       "example": "Hey, do you want to hang out this weekend?",
       "collocation": "hang out with friends, hang out at a cafe",
@@ -391,7 +403,11 @@
       "formula": "Subject + have/has + Past Participle (V3)",
       "explanation": "Thì hiện tại hoàn thành diễn tả hành động đã xảy ra trong quá khứ nhưng có liên quan hoặc ảnh hưởng đến hiện tại. Không cần biết chính xác thời điểm xảy ra.",
       "example": "I have just finished my homework. / She has lived in Hanoi for 5 years.",
+<<<<<<< HEAD
       "commonMistakes": "Không dùng với các trạng từ chỉ thời gian cụ thể như yesterday, last year, ago. SAI: I have seen him yesterday. ĐÚNG: I saw him yesterday.",
+=======
+      "commonMistakes": "Không dùng với các trạng từ chỉ thời gian cụ thể như yesterday, last year, ago.",
+>>>>>>> main
       "tags": ["IELTS", "Thường gặp", "Thì động từ"],
       "ease_factor": 2.3,
       "interval": 3,
@@ -404,9 +420,15 @@
       "title": "Conditional Sentences Type 2",
       "category": "Câu điều kiện",
       "formula": "If + Subject + V2/were, Subject + would/could/might + V-bare",
+<<<<<<< HEAD
       "explanation": "Câu điều kiện loại 2 diễn tả tình huống giả định, không có thực ở hiện tại hoặc tương lai. Dùng để nói về điều ước, tình huống tưởng tượng.",
       "example": "If I were a millionaire, I would travel the world. / If she studied harder, she could pass the exam.",
       "commonMistakes": "Dùng 'was' thay 'were' trong văn viết trang trọng. Trong văn học thuật (IELTS Writing), luôn dùng 'If I were...' thay vì 'If I was...'",
+=======
+      "explanation": "Câu điều kiện loại 2 diễn tả tình huống giả định, không có thực ở hiện tại hoặc tương lai.",
+      "example": "If I were a millionaire, I would travel the world.",
+      "commonMistakes": "Dùng 'was' thay 'were' trong văn viết trang trọng.",
+>>>>>>> main
       "tags": ["IELTS", "Ngữ pháp nâng cao", "Câu điều kiện"],
       "ease_factor": 1.9,
       "interval": 1,
@@ -419,9 +441,15 @@
       "title": "Passive Voice",
       "category": "Câu bị động",
       "formula": "Subject + to be (chia theo thì) + Past Participle (V3) + (by + agent)",
+<<<<<<< HEAD
       "explanation": "Câu bị động được dùng khi chúng ta muốn nhấn mạnh vào đối tượng bị tác động thay vì người thực hiện hành động. Rất phổ biến trong văn viết học thuật.",
       "example": "The report was written by the manager. / English is spoken in many countries.",
       "commonMistakes": "Không chia 'to be' đúng theo thì. SAI: The book is written yesterday. ĐÚNG: The book was written yesterday.",
+=======
+      "explanation": "Câu bị động được dùng khi chúng ta muốn nhấn mạnh vào đối tượng bị tác động thay vì người thực hiện hành động.",
+      "example": "The report was written by the manager. / English is spoken in many countries.",
+      "commonMistakes": "Không chia 'to be' đúng theo thì.",
+>>>>>>> main
       "tags": ["IELTS", "TOEIC", "Academic Writing"],
       "ease_factor": 2.5,
       "interval": 6,
@@ -434,9 +462,15 @@
       "title": "Relative Clauses",
       "category": "Mệnh đề quan hệ",
       "formula": "Noun + who/which/that/whose/where/when + clause",
+<<<<<<< HEAD
       "explanation": "Mệnh đề quan hệ dùng để bổ sung thông tin về một danh từ. 'who' cho người, 'which' cho vật/sự việc, 'whose' cho sở hữu, 'where' cho nơi chốn.",
       "example": "The student who studies hard will succeed. / This is the book which changed my life.",
       "commonMistakes": "Dùng nhầm 'which' cho người hoặc 'who' cho vật. Quên dấu phẩy với mệnh đề quan hệ không xác định (Non-defining: My mother, who lives in Hanoi, is a doctor).",
+=======
+      "explanation": "Mệnh đề quan hệ dùng để bổ sung thông tin về một danh từ.",
+      "example": "The student who studies hard will succeed.",
+      "commonMistakes": "Dùng nhầm 'which' cho người hoặc 'who' cho vật.",
+>>>>>>> main
       "tags": ["IELTS", "Writing", "Quan trọng"],
       "ease_factor": 2.1,
       "interval": 2,
@@ -449,9 +483,15 @@
       "title": "Modal Verbs",
       "category": "Động từ khuyết thiếu",
       "formula": "Subject + modal (can/could/may/might/must/should/would) + V-bare",
+<<<<<<< HEAD
       "explanation": "Modal verbs diễn tả khả năng, sự cho phép, nghĩa vụ, hay sự suy đoán. Sau modal luôn là động từ nguyên thể không 'to'. Không thêm -s/-es sau modal.",
       "example": "You must wear a seatbelt. / She might be late. / Could you help me?",
       "commonMistakes": "Thêm 'to' sau modal: SAI: You must to go. ĐÚNG: You must go. Thêm -s/-es: SAI: He cans swim. ĐÚNG: He can swim.",
+=======
+      "explanation": "Modal verbs diễn tả khả năng, sự cho phép, nghĩa vụ, hay sự suy đoán.",
+      "example": "You must wear a seatbelt. / She might be late.",
+      "commonMistakes": "Thêm 'to' sau modal: SAI: You must to go. ĐÚNG: You must go.",
+>>>>>>> main
       "tags": ["Cơ bản", "Quan trọng", "TOEIC"],
       "ease_factor": 2.4,
       "interval": 5,
@@ -690,4 +730,8 @@
       "updatedAt": "2025-04-20T07:00:00Z"
     }
   ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main
