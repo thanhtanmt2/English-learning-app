@@ -1,0 +1,11 @@
+{
+  "name": "minlish-mock-api",
+  "version": "1.0.0",
+  "description": "Mock API server for MinLish English Learning App using json-server",
+  "scripts": {
+    "dev": "json-server --watch db.json --port 3000 --routes routes.json"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
