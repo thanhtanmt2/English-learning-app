@@ -20,7 +20,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.english_learning_app.ui.auth.AuthViewModel
+import com.example.english_learning_app.ui.auth.LoginScreen
+import com.example.english_learning_app.ui.auth.RegisterScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +37,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun AppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "login") {
-        composable("login") { LoginScreen(navController) }
-        composable("register") { RegisterScreen(navController) }
+        composable("login") { 
+            val authViewModel: AuthViewModel = viewModel()
+            LoginScreen(authViewModel) 
+        }
+        composable("register") { 
+            val authViewModel: AuthViewModel = viewModel()
+            RegisterScreen(authViewModel) 
+        }
         composable("home") { HomeScreen(navController) }
         composable("word_set_list") { WordSetListScreen(navController) }
         composable("word_list") { WordListScreen(navController) }
@@ -66,58 +75,8 @@ private fun ScreenColumn(title: String, content: @Composable () -> Unit) {
     }
 }
 
-@Composable
-private fun LoginScreen(navController: NavHostController) {
-    ScreenColumn(title = "Login Screen") {
-        Button(
-            onClick = { navController.navigate("register") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Go to Register")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Login -> Home")
-        }
-    }
-}
 
-@Composable
-private fun RegisterScreen(navController: NavHostController) {
-    ScreenColumn(title = "Register Screen") {
-        Button(
-            onClick = {
-                navController.navigate("login") {
-                    popUpTo("login") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Login")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Register -> Home")
-        }
-    }
-}
+
 
 @Composable
 private fun HomeScreen(navController: NavHostController) {
