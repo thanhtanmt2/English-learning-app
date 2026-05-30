@@ -8,9 +8,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 // Giao diện thêm mới Bài học Ngữ pháp
 @Composable
-fun AddEditGrammarScreen(navController: NavHostController) {
+fun AddEditGrammarScreen(
+    navController: NavHostController,
+    viewModel: GrammarViewModel = viewModel() // Tự động lấy ViewModel mà không làm lỗi MainActivity
+) {
     // Các biến trạng thái lưu tạm chữ đang gõ (Local State)
     var title by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
@@ -55,12 +60,30 @@ fun AddEditGrammarScreen(navController: NavHostController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Hiển thị báo lỗi / trạng thái xử lý
+        if (viewModel.isLoading.value) {
+            Text("Đang lưu...", color = MaterialTheme.colorScheme.primary)
+            Spacer(modifier = Modifier.height(8.dp))
+        } else if (viewModel.errorMessage.value.isNotEmpty()) {
+            Text(text = viewModel.errorMessage.value, color = MaterialTheme.colorScheme.error)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        // Tự động lùi trang khi lưu thành công
+        LaunchedEffect(viewModel.isAddSuccess.value) {
+            if (viewModel.isAddSuccess.value) {
+                navController.popBackStack()
+            }
+        }
+
         // Nút Lưu
         Button(
             onClick = { 
-                // Tương lai sẽ gọi ViewModel để gửi dữ liệu lên mạng ở đây 
+                // Kích hoạt kỹ năng lưu bài học của bộ não
+                viewModel.addGrammarNote(title, category, formula)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = title.isNotBlank() && !viewModel.isLoading.value // Bắt buộc phải có Tiêu đề mới cho Lưu
         ) {
             Text("Lưu bài học")
         }

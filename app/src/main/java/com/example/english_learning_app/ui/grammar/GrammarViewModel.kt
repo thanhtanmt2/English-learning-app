@@ -17,6 +17,7 @@ class GrammarViewModel : ViewModel() {
 
     var isLoading = mutableStateOf(false)
     var errorMessage = mutableStateOf("")
+    var isAddSuccess = mutableStateOf(false) // Báo hiệu đã thêm xong
 
     // Hàm gọi mạng để tải danh sách Bài học
     fun fetchGrammarNotes() {
@@ -45,6 +46,41 @@ class GrammarViewModel : ViewModel() {
                 quizQuestions.value = quizzes
             } catch (e: Exception) {
                 errorMessage.value = "Lỗi tải trắc nghiệm: ${e.message}"
+            } finally {
+                isLoading.value = false
+            }
+        }
+    }
+
+    // Hàm gửi bài học mới lên mạng
+    fun addGrammarNote(title: String, category: String, formula: String) {
+        isLoading.value = true
+        errorMessage.value = ""
+        isAddSuccess.value = false
+        viewModelScope.launch {
+            try {
+                // Tạo khuôn chứa thông tin mới (ID tự tạo theo thời gian)
+                val newNote = GrammarNote(
+                    id = System.currentTimeMillis().toString(),
+                    title = title,
+                    category = category,
+                    formula = formula,
+                    explanation = "",
+                    example = "",
+                    commonMistakes = "",
+                    tags = emptyList(),
+                    easeFactor = 2.5,
+                    interval = 0,
+                    nextReviewDate = ""
+                )
+                // Nhờ Retrofit gửi lên server
+                RetrofitClient.apiService.addGrammarNote(newNote)
+                
+                // Báo thành công và tải lại danh sách mới
+                isAddSuccess.value = true
+                fetchGrammarNotes()
+            } catch (e: Exception) {
+                errorMessage.value = "Lỗi thêm bài học: ${e.message}"
             } finally {
                 isLoading.value = false
             }
