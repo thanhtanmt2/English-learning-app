@@ -831,7 +831,7 @@
     {
       "id": "h1",
       "userId": "1",
-      "date": "2024-05-29",
+      "date": "2026-05-30",
       "wordsLearned": 15,
       "grammarCompleted": 2,
       "quizScore": 5,
@@ -840,7 +840,7 @@
     {
       "id": "h2",
       "userId": "1",
-      "date": "2024-05-28",
+      "date": "2026-05-29",
       "wordsLearned": 10,
       "grammarCompleted": 1,
       "quizScore": 4,
@@ -849,7 +849,7 @@
     {
       "id": "h3",
       "userId": "1",
-      "date": "2024-05-27",
+      "date": "2026-05-28",
       "wordsLearned": 20,
       "grammarCompleted": 3,
       "quizScore": 5,
@@ -858,7 +858,7 @@
     {
       "id": "h4",
       "userId": "1",
-      "date": "2024-05-26",
+      "date": "2026-05-27",
       "wordsLearned": 5,
       "grammarCompleted": 0,
       "quizScore": 3,
@@ -867,11 +867,29 @@
     {
       "id": "h5",
       "userId": "1",
-      "date": "2024-05-25",
+      "date": "2026-05-26",
       "wordsLearned": 12,
       "grammarCompleted": 1,
       "quizScore": 4,
       "studyTimeMinutes": 40
+    },
+    {
+      "id": "h6",
+      "userId": "1",
+      "date": "2026-05-25",
+      "wordsLearned": 8,
+      "grammarCompleted": 1,
+      "quizScore": 5,
+      "studyTimeMinutes": 25
+    },
+    {
+      "id": "h7",
+      "userId": "1",
+      "date": "2026-05-24",
+      "wordsLearned": 20,
+      "grammarCompleted": 2,
+      "quizScore": 4,
+      "studyTimeMinutes": 50
     }
   ],
   "notifications": [

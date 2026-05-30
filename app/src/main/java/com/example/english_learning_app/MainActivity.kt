@@ -29,6 +29,7 @@ import com.example.english_learning_app.ui.grammar.*
 // Progress
 import com.example.english_learning_app.ui.progress.ProgressScreen
 import com.example.english_learning_app.ui.progress.ProgressViewModel
+import com.example.english_learning_app.ui.progress.ProgressDetailScreen
 
 // Home & Vocabulary (tan_frontend)
 import com.example.english_learning_app.ui.home.HomeScreen
@@ -136,12 +137,12 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
         }
         composable("progress_detail/{date}") { backStackEntry ->
             val date = backStackEntry.arguments?.getString("date")
-            Surface(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    TextButton(onClick = { navController.popBackStack() }) { Text("⬅ Quay lại") }
-                    Text("Chi tiết ngày: $date")
-                }
-            }
+            val progressViewModel: ProgressViewModel = viewModel()
+            ProgressDetailScreen(
+                date = date,
+                viewModel = progressViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         // Vocabulary sub-screens
@@ -234,7 +235,7 @@ fun MainWithBottomNav(authViewModel: AuthViewModel, rootNavController: NavHostCo
         ) {
             // Tab HOME
             composable(BottomNavItem.HOME.route) {
-                HomeScreen(navController = rootNavController)
+                HomeScreen(navController = rootNavController, authViewModel = authViewModel)
             }
 
             // Tab VOCABULARY
