@@ -4,10 +4,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.english_learning_app.data.model.GrammarNote
@@ -16,6 +20,7 @@ import com.example.english_learning_app.data.model.GrammarNote
 @Composable
 fun GrammarListScreen(
     viewModel: GrammarViewModel,
+    onNavigateBack: () -> Unit = {}, // Thêm callback quay lại
     onNavigateToAdd: () -> Unit = {},
     onNavigateToEdit: (String) -> Unit = {},
     onNavigateToQuiz: () -> Unit = {},
@@ -31,7 +36,14 @@ fun GrammarListScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "BÀI HỌC NGỮ PHÁP", fontSize = 24.sp)
+        // Thêm nút Quay lại ở trên cùng
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onNavigateBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+            Text(text = "BÀI HỌC NGỮ PHÁP", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // Nút đi tới màn hình làm bài Trắc nghiệm

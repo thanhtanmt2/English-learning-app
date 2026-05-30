@@ -22,6 +22,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +33,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ProgressScreen(
     viewModel: ProgressViewModel,
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    onNavigateToDetail: (String) -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
         viewModel.fetchProgress()
@@ -55,7 +58,7 @@ fun ProgressScreen(
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center
                     )
-                    Spacer(modifier = Modifier.width(48.dp)) // Để căn giữa text
+                    Spacer(modifier = Modifier.width(48.dp))
                 }
                 HorizontalDivider()
             }
@@ -79,7 +82,6 @@ fun ProgressScreen(
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp)
             ) {
-                // 1. Phần Stats Dashboard
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -103,7 +105,6 @@ fun ProgressScreen(
                     }
                 }
 
-                // 2. Biểu đồ thời gian học
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "Thời gian học (Phút)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
@@ -117,16 +118,14 @@ fun ProgressScreen(
                     }
                 }
 
-                // 3. Tiêu đề danh sách lịch sử
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = "Chi tiết các ngày", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                // 4. Danh sách lịch sử học tập
                 items(history) { record ->
-                    HistoryItem(record = record)
+                    HistoryItem(record = record, onClick = { onNavigateToDetail(record.date) })
                 }
                 
                 item { Spacer(modifier = Modifier.height(32.dp)) }
@@ -161,12 +160,12 @@ fun StatCard(
 }
 
 @Composable
-fun HistoryItem(record: com.example.english_learning_app.data.model.ProgressRecord) {
+fun HistoryItem(record: com.example.english_learning_app.data.model.ProgressRecord, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
-            .clickable { /* Sau này hiện chi tiết */ },
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(1.dp),
         border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant)
@@ -175,7 +174,6 @@ fun HistoryItem(record: com.example.english_learning_app.data.model.ProgressReco
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon ngày tháng
             Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -214,24 +212,29 @@ fun StudyTimeBarChart(records: List<com.example.english_learning_app.data.model.
         return
     }
 
-    val displayRecords = records.takeLast(7).reversed() // Lấy 7 ngày gần nhất
+    // Lấy 7 ngày gần nhất và đảo ngược để ngày cũ bên trái, ngày mới bên phải
+    val displayRecords = records.takeLast(7).reversed()
     val maxTime = displayRecords.maxOfOrNull { it.studyTimeMinutes.toFloat() }?.coerceAtLeast(1f) ?: 1f
+
+    val days = listOf("T2", "T3", "T4", "T5", "T6", "T7", "CN")
 
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .padding(top = 24.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+            .height(180.dp)
+            .padding(top = 24.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
     ) {
         val barCount = displayRecords.size
-        val barWidth = 30.dp.toPx()
+        val barWidth = 28.dp.toPx()
         val spacing = (size.width - (barWidth * barCount)) / (barCount + 1)
+        val textColor = Color.Gray.toArgb()
 
         displayRecords.forEachIndexed { index, record ->
-            val barHeight = (record.studyTimeMinutes.toFloat() / maxTime) * size.height
+            val barHeight = (record.studyTimeMinutes.toFloat() / maxTime) * (size.height - 20.dp.toPx())
             val x = spacing + index * (barWidth + spacing)
-            val y = size.height - barHeight
+            val y = size.height - 20.dp.toPx() - barHeight
 
+            // Vẽ cột
             drawRoundRect(
                 brush = Brush.verticalGradient(
                     colors = listOf(Color(0xFF2196F3), Color(0xFF64B5F6))
@@ -239,6 +242,30 @@ fun StudyTimeBarChart(records: List<com.example.english_learning_app.data.model.
                 topLeft = Offset(x, y),
                 size = Size(barWidth, barHeight),
                 cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
+            )
+
+            // Vẽ tiêu đề ngày (T2, T3...)
+            drawContext.canvas.nativeCanvas.drawText(
+                days[index % 7],
+                x + barWidth / 2,
+                size.height,
+                android.graphics.Paint().apply {
+                    color = textColor
+                    textSize = 12.sp.toPx()
+                    textAlign = android.graphics.Paint.Align.CENTER
+                }
+            )
+            
+            // Vẽ số phút trên đầu cột
+            drawContext.canvas.nativeCanvas.drawText(
+                "${record.studyTimeMinutes}",
+                x + barWidth / 2,
+                y - 5.dp.toPx(),
+                android.graphics.Paint().apply {
+                    color = textColor
+                    textSize = 10.sp.toPx()
+                    textAlign = android.graphics.Paint.Align.CENTER
+                }
             )
         }
     }

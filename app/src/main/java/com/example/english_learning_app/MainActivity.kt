@@ -74,6 +74,7 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
         composable("grammar_list") { 
             GrammarListScreen(
                 viewModel = grammarViewModel,
+                onNavigateBack = { navController.popBackStack() }, // Truyền callback quay lại
                 onNavigateToAdd = { navController.navigate("add_edit_grammar") },
                 onNavigateToEdit = { id -> navController.navigate("add_edit_grammar?id=$id") },
                 onNavigateToQuiz = { navController.navigate("grammar_quiz") },
@@ -112,8 +113,23 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
             val progressViewModel: ProgressViewModel = viewModel()
             ProgressScreen(
                 viewModel = progressViewModel,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToDetail = { date -> 
+                    navController.navigate("progress_detail/$date")
+                }
             )
+        }
+        composable("progress_detail/{date}") { backStackEntry ->
+            val date = backStackEntry.arguments?.getString("date")
+            // Ở đây bạn có thể tạo một màn hình Detail cho Progress
+            // Tạm thời tôi để Text đơn giản hoặc bạn có thể tự tạo file mới
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    TextButton(onClick = { navController.popBackStack() }) { Text("⬅ Quay lại") }
+                    Text("Chi tiết ngày: $date", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Text("Chức năng đang phát triển...")
+                }
+            }
         }
     }
 }
