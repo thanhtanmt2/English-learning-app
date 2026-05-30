@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.english_learning_app.ui.auth.AuthViewModel
 import com.example.english_learning_app.ui.auth.LoginScreen
 import com.example.english_learning_app.ui.auth.RegisterScreen
+import com.example.english_learning_app.ui.grammar.AddEditGrammarScreen
 import com.example.english_learning_app.ui.grammar.GrammarListScreen
 import com.example.english_learning_app.ui.grammar.GrammarQuizScreen
 import com.example.english_learning_app.ui.grammar.GrammarViewModel
@@ -46,7 +47,13 @@ private fun AppNavHost(navController: NavHostController) {
             val authViewModel: AuthViewModel = viewModel()
             LoginScreen(
                 viewModel = authViewModel,
-                onNavigateToRegister = { navController.navigate("register") }
+                onNavigateToRegister = { navController.navigate("register") },
+                onNavigateToHome = { 
+                    navController.navigate("home") {
+                        // Xóa trang login khỏi lịch sử để bấm nút Back không bị quay ngược lại trang đăng nhập
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
             ) 
         }
         composable("register") { 
@@ -225,4 +232,4 @@ private fun DictationScreen(navController: NavHostController) {
 
 
 
-
+

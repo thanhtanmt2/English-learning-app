@@ -22,28 +22,33 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     // Trạng thái báo lỗi hoặc thành công để UI hiển thị
     var errorMessage = mutableStateOf("")
     var isLoading = mutableStateOf(false)
+    var isLoginSuccess = mutableStateOf(false) // Cờ báo hiệu login thành công để chuyển trang
 
     // Hàm gọi khi user bấm nút "Đăng nhập"
     fun login() {
         // Bật trạng thái đang tải
         isLoading.value = true
         errorMessage.value = ""
+        isLoginSuccess.value = false
 
         // Chạy luồng phụ (coroutines) để không đơ UI
         viewModelScope.launch {
             try {
-                // Đóng gói dữ liệu gửi đi
-                val request = LoginRequest(email.value, password.value)
+                // Gọi lên mạng để tìm kiếm User
+                val users = RetrofitClient.apiService.login(email.value, password.value)
                 
-                // Gọi API
-                val user = RetrofitClient.apiService.login(request)
-                
-                // Giả lập lưu JWT Token (Vì mock api không có thật)
-                tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
-                
-                // (Sau này sẽ chuyển màn hình ở đây, tạm thời in ra báo thành công)
-                errorMessage.value = "Thành công! Xin chào ${user.name}"
-                
+                if (users.isNotEmpty()) {
+                    val user = users[0] // Lấy người đầu tiên tìm thấy
+                    // Lưu token vào TokenManager
+                    tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
+                    
+                    // Hiển thị thông báo và bật cờ chuyển trang
+                    errorMessage.value = "Thành công! Xin chào ${user.name}"
+                    isLoginSuccess.value = true
+                } else {
+                    // Trả về danh sách rỗng tức là không tìm thấy
+                    errorMessage.value = "Sai Email hoặc Mật khẩu!"
+                }
             } catch (e: Exception) {
                 // Bắt lỗi nếu sai pass hoặc sập mạng
                 errorMessage.value = "Lỗi: ${e.message}"

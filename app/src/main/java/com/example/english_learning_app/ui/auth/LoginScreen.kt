@@ -3,15 +3,27 @@ package com.example.english_learning_app.ui.auth
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Giao diện màn hình Đăng nhập
+// Giao diện Đăng nhập
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, onNavigateToRegister: () -> Unit = {}) {
+fun LoginScreen(
+    viewModel: AuthViewModel,
+    onNavigateToRegister: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {}
+) {
+    // Tự động chuyển trang khi đăng nhập thành công
+    LaunchedEffect(viewModel.isLoginSuccess.value) {
+        if (viewModel.isLoginSuccess.value) {
+            onNavigateToHome()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

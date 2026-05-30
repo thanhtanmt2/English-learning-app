@@ -9,6 +9,7 @@ import com.example.english_learning_app.data.model.User
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * Interface này là nơi liệt kê tất cả các API mà Frontend sẽ gọi.
@@ -16,9 +17,12 @@ import retrofit2.http.POST
  */
 interface ApiService {
 
-    // API Đăng nhập
-    @POST("auth/login")
-    suspend fun login(@Body request: LoginRequest): User
+    // API Đăng nhập (Dùng GET để tìm kiếm User trong json-server)
+    @GET("users")
+    suspend fun login(
+        @Query("email") email: String, 
+        @Query("password") password: String
+    ): List<User>
 
     // API Đăng ký
     @POST("auth/register")
