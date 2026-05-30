@@ -9,9 +9,10 @@
   "/api/v1/words/review": "/words",
   "/api/v1/words/:id/review": "/words/:id",
   "/api/v1/grammar": "/grammar_notes",
-  "/api/v1/grammar/:id": "/grammar_notes/:id",
   "/api/v1/grammar/quiz": "/quiz_questions",
+  "/api/v1/grammar/:id": "/grammar_notes/:id",
   "/api/v1/progress": "/progress",
+  "/api/v1/progress_history": "/progress_history",
   "/api/v1/notifications": "/notifications",
   "/api/v1/notifications/:id": "/notifications/:id"
 }

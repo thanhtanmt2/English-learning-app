@@ -1,144 +1,244 @@
 package com.example.english_learning_app.ui.progress
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Giao diện hiển thị Tiến độ học tập
 @Composable
 fun ProgressScreen(
     viewModel: ProgressViewModel,
     onNavigateBack: () -> Unit = {}
 ) {
-    // Tự động kéo dữ liệu tiến độ về khi mở màn hình
     LaunchedEffect(Unit) {
         viewModel.fetchProgress()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Nút quay lại
-        TextButton(onClick = onNavigateBack) {
-            Text("⬅ Quay lại")
-        }
-
-        Text(text = "TIẾN ĐỘ HỌC TẬP", fontSize = 24.sp, modifier = Modifier.padding(vertical = 16.dp))
-
-        if (viewModel.isLoading.value) {
-            Text("Đang tải dữ liệu...")
-        } else if (viewModel.errorMessage.value.isNotEmpty()) {
-            Text(text = viewModel.errorMessage.value, color = MaterialTheme.colorScheme.error)
-        } else {
-            val records = viewModel.progressRecords.value
-            
-            // Tính toán Streak (Chuỗi ngày) và Accuracy (% đúng trắc nghiệm)
-            val totalQuiz = records.sumOf { it.quizScore }
-            val accuracy = if (records.isNotEmpty()) (totalQuiz * 100) / (records.size * 5) else 0 // Giả sử mỗi bài có 5 câu
-            val streak = records.size // Đơn giản hóa: Số record liên tiếp
-
-            // --- Phần Dashboard ---
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                DashboardCard("🔥 Streak", "$streak Ngày", Color(0xFFFF9800))
-                DashboardCard("🎯 Accuracy", "$accuracy%", Color(0xFF4CAF50))
+    Scaffold(
+        topBar = {
+            Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                    Text(
+                        text = "TIẾN ĐỘ HỌC TẬP",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.width(48.dp)) // Để căn giữa text
+                }
+                HorizontalDivider()
             }
+        }
+    ) { paddingValues ->
+        if (viewModel.isLoading.value) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else if (viewModel.errorMessage.value.isNotEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = viewModel.errorMessage.value, color = MaterialTheme.colorScheme.error)
+            }
+        } else {
+            val overview = viewModel.progressOverview.value
+            val history = viewModel.progressRecords.value
 
-            Text("Thời gian học (Phút)", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp)
+            ) {
+                // 1. Phần Stats Dashboard
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        StatCard(
+                            modifier = Modifier.weight(1f),
+                            title = "Streak",
+                            value = "${overview?.streak ?: 0} Ngày",
+                            icon = Icons.Default.Whatshot,
+                            color = Color(0xFFFF5722)
+                        )
+                        StatCard(
+                            modifier = Modifier.weight(1f),
+                            title = "Accuracy",
+                            value = "${overview?.accuracyRate ?: 0}%",
+                            icon = Icons.Default.AdsClick,
+                            color = Color(0xFF4CAF50)
+                        )
+                    }
+                }
 
-            // --- Phần Biểu đồ ---
-            StudyTimeBarChart(records = records)
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Chi tiết các ngày", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                items(viewModel.progressRecords.value) { record ->
+                // 2. Biểu đồ thời gian học
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(text = "Thời gian học (Phút)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        elevation = CardDefaults.cardElevation(4.dp)
+                            .padding(vertical = 12.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = "Ngày: ${record.date}", fontSize = 18.sp, color = MaterialTheme.colorScheme.primary)
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = "📚 Từ vựng đã học: ${record.wordsLearned}")
-                            Text(text = "📝 Ngữ pháp hoàn thành: ${record.grammarCompleted}")
-                            Text(text = "🎯 Điểm trắc nghiệm: ${record.quizScore}")
-                            Text(text = "⏱ Thời gian học: ${record.studyTimeMinutes} phút")
-                        }
+                        StudyTimeBarChart(records = history)
                     }
                 }
+
+                // 3. Tiêu đề danh sách lịch sử
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "Chi tiết các ngày", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                // 4. Danh sách lịch sử học tập
+                items(history) { record ->
+                    HistoryItem(record = record)
+                }
+                
+                item { Spacer(modifier = Modifier.height(32.dp)) }
             }
         }
     }
 }
 
-// Hàm phụ trợ vẽ Ô hiển thị thông tin (Dashboard)
 @Composable
-fun DashboardCard(title: String, value: String, color: Color) {
+fun StatCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    icon: ImageVector,
+    color: Color
+) {
     Card(
-        elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier.width(140.dp)
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, fontWeight = FontWeight.Bold, color = color)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = title, fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
+            }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = value, fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+            Text(text = value, fontSize = 22.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
 
-// Hàm phụ trợ tự vẽ Biểu đồ cột (Bar Chart) bằng Canvas
+@Composable
+fun HistoryItem(record: com.example.english_learning_app.data.model.ProgressRecord) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .clickable { /* Sau này hiện chi tiết */ },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(1.dp),
+        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Icon ngày tháng
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary)
+            }
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = record.date, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    text = "Đã học: ${record.wordsLearned} từ • ${record.studyTimeMinutes} phút",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            
+            Column(horizontalAlignment = Alignment.End) {
+                Text(text = "Đúng: ${record.quizScore}/5", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
+                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.outline)
+            }
+        }
+    }
+}
+
 @Composable
 fun StudyTimeBarChart(records: List<com.example.english_learning_app.data.model.ProgressRecord>) {
-    if (records.isEmpty()) return
+    if (records.isEmpty()) {
+        Box(modifier = Modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.Center) {
+            Text("Chưa có dữ liệu")
+        }
+        return
+    }
 
-    // Lấy tối đa 7 ngày gần nhất
-    val chartData = records.takeLast(7).map { it.studyTimeMinutes.toFloat() }
-    val maxTime = chartData.maxOrNull() ?: 1f
+    val displayRecords = records.takeLast(7).reversed() // Lấy 7 ngày gần nhất
+    val maxTime = displayRecords.maxOfOrNull { it.studyTimeMinutes.toFloat() }?.coerceAtLeast(1f) ?: 1f
 
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
-            .padding(16.dp)
+            .padding(top = 24.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
     ) {
-        val barWidth = size.width / (chartData.size * 2)
-        
-        chartData.forEachIndexed { index, time ->
-            val barHeight = (time / maxTime) * size.height
-            val startX = index * (barWidth * 2) + barWidth / 2
-            val startY = size.height - barHeight
+        val barCount = displayRecords.size
+        val barWidth = 30.dp.toPx()
+        val spacing = (size.width - (barWidth * barCount)) / (barCount + 1)
+
+        displayRecords.forEachIndexed { index, record ->
+            val barHeight = (record.studyTimeMinutes.toFloat() / maxTime) * size.height
+            val x = spacing + index * (barWidth + spacing)
+            val y = size.height - barHeight
 
             drawRoundRect(
-                color = Color(0xFF2196F3), // Màu xanh dương bựt
-                topLeft = Offset(startX, startY),
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color(0xFF2196F3), Color(0xFF64B5F6))
+                ),
+                topLeft = Offset(x, y),
                 size = Size(barWidth, barHeight),
-                cornerRadius = CornerRadius(8f, 8f)
+                cornerRadius = CornerRadius(4.dp.toPx(), 4.dp.toPx())
             )
         }
     }

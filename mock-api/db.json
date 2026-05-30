@@ -447,63 +447,6 @@
   ],
   "grammar_notes": [
     {
-      "id": "1",
-      "userId": "1",
-      "title": "Present Perfect Tense",
-      "category": "Thì động từ",
-      "formula": "Subject + have/has + Past Participle (V3)",
-      "explanation": "Thì hiện tại hoàn thành diễn tả hành động đã xảy ra trong quá khứ nhưng có liên quan hoặc ảnh hưởng đến hiện tại. Không cần biết chính xác thời điểm xảy ra.",
-      "example": "I have just finished my homework. / She has lived in Hanoi for 5 years.",
-      "commonMistakes": "Không dùng với các trạng từ chỉ thời gian cụ thể như yesterday, last year, ago.",
-      "tags": [
-        "IELTS",
-        "Thường gặp",
-        "Thì động từ"
-      ],
-      "ease_factor": 2.3,
-      "interval": 3,
-      "next_review_date": "2025-06-03T00:00:00Z",
-      "createdAt": "2025-01-15T10:00:00Z"
-    },
-    {
-      "id": "2",
-      "userId": "1",
-      "title": "Conditional Sentences Type 2",
-      "category": "Câu điều kiện",
-      "formula": "If + Subject + V2/were, Subject + would/could/might + V-bare",
-      "explanation": "Câu điều kiện loại 2 diễn tả tình huống giả định, không có thực ở hiện tại hoặc tương lai.",
-      "example": "If I were a millionaire, I would travel the world.",
-      "commonMistakes": "Dùng 'was' thay 'were' trong văn viết trang trọng.",
-      "tags": [
-        "IELTS",
-        "Ngữ pháp nâng cao",
-        "Câu điều kiện"
-      ],
-      "ease_factor": 1.9,
-      "interval": 1,
-      "next_review_date": "2025-05-29T00:00:00Z",
-      "createdAt": "2025-01-20T10:00:00Z"
-    },
-    {
-      "id": "3",
-      "userId": "1",
-      "title": "Passive Voice",
-      "category": "Câu bị động",
-      "formula": "Subject + to be (chia theo thì) + Past Participle (V3) + (by + agent)",
-      "explanation": "Câu bị động được dùng khi chúng ta muốn nhấn mạnh vào đối tượng bị tác động thay vì người thực hiện hành động.",
-      "example": "The report was written by the manager. / English is spoken in many countries.",
-      "commonMistakes": "Không chia 'to be' đúng theo thì.",
-      "tags": [
-        "IELTS",
-        "TOEIC",
-        "Academic Writing"
-      ],
-      "ease_factor": 2.5,
-      "interval": 6,
-      "next_review_date": "2025-06-08T00:00:00Z",
-      "createdAt": "2025-02-01T10:00:00Z"
-    },
-    {
       "id": "4",
       "userId": "1",
       "title": "Relative Clauses",
@@ -540,20 +483,6 @@
       "interval": 5,
       "next_review_date": "2025-06-06T00:00:00Z",
       "createdAt": "2025-02-15T10:00:00Z"
-    },
-    {
-      "category": "cau dieu kien",
-      "commonMistakes": "nham lan 2 menh de",
-      "ease_factor": 2.5,
-      "example": "minh hoa",
-      "explanation": "if 1,2 ",
-      "formula": "if",
-      "id": "H12B6Wb",
-      "interval": 0,
-      "level": "B1",
-      "next_review_date": "",
-      "tags": [],
-      "title": "cau dieu kien\n"
     }
   ],
   "quiz_questions": [
@@ -898,6 +827,53 @@
       "lastStudiedAt": "2025-05-29T07:00:00Z"
     }
   ],
+  "progress_history": [
+    {
+      "id": "h1",
+      "userId": "1",
+      "date": "2024-05-29",
+      "wordsLearned": 15,
+      "grammarCompleted": 2,
+      "quizScore": 5,
+      "studyTimeMinutes": 45
+    },
+    {
+      "id": "h2",
+      "userId": "1",
+      "date": "2024-05-28",
+      "wordsLearned": 10,
+      "grammarCompleted": 1,
+      "quizScore": 4,
+      "studyTimeMinutes": 30
+    },
+    {
+      "id": "h3",
+      "userId": "1",
+      "date": "2024-05-27",
+      "wordsLearned": 20,
+      "grammarCompleted": 3,
+      "quizScore": 5,
+      "studyTimeMinutes": 60
+    },
+    {
+      "id": "h4",
+      "userId": "1",
+      "date": "2024-05-26",
+      "wordsLearned": 5,
+      "grammarCompleted": 0,
+      "quizScore": 3,
+      "studyTimeMinutes": 15
+    },
+    {
+      "id": "h5",
+      "userId": "1",
+      "date": "2024-05-25",
+      "wordsLearned": 12,
+      "grammarCompleted": 1,
+      "quizScore": 4,
+      "studyTimeMinutes": 40
+    }
+  ],
   "notifications": [
     {
       "id": "1",
@@ -931,6 +907,73 @@
       "emailNotificationEnabled": true,
       "streakReminderEnabled": true,
       "updatedAt": "2025-04-20T07:00:00Z"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "1",
+      "grammarNoteId": "1",
+      "question": "He ___ to school every day.",
+      "options": [
+        "go",
+        "goes",
+        "going",
+        "went"
+      ],
+      "correctAnswer": "goes",
+      "explanation": "Với chủ ngữ số ít (He) trong thì hiện tại đơn, động từ phải thêm s/es."
+    },
+    {
+      "id": "2",
+      "grammarNoteId": "2",
+      "question": "They ___ watching TV now.",
+      "options": [
+        "is",
+        "am",
+        "are",
+        "do"
+      ],
+      "correctAnswer": "are",
+      "explanation": "Chủ ngữ số nhiều (They) đi với 'are' trong thì hiện tại tiếp diễn."
+    },
+    {
+      "id": "3",
+      "grammarNoteId": "1",
+      "question": "___ you like apple?",
+      "options": [
+        "Do",
+        "Does",
+        "Are",
+        "Is"
+      ],
+      "correctAnswer": "Do",
+      "explanation": "Câu hỏi với động từ thường ở hiện tại đơn dùng trợ động từ Do/Does."
+    },
+    {
+      "id": "4",
+      "grammarNoteId": "2",
+      "question": "I ___ doing my homework right now.",
+      "options": [
+        "is",
+        "am",
+        "are",
+        "do"
+      ],
+      "correctAnswer": "am",
+      "explanation": "I đi với to be 'am' trong thì tiếp diễn."
+    },
+    {
+      "id": "5",
+      "grammarNoteId": "1",
+      "question": "She ___ play football.",
+      "options": [
+        "don't",
+        "doesn't",
+        "not",
+        "isn't"
+      ],
+      "correctAnswer": "doesn't",
+      "explanation": "Phủ định hiện tại đơn với chủ ngữ số ít là doesn't + V_inf."
     }
   ]
 }

@@ -42,6 +42,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
+    // Khởi tạo GrammarViewModel ở đây để dùng chung cho các màn hình liên quan đến Ngữ pháp
+    val grammarViewModel: GrammarViewModel = viewModel()
+
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { 
             LoginScreen(
@@ -69,7 +72,6 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
         composable("home") { HomeScreen(navController, authViewModel) }
         
         composable("grammar_list") { 
-            val grammarViewModel: GrammarViewModel = viewModel()
             GrammarListScreen(
                 viewModel = grammarViewModel,
                 onNavigateToAdd = { navController.navigate("add_edit_grammar") },
@@ -88,7 +90,6 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
             arguments = listOf(navArgument("id") { nullable = true; defaultValue = null; type = NavType.StringType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
-            val grammarViewModel: GrammarViewModel = viewModel()
             AddEditGrammarScreen(
                 navController = navController,
                 viewModel = grammarViewModel,
@@ -96,7 +97,6 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
             )
         }
         composable("grammar_quiz") { 
-            val grammarViewModel: GrammarViewModel = viewModel()
             GrammarQuizScreen(
                 viewModel = grammarViewModel,
                 onNavigateBack = { navController.popBackStack() }
