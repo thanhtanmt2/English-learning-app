@@ -1,9 +1,12 @@
 package com.example.english_learning_app.data.remote
 
+import com.example.english_learning_app.data.model.GrammarNote
 import com.example.english_learning_app.data.model.LoginRequest
+import com.example.english_learning_app.data.model.QuizQuestion
 import com.example.english_learning_app.data.model.RegisterRequest
 import com.example.english_learning_app.data.model.User
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 /**
@@ -20,7 +23,15 @@ interface ApiService {
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): User
 
-    
-    // (Các API cho Grammar và Progress sẽ được thêm vào sau khi chúng ta 
-    // code xong UI của phần Auth để bạn đỡ bị ngợp nhé!)
+    // Lấy danh sách bài học Ngữ pháp
+    @GET("grammar")
+    suspend fun getGrammarNotes(): List<GrammarNote>
+
+    // Lấy danh sách câu hỏi trắc nghiệm
+    @GET("grammar/quiz")
+    suspend fun getGrammarQuizzes(): List<QuizQuestion>
+
+    // Thêm một bài học Ngữ pháp mới
+    @POST("grammar")
+    suspend fun addGrammarNote(@Body note: GrammarNote): GrammarNote
 }

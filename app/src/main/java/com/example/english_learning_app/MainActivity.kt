@@ -24,6 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.english_learning_app.ui.auth.AuthViewModel
 import com.example.english_learning_app.ui.auth.LoginScreen
 import com.example.english_learning_app.ui.auth.RegisterScreen
+import com.example.english_learning_app.ui.grammar.GrammarListScreen
+import com.example.english_learning_app.ui.grammar.GrammarViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,14 @@ private fun AppNavHost(navController: NavHostController) {
         composable("add_edit_word") { AddEditWordScreen(navController) }
         composable("flashcard") { FlashcardScreen(navController) }
         composable("dictation") { DictationScreen(navController) }
-        composable("grammar_list") { GrammarListScreen(navController) }
+        composable("grammar_list") { 
+            val grammarViewModel: GrammarViewModel = viewModel()
+            GrammarListScreen(
+                viewModel = grammarViewModel,
+                onNavigateToAdd = { navController.navigate("add_edit_grammar") },
+                onNavigateToQuiz = { navController.navigate("grammar_quiz") }
+            )
+        }
         composable("add_edit_grammar") { AddEditGrammarScreen(navController) }
         composable("grammar_quiz") { GrammarQuizScreen(navController) }
         composable("progress") { ProgressScreen(navController) }
@@ -199,24 +208,7 @@ private fun DictationScreen(navController: NavHostController) {
     }
 }
 
-@Composable
-private fun GrammarListScreen(navController: NavHostController) {
-    ScreenColumn(title = "Grammar List Screen") {
-        Button(
-            onClick = { navController.navigate("add_edit_grammar") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Add/Edit Grammar")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { navController.navigate("grammar_quiz") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Grammar Quiz")
-        }
-    }
-}
+
 
 @Composable
 private fun AddEditGrammarScreen(navController: NavHostController) {
