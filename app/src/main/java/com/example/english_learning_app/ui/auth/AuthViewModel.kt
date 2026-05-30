@@ -26,6 +26,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     // Hàm gọi khi user bấm nút "Đăng nhập"
     fun login() {
+        // Bắt lỗi cơ bản (Validation)
+        if (email.value.isBlank() || password.value.isBlank()) {
+            errorMessage.value = "Vui lòng nhập đầy đủ Email và Mật khẩu!"
+            return
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()) {
+            errorMessage.value = "Email không đúng định dạng!"
+            return
+        }
+
         // Bật trạng thái đang tải
         isLoading.value = true
         errorMessage.value = ""
@@ -59,12 +69,33 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
     // Hàm Đăng ký
-    fun register() {
+    fun register(goal: String, level: String) {
+        // Bắt lỗi Form (Validation) cực kỳ quan trọng cho Đăng ký
+        if (name.value.isBlank() || email.value.isBlank() || password.value.isBlank()) {
+            errorMessage.value = "Vui lòng nhập đầy đủ Tên, Email và Mật khẩu!"
+            return
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()) {
+            errorMessage.value = "Email không đúng định dạng!"
+            return
+        }
+        if (password.value.length < 6) {
+            errorMessage.value = "Mật khẩu phải dài từ 6 ký tự trở lên!"
+            return
+        }
+
         isLoading.value = true
         errorMessage.value = ""
         viewModelScope.launch {
             try {
-                val request = RegisterRequest(email.value, password.value, name.value)
+                // Đóng gói dữ liệu gửi đi với đầy đủ 5 thông tin
+                val request = RegisterRequest(
+                    name = name.value,
+                    email = email.value,
+                    password = password.value,
+                    goal = goal,
+                    level = level
+                )
                 val user = RetrofitClient.apiService.register(request)
                 
                 // Lưu token sau khi đăng ký thành công

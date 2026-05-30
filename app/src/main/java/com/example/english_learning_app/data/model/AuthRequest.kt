@@ -14,7 +14,9 @@ data class LoginRequest(
  * Lớp chứa dữ liệu gửi lên API khi Đăng ký
  */
 data class RegisterRequest(
+    @SerializedName("name") val name: String,
     @SerializedName("email") val email: String,
     @SerializedName("password") val password: String,
-    @SerializedName("name") val name: String
+    @SerializedName("goal") val goal: String,
+    @SerializedName("level") val level: String
 )

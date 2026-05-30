@@ -60,6 +60,11 @@
       "email": "an.nguyen@email.com",
       "password": "hashed_password_123",
       "id": "S63ViM9"
+    },
+    {
+      "email": "an.nguyen@email.com",
+      "password": "hashed_password_123",
+      "id": "33m5VFq"
     }
   ],
   "wordsets": [

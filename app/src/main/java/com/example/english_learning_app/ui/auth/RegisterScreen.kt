@@ -2,7 +2,7 @@ package com.example.english_learning_app.ui.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -40,6 +40,76 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        // --- Bổ sung Phần chọn Mục tiêu (Goal) ---
+        var expandedGoal by remember { mutableStateOf(false) }
+        var selectedGoal by remember { mutableStateOf("IELTS") }
+        val goals = listOf("IELTS", "TOEIC", "Giao tiếp")
+
+        Box(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                value = selectedGoal,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Mục tiêu học tập") },
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { expandedGoal = !expandedGoal }) {
+                        Text("▼")
+                    }
+                }
+            )
+            DropdownMenu(
+                expanded = expandedGoal,
+                onDismissRequest = { expandedGoal = false }
+            ) {
+                goals.forEach { goal ->
+                    DropdownMenuItem(
+                        text = { Text(goal) },
+                        onClick = {
+                            selectedGoal = goal
+                            expandedGoal = false
+                        }
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Bổ sung Phần chọn Trình độ (Level) ---
+        var expandedLevel by remember { mutableStateOf(false) }
+        var selectedLevel by remember { mutableStateOf("A1") }
+        val levels = listOf("A1", "A2", "B1", "B2", "C1", "C2")
+
+        Box(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                value = selectedLevel,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Trình độ hiện tại") },
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { expandedLevel = !expandedLevel }) {
+                        Text("▼")
+                    }
+                }
+            )
+            DropdownMenu(
+                expanded = expandedLevel,
+                onDismissRequest = { expandedLevel = false }
+            ) {
+                levels.forEach { level ->
+                    DropdownMenuItem(
+                        text = { Text(level) },
+                        onClick = {
+                            selectedLevel = level
+                            expandedLevel = false
+                        }
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Ô nhập Password
         OutlinedTextField(
             value = viewModel.password.value,
@@ -58,7 +128,7 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
 
         // Nút Đăng ký
         Button(
-            onClick = { viewModel.register() },
+            onClick = { viewModel.register(selectedGoal, selectedLevel) },
             modifier = Modifier.fillMaxWidth(),
             enabled = !viewModel.isLoading.value
         ) {
