@@ -4,6 +4,7 @@ import com.example.english_learning_app.data.model.User
 import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordPayload
 import com.example.english_learning_app.data.model.WordSet
+import com.example.english_learning_app.data.model.WordSetPayload
 import com.example.english_learning_app.data.remote.MockApiService
 
 class VocabularyRepository(private val apiService: MockApiService) {
@@ -19,6 +20,10 @@ class VocabularyRepository(private val apiService: MockApiService) {
 
     suspend fun loadWords(userId: String, wordSetId: String): List<Word> {
         return apiService.getWords(wordSetId = wordSetId, userId = userId)
+    }
+
+    suspend fun createWordSet(payload: WordSetPayload): WordSet {
+        return apiService.createWordSet(payload)
     }
 
     suspend fun loadWord(wordId: String): Word {

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,14 +32,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.ui.common.rememberTtsSpeaker
 
 @Composable
 fun FlashcardScreen(
     navController: NavHostController,
+    wordSetId: String? = null,
     viewModel: LearningViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var isFlipped by remember { mutableStateOf(false) }
+    val speak = rememberTtsSpeaker()
     val rotation by animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
         animationSpec = tween(durationMillis = 320)
@@ -45,6 +50,12 @@ fun FlashcardScreen(
 
     LaunchedEffect(Unit) {
         viewModel.load()
+    }
+
+    LaunchedEffect(wordSetId, uiState.wordSets) {
+        if (!wordSetId.isNullOrBlank() && uiState.wordSet == null && uiState.wordSets.isNotEmpty()) {
+            viewModel.selectWordSetById(wordSetId)
+        }
     }
 
     Column(
@@ -55,7 +66,7 @@ fun FlashcardScreen(
         Text(text = "Flashcard", fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = uiState.wordSet?.name ?: "Dang tai bo tu...",
+            text = uiState.wordSet?.name ?: "Chon bo tu de bat dau",
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6C757D)
         )
@@ -72,6 +83,30 @@ fun FlashcardScreen(
                 color = Color(0xFFB00020),
                 style = MaterialTheme.typography.bodySmall
             )
+            return@Column
+        }
+
+        if (uiState.wordSet == null) {
+            LazyColumn(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)) {
+                items(uiState.wordSets) { set ->
+                    Card(
+                        onClick = { viewModel.selectWordSet(set) },
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9F2)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(text = set.name, fontWeight = FontWeight.SemiBold)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = set.description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF6C757D)
+                            )
+                        }
+                    }
+                }
+            }
             return@Column
         }
 
@@ -128,6 +163,20 @@ fun FlashcardScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { speak(word?.word ?: "") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Listen")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            onClick = { viewModel.clearSelection() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Change word set")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
                 viewModel.nextWord()

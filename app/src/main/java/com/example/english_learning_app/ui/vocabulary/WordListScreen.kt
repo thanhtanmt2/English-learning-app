@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.ui.common.rememberTtsSpeaker
 
 @Composable
 fun WordListScreen(
@@ -36,6 +37,7 @@ fun WordListScreen(
     viewModel: WordListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val speak = rememberTtsSpeaker()
 
     LaunchedEffect(wordSetId) {
         viewModel.load(wordSetId)
@@ -65,6 +67,24 @@ fun WordListScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Button(
+                onClick = { navController.navigate("flashcard?wordSetId=$wordSetId") },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Flashcard")
+            }
+            Button(
+                onClick = { navController.navigate("dictation?wordSetId=$wordSetId") },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Dictation")
+            }
+        }
 
         if (uiState.isLoading) {
             Text(text = "Dang tai du lieu...", color = Color(0xFF6C757D))
@@ -98,6 +118,9 @@ fun WordListScreen(
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.weight(1f)
                             )
+                            TextButton(onClick = { speak(word.word) }) {
+                                Text(text = "Speak")
+                            }
                             TextButton(onClick = { viewModel.deleteWord(word.id) }) {
                                 Text(text = "Delete")
                             }

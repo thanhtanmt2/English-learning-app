@@ -134,23 +134,12 @@
       "createdAt": "2025-01-14T10:00:00Z"
     },
     {
-      "id": "5",
-      "wordsetId": "1",
+      "example": "There has been a substantial increase in the number of online learners.",
+      "meaning": "đáng kể",
       "userId": "1",
       "word": "substantial",
-      "pronunciation": "/səbˈstænʃəl/",
-      "partOfSpeech": "adjective",
-      "meaning": "đáng kể",
-      "description": "Of considerable importance, size, or worth.",
-      "example": "There has been a substantial increase in the number of online learners.",
-      "collocation": "substantial evidence, substantial amount, substantial progress",
-      "relatedWords": "substantially (adv), substance (n)",
-      "note": "Từ hay được dùng thay cho 'big' hoặc 'large' trong IELTS Academic",
-      "ease_factor": 2.5,
-      "interval": 1,
-      "repetitions": 0,
-      "next_review_date": "2025-05-30T00:00:00Z",
-      "createdAt": "2025-01-15T10:00:00Z"
+      "wordsetId": "1",
+      "id": "5"
     },
     {
       "id": "6",
@@ -360,6 +349,13 @@
       "repetitions": 0,
       "next_review_date": "2025-05-30T00:00:00Z",
       "createdAt": "2025-02-23T10:00:00Z"
+    },
+    {
+      "meaning": "",
+      "userId": "1",
+      "word": "",
+      "wordsetId": "1",
+      "id": "qdwuRdU"
     }
   ],
   "grammar_notes": [

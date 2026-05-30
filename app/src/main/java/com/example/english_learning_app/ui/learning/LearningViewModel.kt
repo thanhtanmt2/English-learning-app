@@ -18,7 +18,7 @@ class LearningViewModel : ViewModel() {
     val uiState: StateFlow<LearningUiState> = _uiState.asStateFlow()
 
     fun load() {
-        if (_uiState.value.isLoading || _uiState.value.wordSet != null) {
+        if (_uiState.value.isLoading || _uiState.value.wordSets.isNotEmpty()) {
             return
         }
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
@@ -26,21 +26,42 @@ class LearningViewModel : ViewModel() {
             try {
                 val user = repository.loadUser()
                 val wordSets = repository.loadWordSets(user.id)
-                val firstSet = wordSets.firstOrNull()
-                if (firstSet == null) {
-                    _uiState.value = LearningUiState(isLoading = false, errorMessage = "No word sets")
-                    return@launch
-                }
-                val words = repository.loadWords(userId = user.id, wordSetId = firstSet.id)
                 _uiState.value = LearningUiState(
                     isLoading = false,
-                    wordSet = firstSet,
-                    words = words
+                    userId = user.id,
+                    wordSets = wordSets
                 )
             } catch (ex: Exception) {
                 _uiState.value = LearningUiState(isLoading = false, errorMessage = ex.message)
             }
         }
+    }
+
+    fun selectWordSet(wordSet: WordSet) {
+        val userId = _uiState.value.userId ?: return
+        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+        viewModelScope.launch {
+            try {
+                val words = repository.loadWords(userId = userId, wordSetId = wordSet.id)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    wordSet = wordSet,
+                    words = words,
+                    currentIndex = 0
+                )
+            } catch (ex: Exception) {
+                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = ex.message)
+            }
+        }
+    }
+
+    fun selectWordSetById(wordSetId: String) {
+        val set = _uiState.value.wordSets.firstOrNull { it.id == wordSetId } ?: return
+        selectWordSet(set)
+    }
+
+    fun clearSelection() {
+        _uiState.value = _uiState.value.copy(wordSet = null, words = emptyList(), currentIndex = 0)
     }
 
     fun nextWord() {
@@ -53,6 +74,8 @@ class LearningViewModel : ViewModel() {
 
 data class LearningUiState(
     val isLoading: Boolean = false,
+    val userId: String? = null,
+    val wordSets: List<WordSet> = emptyList(),
     val wordSet: WordSet? = null,
     val words: List<Word> = emptyList(),
     val currentIndex: Int = 0,

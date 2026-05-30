@@ -5,6 +5,7 @@ import com.example.english_learning_app.data.model.User
 import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordPayload
 import com.example.english_learning_app.data.model.WordSet
+import com.example.english_learning_app.data.model.WordSetPayload
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -23,6 +24,11 @@ interface MockApiService {
     suspend fun getWordSets(
         @Query("userId") userId: String? = null
     ): List<WordSet>
+
+    @POST("api/v1/wordsets")
+    suspend fun createWordSet(
+        @Body payload: WordSetPayload
+    ): WordSet
 
     @GET("api/v1/words")
     suspend fun getWords(

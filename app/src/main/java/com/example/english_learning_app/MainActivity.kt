@@ -25,6 +25,7 @@ import androidx.navigation.navArgument
 import com.example.english_learning_app.ui.home.HomeScreen
 import com.example.english_learning_app.ui.learning.DictationScreen
 import com.example.english_learning_app.ui.learning.FlashcardScreen
+import com.example.english_learning_app.ui.vocabulary.AddWordSetScreen
 import com.example.english_learning_app.ui.vocabulary.AddEditWordScreen
 import com.example.english_learning_app.ui.vocabulary.WordListScreen
 import com.example.english_learning_app.ui.vocabulary.WordSetListScreen
@@ -45,7 +46,17 @@ private fun AppNavHost(navController: NavHostController) {
         composable("login") { LoginScreen(navController) }
         composable("register") { RegisterScreen(navController) }
         composable("home") { HomeScreen(navController) }
-        composable("word_set_list") { WordSetListScreen(navController) }
+        composable(
+            route = "word_set_list?refresh={refresh}",
+            arguments = listOf(navArgument("refresh") {
+                type = NavType.BoolType
+                defaultValue = false
+            })
+        ) { backStackEntry ->
+            val refresh = backStackEntry.arguments?.getBoolean("refresh") ?: false
+            WordSetListScreen(navController, refresh)
+        }
+        composable("add_word_set") { AddWordSetScreen(navController) }
         composable(
             route = "word_list/{wordSetId}",
             arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
@@ -71,8 +82,26 @@ private fun AppNavHost(navController: NavHostController) {
             val wordId = backStackEntry.arguments?.getString("wordId")
             AddEditWordScreen(navController, wordSetId, wordId)
         }
-        composable("flashcard") { FlashcardScreen(navController) }
-        composable("dictation") { DictationScreen(navController) }
+        composable(
+            route = "flashcard?wordSetId={wordSetId}",
+            arguments = listOf(navArgument("wordSetId") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { backStackEntry ->
+            val wordSetId = backStackEntry.arguments?.getString("wordSetId")
+            FlashcardScreen(navController, wordSetId)
+        }
+        composable(
+            route = "dictation?wordSetId={wordSetId}",
+            arguments = listOf(navArgument("wordSetId") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { backStackEntry ->
+            val wordSetId = backStackEntry.arguments?.getString("wordSetId")
+            DictationScreen(navController, wordSetId)
+        }
         composable("grammar_list") { GrammarListScreen(navController) }
         composable("add_edit_grammar") { AddEditGrammarScreen(navController) }
         composable("grammar_quiz") { GrammarQuizScreen(navController) }

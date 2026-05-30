@@ -16,8 +16,8 @@ class WordSetListViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(WordSetListUiState())
     val uiState: StateFlow<WordSetListUiState> = _uiState.asStateFlow()
 
-    fun load() {
-        if (_uiState.value.isLoading || _uiState.value.wordSets.isNotEmpty()) {
+    fun load(force: Boolean = false) {
+        if (!force && (_uiState.value.isLoading || _uiState.value.wordSets.isNotEmpty())) {
             return
         }
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)

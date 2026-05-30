@@ -2,6 +2,7 @@ package com.example.english_learning_app.ui.vocabulary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -28,12 +30,13 @@ import androidx.navigation.NavHostController
 @Composable
 fun WordSetListScreen(
     navController: NavHostController,
+    refresh: Boolean = false,
     viewModel: WordSetListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.load()
+    LaunchedEffect(refresh) {
+        viewModel.load(force = refresh)
     }
 
     Column(
@@ -41,17 +44,24 @@ fun WordSetListScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Text(
-            text = "Word Sets",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = "Chon bo tu de bat dau hoc.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF4A4E69)
-        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Word Sets",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Chon bo tu de bat dau hoc.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF4A4E69)
+                )
+            }
+            Button(onClick = { navController.navigate("add_word_set") }) {
+                Text(text = "Add")
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         if (uiState.isLoading) {
