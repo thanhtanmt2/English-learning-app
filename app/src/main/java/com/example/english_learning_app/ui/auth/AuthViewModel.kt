@@ -1,15 +1,19 @@
 package com.example.english_learning_app.ui.auth
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.english_learning_app.data.local.TokenManager
 import com.example.english_learning_app.data.model.LoginRequest
 import com.example.english_learning_app.data.model.RegisterRequest
 import com.example.english_learning_app.data.remote.RetrofitClient
 import kotlinx.coroutines.launch
 
 // "Bộ não" xử lý logic cho phần Auth
-class AuthViewModel : ViewModel() {
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val tokenManager = TokenManager(application)
 
     // Trạng thái lưu email và password đang gõ
     var email = mutableStateOf("")
@@ -34,6 +38,9 @@ class AuthViewModel : ViewModel() {
                 // Gọi API
                 val user = RetrofitClient.apiService.login(request)
                 
+                // Giả lập lưu JWT Token (Vì mock api không có thật)
+                tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
+                
                 // (Sau này sẽ chuyển màn hình ở đây, tạm thời in ra báo thành công)
                 errorMessage.value = "Thành công! Xin chào ${user.name}"
                 
@@ -54,6 +61,10 @@ class AuthViewModel : ViewModel() {
             try {
                 val request = RegisterRequest(email.value, password.value, name.value)
                 val user = RetrofitClient.apiService.register(request)
+                
+                // Lưu token sau khi đăng ký thành công
+                tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
+                
                 errorMessage.value = "Đăng ký thành công! Chào ${user.name}"
             } catch (e: Exception) {
                 errorMessage.value = "Lỗi: ${e.message}"
