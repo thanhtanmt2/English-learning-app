@@ -95,4 +95,62 @@ class GrammarViewModel : ViewModel() {
             }
         }
     }
+
+    // Hàm cập nhật bài học
+    fun updateGrammarNote(
+        id: String,
+        title: String, 
+        category: String, 
+        formula: String,
+        explanation: String,
+        example: String,
+        commonMistakes: String
+    ) {
+        isLoading.value = true
+        errorMessage.value = ""
+        isAddSuccess.value = false
+        
+        viewModelScope.launch {
+            try {
+                val updatedNote = GrammarNote(
+                    id = id,
+                    title = title,
+                    category = category,
+                    level = "B1",
+                    formula = formula,
+                    explanation = explanation,
+                    example = example,
+                    commonMistakes = commonMistakes,
+                    tags = emptyList(),
+                    easeFactor = 2.5,
+                    interval = 0,
+                    nextReviewDate = ""
+                )
+                RetrofitClient.apiService.updateGrammarNote(id, updatedNote)
+                isAddSuccess.value = true
+                fetchGrammarNotes()
+            } catch (e: Exception) {
+                errorMessage.value = "Lỗi cập nhật: ${e.message}"
+            } finally {
+                isLoading.value = false
+            }
+        }
+    }
+
+    // Hàm xóa bài học
+    fun deleteGrammarNote(id: String) {
+        viewModelScope.launch {
+            try {
+                RetrofitClient.apiService.deleteGrammarNote(id)
+                fetchGrammarNotes() // Tải lại danh sách sau khi xóa
+            } catch (e: Exception) {
+                errorMessage.value = "Lỗi xóa: ${e.message}"
+            }
+        }
+    }
+
+    // Hàm hỗ trợ lấy bài học theo ID từ danh sách hiện có
+    fun getGrammarNoteById(id: String): GrammarNote? {
+        return grammarNotes.value.find { it.id == id }
+    }
 }

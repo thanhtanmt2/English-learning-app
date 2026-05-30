@@ -65,6 +65,22 @@
       "email": "an.nguyen@email.com",
       "password": "hashed_password_123",
       "id": "33m5VFq"
+    },
+    {
+      "email": "nhut@gmail.com",
+      "goal": "IELTS",
+      "level": "A1",
+      "name": "nhut\t",
+      "password": "123456",
+      "id": "EvGf4ed"
+    },
+    {
+      "email": "nhut1@gmail.com",
+      "goal": "TOEIC",
+      "level": "A1",
+      "name": "daominhnhut",
+      "password": "123456",
+      "id": "cJPEsIr"
     }
   ],
   "wordsets": [
@@ -524,6 +540,20 @@
       "interval": 5,
       "next_review_date": "2025-06-06T00:00:00Z",
       "createdAt": "2025-02-15T10:00:00Z"
+    },
+    {
+      "category": "cau dieu kien",
+      "commonMistakes": "nham lan 2 menh de",
+      "ease_factor": 2.5,
+      "example": "minh hoa",
+      "explanation": "if 1,2 ",
+      "formula": "if",
+      "id": "H12B6Wb",
+      "interval": 0,
+      "level": "B1",
+      "next_review_date": "",
+      "tags": [],
+      "title": "cau dieu kien\n"
     }
   ],
   "quiz_questions": [

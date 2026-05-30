@@ -14,7 +14,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun AddEditGrammarScreen(
     navController: NavHostController,
-    viewModel: GrammarViewModel = viewModel() // Tự động lấy ViewModel mà không làm lỗi MainActivity
+    viewModel: GrammarViewModel = viewModel(), // Tự động lấy ViewModel mà không làm lỗi MainActivity
+    noteId: String? = null
 ) {
     // Các biến trạng thái lưu tạm chữ đang gõ (Local State)
     var title by remember { mutableStateOf("") }
@@ -23,6 +24,21 @@ fun AddEditGrammarScreen(
     var explanation by remember { mutableStateOf("") }
     var example by remember { mutableStateOf("") }
     var commonMistakes by remember { mutableStateOf("") }
+
+    // Kéo dữ liệu cũ điền vào nếu là chế độ Sửa
+    LaunchedEffect(noteId) {
+        if (noteId != null) {
+            val note = viewModel.getGrammarNoteById(noteId)
+            if (note != null) {
+                title = note.title
+                category = note.category
+                formula = note.formula
+                explanation = note.explanation
+                example = note.example
+                commonMistakes = note.commonMistakes
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -34,7 +50,7 @@ fun AddEditGrammarScreen(
             Text("⬅ Quay lại")
         }
 
-        Text(text = "THÊM BÀI HỌC MỚI", fontSize = 24.sp, modifier = Modifier.padding(vertical = 16.dp))
+        Text(text = if (noteId != null) "CHỈNH SỬA BÀI HỌC" else "THÊM BÀI HỌC MỚI", fontSize = 24.sp, modifier = Modifier.padding(vertical = 16.dp))
 
         // Ô nhập Tiêu đề
         OutlinedTextField(
@@ -109,16 +125,19 @@ fun AddEditGrammarScreen(
             }
         }
 
-        // Nút Lưu
+        // Nút Lưu / Cập nhật
         Button(
             onClick = { 
-                // Kích hoạt kỹ năng lưu bài học của bộ não
-                viewModel.addGrammarNote(title, category, formula, explanation, example, commonMistakes)
+                if (noteId != null) {
+                    viewModel.updateGrammarNote(noteId, title, category, formula, explanation, example, commonMistakes)
+                } else {
+                    viewModel.addGrammarNote(title, category, formula, explanation, example, commonMistakes)
+                }
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = title.isNotBlank() && !viewModel.isLoading.value // Bắt buộc phải có Tiêu đề mới cho Lưu
         ) {
-            Text("Lưu bài học")
+            Text(if (noteId != null) "Cập nhật bài học" else "Lưu bài học")
         }
     }
 }

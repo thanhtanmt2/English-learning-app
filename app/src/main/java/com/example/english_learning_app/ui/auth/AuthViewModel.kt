@@ -23,6 +23,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     var errorMessage = mutableStateOf("")
     var isLoading = mutableStateOf(false)
     var isLoginSuccess = mutableStateOf(false) // Cờ báo hiệu login thành công để chuyển trang
+    var isRegisterSuccess = mutableStateOf(false) // Cờ báo hiệu đăng ký thành công
+    var isUpdateSuccess = mutableStateOf(false) // Cờ báo hiệu cập nhật profile thành công
+
+    var currentUser = mutableStateOf<com.example.english_learning_app.data.model.User?>(null)
 
     // Hàm gọi khi user bấm nút "Đăng nhập"
     fun login() {
@@ -49,6 +53,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 
                 if (users.isNotEmpty()) {
                     val user = users[0] // Lấy người đầu tiên tìm thấy
+                    currentUser.value = user
                     // Lưu token vào TokenManager
                     tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
                     
@@ -86,6 +91,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
         isLoading.value = true
         errorMessage.value = ""
+        isRegisterSuccess.value = false
         viewModelScope.launch {
             try {
                 // Đóng gói dữ liệu gửi đi với đầy đủ 5 thông tin
@@ -97,13 +103,40 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     level = level
                 )
                 val user = RetrofitClient.apiService.register(request)
+                currentUser.value = user
                 
                 // Lưu token sau khi đăng ký thành công
                 tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
                 
                 errorMessage.value = "Đăng ký thành công! Chào ${user.name}"
+                isRegisterSuccess.value = true
             } catch (e: Exception) {
                 errorMessage.value = "Lỗi: ${e.message}"
+            } finally {
+                isLoading.value = false
+            }
+        }
+    }
+
+    // Cập nhật thông tin Profile
+    fun updateProfile(newName: String, newGoal: String, newLevel: String) {
+        val user = currentUser.value ?: return
+        isLoading.value = true
+        errorMessage.value = ""
+        isUpdateSuccess.value = false
+
+        viewModelScope.launch {
+            try {
+                // Giả định API cho phép PATCH hoặc PUT để sửa User
+                // Lưu ý: ApiService.kt cần có hàm updateProfile
+                val updatedUser = user.copy(name = newName, goal = newGoal, level = newLevel)
+                RetrofitClient.apiService.updateUser(user.id, updatedUser)
+                
+                currentUser.value = updatedUser
+                isUpdateSuccess.value = true
+                errorMessage.value = "Cập nhật thành công!"
+            } catch (e: Exception) {
+                errorMessage.value = "Lỗi cập nhật: ${e.message}"
             } finally {
                 isLoading.value = false
             }

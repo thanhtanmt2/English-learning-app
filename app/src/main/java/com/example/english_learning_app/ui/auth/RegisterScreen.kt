@@ -12,6 +12,15 @@ import androidx.compose.ui.unit.sp
 // Giao diện của màn hình Đăng ký
 @Composable
 fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {}) {
+    
+    // Tự động chuyển hướng về trang đăng nhập khi đăng ký thành công
+    LaunchedEffect(viewModel.isRegisterSuccess.value) {
+        if (viewModel.isRegisterSuccess.value) {
+            onNavigateToLogin()
+            viewModel.isRegisterSuccess.value = false // Reset trạng thái
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -22,7 +31,7 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
         Text(text = "ĐĂNG KÝ TÀI KHOẢN", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Ô nhập Họ Tên
+        // 1. Họ và Tên
         OutlinedTextField(
             value = viewModel.name.value,
             onValueChange = { viewModel.name.value = it },
@@ -31,7 +40,7 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Ô nhập Email
+        // 2. Email
         OutlinedTextField(
             value = viewModel.email.value,
             onValueChange = { viewModel.email.value = it },
@@ -40,7 +49,17 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Bổ sung Phần chọn Mục tiêu (Goal) ---
+        // 3. Mật khẩu
+        OutlinedTextField(
+            value = viewModel.password.value,
+            onValueChange = { viewModel.password.value = it },
+            label = { Text("Mật khẩu") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 4. Mục tiêu học tập (Goal)
         var expandedGoal by remember { mutableStateOf(false) }
         var selectedGoal by remember { mutableStateOf("IELTS") }
         val goals = listOf("IELTS", "TOEIC", "Giao tiếp")
@@ -75,7 +94,7 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        // --- Bổ sung Phần chọn Trình độ (Level) ---
+        // 5. Trình độ hiện tại (Level)
         var expandedLevel by remember { mutableStateOf(false) }
         var selectedLevel by remember { mutableStateOf("A1") }
         val levels = listOf("A1", "A2", "B1", "B2", "C1", "C2")
@@ -108,16 +127,6 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Ô nhập Password
-        OutlinedTextField(
-            value = viewModel.password.value,
-            onValueChange = { viewModel.password.value = it },
-            label = { Text("Mật khẩu") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Hiển thị báo lỗi / thành công

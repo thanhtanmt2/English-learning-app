@@ -7,17 +7,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.english_learning_app.data.model.GrammarNote
 
 // Giao diện màn hình Danh sách Bài học Ngữ pháp
 @Composable
 fun GrammarListScreen(
     viewModel: GrammarViewModel,
     onNavigateToAdd: () -> Unit = {},
-    onNavigateToQuiz: () -> Unit = {}
+    onNavigateToEdit: (String) -> Unit = {},
+    onNavigateToQuiz: () -> Unit = {},
+    onNavigateToDetail: (GrammarNote) -> Unit = {}
 ) {
     // Ngay khi mở màn hình, tự động gọi API lấy danh sách bài học
     LaunchedEffect(Unit) {
@@ -58,12 +60,21 @@ fun GrammarListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .clickable { /* Tương lai sẽ bấm vào để xem chi tiết hoặc sửa */ },
+                            .clickable { onNavigateToDetail(note) },
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(text = note.title, fontSize = 20.sp)
                             Text(text = note.category, color = MaterialTheme.colorScheme.secondary)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                                IconButton(onClick = { onNavigateToEdit(note.id) }) {
+                                    Text("✏️")
+                                }
+                                IconButton(onClick = { viewModel.deleteGrammarNote(note.id) }) {
+                                    Text("🗑️")
+                                }
+                            }
                         }
                     }
                 }
