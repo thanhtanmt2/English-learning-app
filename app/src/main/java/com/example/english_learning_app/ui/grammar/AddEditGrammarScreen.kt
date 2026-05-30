@@ -20,6 +20,9 @@ fun AddEditGrammarScreen(
     var title by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
     var formula by remember { mutableStateOf("") }
+    var explanation by remember { mutableStateOf("") }
+    var example by remember { mutableStateOf("") }
+    var commonMistakes by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -58,6 +61,36 @@ fun AddEditGrammarScreen(
             label = { Text("Công thức (VD: S + V + O)") },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Ô nhập Giải thích
+        OutlinedTextField(
+            value = explanation,
+            onValueChange = { explanation = it },
+            label = { Text("Giải thích chi tiết") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 3 // Cho phép ô nhập to ra để gõ văn bản dài
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Ô nhập Ví dụ
+        OutlinedTextField(
+            value = example,
+            onValueChange = { example = it },
+            label = { Text("Ví dụ minh họa") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Ô nhập Lỗi sai hay gặp
+        OutlinedTextField(
+            value = commonMistakes,
+            onValueChange = { commonMistakes = it },
+            label = { Text("Lỗi sai hay gặp (Tùy chọn)") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         // Hiển thị báo lỗi / trạng thái xử lý
@@ -80,7 +113,7 @@ fun AddEditGrammarScreen(
         Button(
             onClick = { 
                 // Kích hoạt kỹ năng lưu bài học của bộ não
-                viewModel.addGrammarNote(title, category, formula)
+                viewModel.addGrammarNote(title, category, formula, explanation, example, commonMistakes)
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = title.isNotBlank() && !viewModel.isLoading.value // Bắt buộc phải có Tiêu đề mới cho Lưu

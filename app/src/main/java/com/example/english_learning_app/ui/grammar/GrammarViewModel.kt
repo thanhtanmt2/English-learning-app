@@ -52,22 +52,31 @@ class GrammarViewModel : ViewModel() {
         }
     }
 
-    // Hàm gửi bài học mới lên mạng
-    fun addGrammarNote(title: String, category: String, formula: String) {
+    // Hàm thêm bài học mới
+    fun addGrammarNote(
+        title: String, 
+        category: String, 
+        formula: String,
+        explanation: String,
+        example: String,
+        commonMistakes: String
+    ) {
         isLoading.value = true
         errorMessage.value = ""
         isAddSuccess.value = false
+        
         viewModelScope.launch {
             try {
-                // Tạo khuôn chứa thông tin mới (ID tự tạo theo thời gian)
+                // Đóng gói dữ liệu thành khuôn GrammarNote
                 val newNote = GrammarNote(
-                    id = System.currentTimeMillis().toString(),
+                    id = "", // Mock API sẽ tự sinh ID
                     title = title,
                     category = category,
+                    level = "B1", // Tạm thời để mặc định là B1
                     formula = formula,
-                    explanation = "",
-                    example = "",
-                    commonMistakes = "",
+                    explanation = explanation,
+                    example = example,
+                    commonMistakes = commonMistakes,
                     tags = emptyList(),
                     easeFactor = 2.5,
                     interval = 0,
