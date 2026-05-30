@@ -1,5 +1,5 @@
 {
-  "users": [
+  "user": [
     {
       "id": "1",
       "name": "Nguyen Van An",
@@ -9,36 +9,19 @@
       "level": "B1",
       "avatarUrl": "https://i.pravatar.cc/150?img=1",
       "createdAt": "2025-01-10T08:00:00Z"
-    },
-    {
-      "id": "2",
-      "name": "Tran Thi Bao",
-      "email": "bao.tran@email.com",
-      "password": "hashed_password_456",
-      "goal": "Giao tiếp",
-      "level": "A2",
-      "avatarUrl": "https://i.pravatar.cc/150?img=5",
-      "createdAt": "2025-02-15T09:30:00Z"
-    },
-    {
-      "id": "3",
-      "name": "Le Minh Duc",
-      "email": "duc.le@email.com",
-      "password": "hashed_password_789",
-      "goal": "TOEIC",
-      "level": "B2",
-      "avatarUrl": "https://i.pravatar.cc/150?img=3",
-      "createdAt": "2025-03-01T07:00:00Z"
     }
   ],
-
   "wordsets": [
     {
       "id": "1",
       "userId": "1",
       "name": "IELTS Academic Vocabulary",
       "description": "Top 500 từ thường xuất hiện trong bài thi IELTS Academic",
-      "tags": ["IELTS", "Academic", "Nâng cao"],
+      "tags": [
+        "IELTS",
+        "Academic",
+        "Nâng cao"
+      ],
       "totalWords": 5,
       "learnedWords": 3,
       "createdAt": "2025-01-11T10:00:00Z"
@@ -48,7 +31,11 @@
       "userId": "1",
       "name": "Business English",
       "description": "Từ vựng tiếng Anh thương mại, dùng trong môi trường công sở",
-      "tags": ["Business", "TOEIC", "Chuyên ngành"],
+      "tags": [
+        "Business",
+        "TOEIC",
+        "Chuyên ngành"
+      ],
       "totalWords": 4,
       "learnedWords": 2,
       "createdAt": "2025-01-20T14:00:00Z"
@@ -58,7 +45,10 @@
       "userId": "1",
       "name": "Daily Conversation",
       "description": "Những từ và cụm từ phổ biến trong hội thoại hàng ngày",
-      "tags": ["Giao tiếp", "Cơ bản"],
+      "tags": [
+        "Giao tiếp",
+        "Cơ bản"
+      ],
       "totalWords": 4,
       "learnedWords": 4,
       "createdAt": "2025-02-05T08:30:00Z"
@@ -68,32 +58,23 @@
       "userId": "2",
       "name": "Travel English",
       "description": "Từ vựng cần thiết khi đi du lịch nước ngoài",
-      "tags": ["Du lịch", "Giao tiếp"],
+      "tags": [
+        "Du lịch",
+        "Giao tiếp"
+      ],
       "totalWords": 3,
       "learnedWords": 1,
       "createdAt": "2025-02-20T11:00:00Z"
     }
   ],
-
   "words": [
     {
-      "id": "1",
-      "wordsetId": "1",
+      "example": "The politician gave an ambiguous answer that satisfied no one.",
+      "meaning": "mơ hồ, không rõ ràng",
       "userId": "1",
       "word": "ambiguous",
-      "pronunciation": "/æmˈbɪɡjuəs/",
-      "partOfSpeech": "adjective",
-      "meaning": "mơ hồ, không rõ ràng",
-      "description": "Open to more than one interpretation; not having one obvious meaning.",
-      "example": "The politician gave an ambiguous answer that satisfied no one.",
-      "collocation": "ambiguous statement, remain ambiguous, deliberately ambiguous",
-      "relatedWords": "ambiguity (n), ambiguously (adv), unambiguous (adj)",
-      "note": "Thường xuất hiện trong IELTS Reading và Writing Task 2",
-      "ease_factor": 2.5,
-      "interval": 1,
-      "repetitions": 0,
-      "next_review_date": "2025-06-01T00:00:00Z",
-      "createdAt": "2025-01-11T10:00:00Z"
+      "wordsetId": "1",
+      "id": "1"
     },
     {
       "id": "2",
@@ -381,7 +362,6 @@
       "createdAt": "2025-02-23T10:00:00Z"
     }
   ],
-
   "grammar_notes": [
     {
       "id": "1",
@@ -392,7 +372,11 @@
       "explanation": "Thì hiện tại hoàn thành diễn tả hành động đã xảy ra trong quá khứ nhưng có liên quan hoặc ảnh hưởng đến hiện tại. Không cần biết chính xác thời điểm xảy ra.",
       "example": "I have just finished my homework. / She has lived in Hanoi for 5 years.",
       "commonMistakes": "Không dùng với các trạng từ chỉ thời gian cụ thể như yesterday, last year, ago.",
-      "tags": ["IELTS", "Thường gặp", "Thì động từ"],
+      "tags": [
+        "IELTS",
+        "Thường gặp",
+        "Thì động từ"
+      ],
       "ease_factor": 2.3,
       "interval": 3,
       "next_review_date": "2025-06-03T00:00:00Z",
@@ -407,7 +391,11 @@
       "explanation": "Câu điều kiện loại 2 diễn tả tình huống giả định, không có thực ở hiện tại hoặc tương lai.",
       "example": "If I were a millionaire, I would travel the world.",
       "commonMistakes": "Dùng 'was' thay 'were' trong văn viết trang trọng.",
-      "tags": ["IELTS", "Ngữ pháp nâng cao", "Câu điều kiện"],
+      "tags": [
+        "IELTS",
+        "Ngữ pháp nâng cao",
+        "Câu điều kiện"
+      ],
       "ease_factor": 1.9,
       "interval": 1,
       "next_review_date": "2025-05-29T00:00:00Z",
@@ -422,7 +410,11 @@
       "explanation": "Câu bị động được dùng khi chúng ta muốn nhấn mạnh vào đối tượng bị tác động thay vì người thực hiện hành động.",
       "example": "The report was written by the manager. / English is spoken in many countries.",
       "commonMistakes": "Không chia 'to be' đúng theo thì.",
-      "tags": ["IELTS", "TOEIC", "Academic Writing"],
+      "tags": [
+        "IELTS",
+        "TOEIC",
+        "Academic Writing"
+      ],
       "ease_factor": 2.5,
       "interval": 6,
       "next_review_date": "2025-06-08T00:00:00Z",
@@ -437,7 +429,11 @@
       "explanation": "Mệnh đề quan hệ dùng để bổ sung thông tin về một danh từ.",
       "example": "The student who studies hard will succeed.",
       "commonMistakes": "Dùng nhầm 'which' cho người hoặc 'who' cho vật.",
-      "tags": ["IELTS", "Writing", "Quan trọng"],
+      "tags": [
+        "IELTS",
+        "Writing",
+        "Quan trọng"
+      ],
       "ease_factor": 2.1,
       "interval": 2,
       "next_review_date": "2025-06-01T00:00:00Z",
@@ -452,20 +448,28 @@
       "explanation": "Modal verbs diễn tả khả năng, sự cho phép, nghĩa vụ, hay sự suy đoán.",
       "example": "You must wear a seatbelt. / She might be late.",
       "commonMistakes": "Thêm 'to' sau modal: SAI: You must to go. ĐÚNG: You must go.",
-      "tags": ["Cơ bản", "Quan trọng", "TOEIC"],
+      "tags": [
+        "Cơ bản",
+        "Quan trọng",
+        "TOEIC"
+      ],
       "ease_factor": 2.4,
       "interval": 5,
       "next_review_date": "2025-06-06T00:00:00Z",
       "createdAt": "2025-02-15T10:00:00Z"
     }
   ],
-
   "quiz_questions": [
     {
       "id": "1",
       "grammarNoteId": "1",
       "question": "She ______ in this company for over 10 years.",
-      "options": ["works", "has worked", "worked", "is working"],
+      "options": [
+        "works",
+        "has worked",
+        "worked",
+        "is working"
+      ],
       "correctAnswer": "has worked",
       "explanation": "Dùng Present Perfect vì có 'for' kết hợp với khoảng thời gian từ quá khứ đến hiện tại.",
       "difficulty": "easy"
@@ -474,7 +478,12 @@
       "id": "2",
       "grammarNoteId": "1",
       "question": "I ______ to Paris twice. It's a beautiful city!",
-      "options": ["went", "have been", "go", "had been"],
+      "options": [
+        "went",
+        "have been",
+        "go",
+        "had been"
+      ],
       "correctAnswer": "have been",
       "explanation": "Dùng Present Perfect để nói về kinh nghiệm sống, không cụ thể thời gian.",
       "difficulty": "easy"
@@ -483,7 +492,12 @@
       "id": "3",
       "grammarNoteId": "2",
       "question": "If I ______ you, I would apologize to him immediately.",
-      "options": ["am", "was", "were", "had been"],
+      "options": [
+        "am",
+        "was",
+        "were",
+        "had been"
+      ],
       "correctAnswer": "were",
       "explanation": "Conditional Type 2 dùng 'were' cho tất cả các ngôi trong văn viết học thuật.",
       "difficulty": "medium"
@@ -492,7 +506,12 @@
       "id": "4",
       "grammarNoteId": "2",
       "question": "She ______ the exam if she studied more.",
-      "options": ["would pass", "will pass", "would have passed", "passes"],
+      "options": [
+        "would pass",
+        "will pass",
+        "would have passed",
+        "passes"
+      ],
       "correctAnswer": "would pass",
       "explanation": "Mệnh đề chính của Conditional Type 2 dùng 'would + V-bare'.",
       "difficulty": "medium"
@@ -501,7 +520,12 @@
       "id": "5",
       "grammarNoteId": "3",
       "question": "The new policy ______ by the government last month.",
-      "options": ["announced", "was announced", "has announced", "announces"],
+      "options": [
+        "announced",
+        "was announced",
+        "has announced",
+        "announces"
+      ],
       "correctAnswer": "was announced",
       "explanation": "Dùng Past Simple Passive (was + V3) vì hành động xảy ra ở quá khứ (last month).",
       "difficulty": "medium"
@@ -510,7 +534,12 @@
       "id": "6",
       "grammarNoteId": "3",
       "question": "English ______ by millions of people around the world.",
-      "options": ["speaks", "is spoke", "is spoken", "spoke"],
+      "options": [
+        "speaks",
+        "is spoke",
+        "is spoken",
+        "spoke"
+      ],
       "correctAnswer": "is spoken",
       "explanation": "Dùng Present Simple Passive (is/am/are + V3) cho sự thật hiển nhiên.",
       "difficulty": "easy"
@@ -519,7 +548,12 @@
       "id": "7",
       "grammarNoteId": "4",
       "question": "The man ______ is standing by the door is my uncle.",
-      "options": ["which", "whose", "who", "whom"],
+      "options": [
+        "which",
+        "whose",
+        "who",
+        "whom"
+      ],
       "correctAnswer": "who",
       "explanation": "Dùng 'who' khi danh từ đứng trước là người và đóng vai trò chủ ngữ trong mệnh đề quan hệ.",
       "difficulty": "easy"
@@ -528,7 +562,12 @@
       "id": "8",
       "grammarNoteId": "4",
       "question": "This is the town ______ I was born.",
-      "options": ["which", "where", "that", "who"],
+      "options": [
+        "which",
+        "where",
+        "that",
+        "who"
+      ],
       "correctAnswer": "where",
       "explanation": "Dùng 'where' khi danh từ đứng trước là nơi chốn.",
       "difficulty": "medium"
@@ -537,7 +576,12 @@
       "id": "9",
       "grammarNoteId": "5",
       "question": "You ______ smoke in the hospital. It's strictly forbidden.",
-      "options": ["should", "might", "mustn't", "couldn't"],
+      "options": [
+        "should",
+        "might",
+        "mustn't",
+        "couldn't"
+      ],
       "correctAnswer": "mustn't",
       "explanation": "'Mustn't' diễn tả sự cấm đoán mạnh mẽ (không được phép làm).",
       "difficulty": "easy"
@@ -546,13 +590,17 @@
       "id": "10",
       "grammarNoteId": "5",
       "question": "She ______ be at home; her lights are on.",
-      "options": ["must", "should", "can", "would"],
+      "options": [
+        "must",
+        "should",
+        "can",
+        "would"
+      ],
       "correctAnswer": "must",
       "explanation": "'Must' diễn tả suy luận chắc chắn (logical deduction) dựa trên bằng chứng.",
       "difficulty": "medium"
     }
   ],
-
   "progress": [
     {
       "id": "1",
@@ -565,19 +613,52 @@
       "totalCorrect": 279,
       "level": "Intermediate",
       "weeklyActivity": [
-        { "day": "T2", "count": 12 },
-        { "day": "T3", "count": 8 },
-        { "day": "T4", "count": 15 },
-        { "day": "T5", "count": 5 },
-        { "day": "T6", "count": 20 },
-        { "day": "T7", "count": 18 },
-        { "day": "CN", "count": 10 }
+        {
+          "day": "T2",
+          "count": 12
+        },
+        {
+          "day": "T3",
+          "count": 8
+        },
+        {
+          "day": "T4",
+          "count": 15
+        },
+        {
+          "day": "T5",
+          "count": 5
+        },
+        {
+          "day": "T6",
+          "count": 20
+        },
+        {
+          "day": "T7",
+          "count": 18
+        },
+        {
+          "day": "CN",
+          "count": 10
+        }
       ],
       "monthlyRetention": [
-        { "week": "Tuần 1", "rate": 75 },
-        { "week": "Tuần 2", "rate": 80 },
-        { "week": "Tuần 3", "rate": 78 },
-        { "week": "Tuần 4", "rate": 85 }
+        {
+          "week": "Tuần 1",
+          "rate": 75
+        },
+        {
+          "week": "Tuần 2",
+          "rate": 80
+        },
+        {
+          "week": "Tuần 3",
+          "rate": 78
+        },
+        {
+          "week": "Tuần 4",
+          "rate": 85
+        }
       ],
       "dailyPlan": {
         "newWordsTarget": 10,
@@ -598,19 +679,52 @@
       "totalCorrect": 78,
       "level": "Beginner",
       "weeklyActivity": [
-        { "day": "T2", "count": 5 },
-        { "day": "T3", "count": 0 },
-        { "day": "T4", "count": 8 },
-        { "day": "T5", "count": 3 },
-        { "day": "T6", "count": 6 },
-        { "day": "T7", "count": 0 },
-        { "day": "CN", "count": 4 }
+        {
+          "day": "T2",
+          "count": 5
+        },
+        {
+          "day": "T3",
+          "count": 0
+        },
+        {
+          "day": "T4",
+          "count": 8
+        },
+        {
+          "day": "T5",
+          "count": 3
+        },
+        {
+          "day": "T6",
+          "count": 6
+        },
+        {
+          "day": "T7",
+          "count": 0
+        },
+        {
+          "day": "CN",
+          "count": 4
+        }
       ],
       "monthlyRetention": [
-        { "week": "Tuần 1", "rate": 60 },
-        { "week": "Tuần 2", "rate": 65 },
-        { "week": "Tuần 3", "rate": 62 },
-        { "week": "Tuần 4", "rate": 70 }
+        {
+          "week": "Tuần 1",
+          "rate": 60
+        },
+        {
+          "week": "Tuần 2",
+          "rate": 65
+        },
+        {
+          "week": "Tuần 3",
+          "rate": 62
+        },
+        {
+          "week": "Tuần 4",
+          "rate": 70
+        }
       ],
       "dailyPlan": {
         "newWordsTarget": 5,
@@ -631,19 +745,52 @@
       "totalCorrect": 1365,
       "level": "Advanced",
       "weeklyActivity": [
-        { "day": "T2", "count": 25 },
-        { "day": "T3", "count": 22 },
-        { "day": "T4", "count": 30 },
-        { "day": "T5", "count": 28 },
-        { "day": "T6", "count": 35 },
-        { "day": "T7", "count": 20 },
-        { "day": "CN", "count": 15 }
+        {
+          "day": "T2",
+          "count": 25
+        },
+        {
+          "day": "T3",
+          "count": 22
+        },
+        {
+          "day": "T4",
+          "count": 30
+        },
+        {
+          "day": "T5",
+          "count": 28
+        },
+        {
+          "day": "T6",
+          "count": 35
+        },
+        {
+          "day": "T7",
+          "count": 20
+        },
+        {
+          "day": "CN",
+          "count": 15
+        }
       ],
       "monthlyRetention": [
-        { "week": "Tuần 1", "rate": 88 },
-        { "week": "Tuần 2", "rate": 90 },
-        { "week": "Tuần 3", "rate": 92 },
-        { "week": "Tuần 4", "rate": 91 }
+        {
+          "week": "Tuần 1",
+          "rate": 88
+        },
+        {
+          "week": "Tuần 2",
+          "rate": 90
+        },
+        {
+          "week": "Tuần 3",
+          "rate": 92
+        },
+        {
+          "week": "Tuần 4",
+          "rate": 91
+        }
       ],
       "dailyPlan": {
         "newWordsTarget": 20,
@@ -654,7 +801,6 @@
       "lastStudiedAt": "2025-05-29T07:00:00Z"
     }
   ],
-
   "notifications": [
     {
       "id": "1",

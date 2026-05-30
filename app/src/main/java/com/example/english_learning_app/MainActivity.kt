@@ -17,9 +17,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.english_learning_app.ui.home.HomeScreen
+import com.example.english_learning_app.ui.learning.DictationScreen
+import com.example.english_learning_app.ui.learning.FlashcardScreen
+import com.example.english_learning_app.ui.vocabulary.AddEditWordScreen
+import com.example.english_learning_app.ui.vocabulary.WordListScreen
+import com.example.english_learning_app.ui.vocabulary.WordSetListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +46,31 @@ private fun AppNavHost(navController: NavHostController) {
         composable("register") { RegisterScreen(navController) }
         composable("home") { HomeScreen(navController) }
         composable("word_set_list") { WordSetListScreen(navController) }
-        composable("word_list") { WordListScreen(navController) }
-        composable("add_edit_word") { AddEditWordScreen(navController) }
+        composable(
+            route = "word_list/{wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
+            WordListScreen(navController, wordSetId)
+        }
+        composable(
+            route = "add_edit_word/{wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
+            AddEditWordScreen(navController, wordSetId, null)
+        }
+        composable(
+            route = "add_edit_word/{wordSetId}/{wordId}",
+            arguments = listOf(
+                navArgument("wordSetId") { type = NavType.StringType },
+                navArgument("wordId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
+            val wordId = backStackEntry.arguments?.getString("wordId")
+            AddEditWordScreen(navController, wordSetId, wordId)
+        }
         composable("flashcard") { FlashcardScreen(navController) }
         composable("dictation") { DictationScreen(navController) }
         composable("grammar_list") { GrammarListScreen(navController) }
@@ -115,121 +146,6 @@ private fun RegisterScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Register -> Home")
-        }
-    }
-}
-
-@Composable
-private fun HomeScreen(navController: NavHostController) {
-    ScreenColumn(title = "Home Screen") {
-        Button(
-            onClick = { navController.navigate("word_set_list") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Vocabulary: Word Sets")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { navController.navigate("flashcard") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Learning: Flashcard")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { navController.navigate("dictation") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Learning: Dictation")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { navController.navigate("grammar_list") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Grammar")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = { navController.navigate("progress") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Progress")
-        }
-    }
-}
-
-@Composable
-private fun WordSetListScreen(navController: NavHostController) {
-    ScreenColumn(title = "Word Set List Screen") {
-        Button(
-            onClick = { navController.navigate("word_list") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Open Word List")
-        }
-    }
-}
-
-@Composable
-private fun WordListScreen(navController: NavHostController) {
-    ScreenColumn(title = "Word List Screen") {
-        Button(
-            onClick = { navController.navigate("add_edit_word") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Add/Edit Word")
-        }
-    }
-}
-
-@Composable
-private fun AddEditWordScreen(navController: NavHostController) {
-    ScreenColumn(title = "Add/Edit Word Screen") {
-        Button(
-            onClick = {
-                navController.navigate("word_list") {
-                    popUpTo("word_list") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Word List")
-        }
-    }
-}
-
-@Composable
-private fun FlashcardScreen(navController: NavHostController) {
-    ScreenColumn(title = "Flashcard Screen") {
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Home")
-        }
-    }
-}
-
-@Composable
-private fun DictationScreen(navController: NavHostController) {
-    ScreenColumn(title = "Dictation Screen") {
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Home")
         }
     }
 }

@@ -1,6 +1,6 @@
 {
-  "/api/v1/auth/register": "/users",
-  "/api/v1/auth/login": "/users",
+  "/api/v1/auth/register": "/user",
+  "/api/v1/auth/login": "/user",
   "/api/v1/wordsets": "/wordsets",
   "/api/v1/wordsets/:id": "/wordsets/:id",
   "/api/v1/wordsets/:id/words": "/words",
