@@ -27,6 +27,8 @@ import com.example.english_learning_app.ui.auth.RegisterScreen
 import com.example.english_learning_app.ui.grammar.GrammarListScreen
 import com.example.english_learning_app.ui.grammar.GrammarQuizScreen
 import com.example.english_learning_app.ui.grammar.GrammarViewModel
+import com.example.english_learning_app.ui.progress.ProgressScreen
+import com.example.english_learning_app.ui.progress.ProgressViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +78,13 @@ private fun AppNavHost(navController: NavHostController) {
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        composable("progress") { ProgressScreen(navController) }
+        composable("progress") { 
+            val progressViewModel: ProgressViewModel = viewModel()
+            ProgressScreen(
+                viewModel = progressViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -217,21 +225,4 @@ private fun DictationScreen(navController: NavHostController) {
 
 
 
-
-
-@Composable
-private fun ProgressScreen(navController: NavHostController) {
-    ScreenColumn(title = "Progress Screen") {
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Home")
-        }
-    }
-}
+
