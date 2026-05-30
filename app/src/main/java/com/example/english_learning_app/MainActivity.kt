@@ -25,6 +25,7 @@ import com.example.english_learning_app.ui.auth.AuthViewModel
 import com.example.english_learning_app.ui.auth.LoginScreen
 import com.example.english_learning_app.ui.auth.RegisterScreen
 import com.example.english_learning_app.ui.grammar.GrammarListScreen
+import com.example.english_learning_app.ui.grammar.GrammarQuizScreen
 import com.example.english_learning_app.ui.grammar.GrammarViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +69,13 @@ private fun AppNavHost(navController: NavHostController) {
             )
         }
         composable("add_edit_grammar") { AddEditGrammarScreen(navController) }
-        composable("grammar_quiz") { GrammarQuizScreen(navController) }
+        composable("grammar_quiz") { 
+            val grammarViewModel: GrammarViewModel = viewModel()
+            GrammarQuizScreen(
+                viewModel = grammarViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
         composable("progress") { ProgressScreen(navController) }
     }
 }
@@ -210,39 +217,7 @@ private fun DictationScreen(navController: NavHostController) {
 
 
 
-@Composable
-private fun AddEditGrammarScreen(navController: NavHostController) {
-    ScreenColumn(title = "Add/Edit Grammar Screen") {
-        Button(
-            onClick = {
-                navController.navigate("grammar_list") {
-                    popUpTo("grammar_list") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Grammar List")
-        }
-    }
-}
 
-@Composable
-private fun GrammarQuizScreen(navController: NavHostController) {
-    ScreenColumn(title = "Grammar Quiz Screen") {
-        Button(
-            onClick = {
-                navController.navigate("grammar_list") {
-                    popUpTo("grammar_list") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Grammar List")
-        }
-    }
-}
 
 @Composable
 private fun ProgressScreen(navController: NavHostController) {
