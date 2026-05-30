@@ -1,5 +1,5 @@
 {
-  "user": [
+  "users": [
     {
       "id": "1",
       "name": "Nguyen Van An",
@@ -9,6 +9,78 @@
       "level": "B1",
       "avatarUrl": "https://i.pravatar.cc/150?img=1",
       "createdAt": "2025-01-10T08:00:00Z"
+    },
+    {
+      "id": "2",
+      "name": "Tran Thi Bao",
+      "email": "bao.tran@email.com",
+      "password": "hashed_password_456",
+      "goal": "Giao tiếp",
+      "level": "A2",
+      "avatarUrl": "https://i.pravatar.cc/150?img=5",
+      "createdAt": "2025-02-15T09:30:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Le Minh Duc",
+      "email": "duc.le@email.com",
+      "password": "hashed_password_789",
+      "goal": "TOEIC",
+      "level": "B2",
+      "avatarUrl": "https://i.pravatar.cc/150?img=3",
+      "createdAt": "2025-03-01T07:00:00Z"
+    },
+    {
+      "email": "an.nguyen@email.com",
+      "password": "hashed_password_123",
+      "id": "U78vEBG"
+    },
+    {
+      "email": "an.nguyen@email.com",
+      "password": "hashed_password_123",
+      "id": "a84A9te"
+    },
+    {
+      "email": "daominhnhut2017@gmail.com",
+      "name": "DaoMinhNhut",
+      "password": "1",
+      "id": "zALHcH1"
+    },
+    {
+      "email": "daominhnhut2017@gmail.com\t",
+      "password": "1",
+      "id": "045zOZk"
+    },
+    {
+      "email": "an.nguyen@email.com",
+      "password": "hashed_password_123",
+      "id": "3WqnPyK"
+    },
+    {
+      "email": "an.nguyen@email.com",
+      "password": "hashed_password_123",
+      "id": "S63ViM9"
+    },
+    {
+      "email": "an.nguyen@email.com",
+      "password": "hashed_password_123",
+      "id": "33m5VFq"
+    },
+    {
+      "email": "nhut@gmail.com",
+      "goal": "IELTS",
+      "level": "A1",
+      "name": "nhut\t",
+      "password": "123456",
+      "id": "EvGf4ed"
+    },
+    {
+      "email": "nhut1@gmail.com",
+      "goal": "TOEIC",
+      "level": "A1",
+      "name": "daominhnhut",
+      "password": "123456",
+      "id": "cJPEsIr"
     }
   ],
   "wordsets": [
@@ -69,12 +141,23 @@
   ],
   "words": [
     {
-      "example": "The politician gave an ambiguous answer that satisfied no one.",
-      "meaning": "mơ hồ, không rõ ràng",
+      "id": "1",
+      "wordsetId": "1",
       "userId": "1",
       "word": "ambiguous",
-      "wordsetId": "1",
-      "id": "1"
+      "pronunciation": "/æmˈbɪɡjuəs/",
+      "partOfSpeech": "adjective",
+      "meaning": "mơ hồ, không rõ ràng",
+      "description": "Open to more than one interpretation; not having one obvious meaning.",
+      "example": "The politician gave an ambiguous answer that satisfied no one.",
+      "collocation": "ambiguous statement, remain ambiguous, deliberately ambiguous",
+      "relatedWords": "ambiguity (n), ambiguously (adv), unambiguous (adj)",
+      "note": "Thường xuất hiện trong IELTS Reading và Writing Task 2",
+      "ease_factor": 2.5,
+      "interval": 1,
+      "repetitions": 0,
+      "next_review_date": "2025-06-01T00:00:00Z",
+      "createdAt": "2025-01-11T10:00:00Z"
     },
     {
       "id": "2",
@@ -134,12 +217,23 @@
       "createdAt": "2025-01-14T10:00:00Z"
     },
     {
-      "example": "There has been a substantial increase in the number of online learners.",
-      "meaning": "đáng kể",
+      "id": "5",
+      "wordsetId": "1",
       "userId": "1",
       "word": "substantial",
-      "wordsetId": "1",
-      "id": "5"
+      "pronunciation": "/səbˈstænʃəl/",
+      "partOfSpeech": "adjective",
+      "meaning": "đáng kể",
+      "description": "Of considerable importance, size, or worth.",
+      "example": "There has been a substantial increase in the number of online learners.",
+      "collocation": "substantial evidence, substantial amount, substantial progress",
+      "relatedWords": "substantially (adv), substance (n)",
+      "note": "Từ hay được dùng thay cho 'big' hoặc 'large' trong IELTS Academic",
+      "ease_factor": 2.5,
+      "interval": 1,
+      "repetitions": 0,
+      "next_review_date": "2025-05-30T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
     },
     {
       "id": "6",
@@ -349,73 +443,9 @@
       "repetitions": 0,
       "next_review_date": "2025-05-30T00:00:00Z",
       "createdAt": "2025-02-23T10:00:00Z"
-    },
-    {
-      "meaning": "",
-      "userId": "1",
-      "word": "",
-      "wordsetId": "1",
-      "id": "qdwuRdU"
     }
   ],
   "grammar_notes": [
-    {
-      "id": "1",
-      "userId": "1",
-      "title": "Present Perfect Tense",
-      "category": "Thì động từ",
-      "formula": "Subject + have/has + Past Participle (V3)",
-      "explanation": "Thì hiện tại hoàn thành diễn tả hành động đã xảy ra trong quá khứ nhưng có liên quan hoặc ảnh hưởng đến hiện tại. Không cần biết chính xác thời điểm xảy ra.",
-      "example": "I have just finished my homework. / She has lived in Hanoi for 5 years.",
-      "commonMistakes": "Không dùng với các trạng từ chỉ thời gian cụ thể như yesterday, last year, ago.",
-      "tags": [
-        "IELTS",
-        "Thường gặp",
-        "Thì động từ"
-      ],
-      "ease_factor": 2.3,
-      "interval": 3,
-      "next_review_date": "2025-06-03T00:00:00Z",
-      "createdAt": "2025-01-15T10:00:00Z"
-    },
-    {
-      "id": "2",
-      "userId": "1",
-      "title": "Conditional Sentences Type 2",
-      "category": "Câu điều kiện",
-      "formula": "If + Subject + V2/were, Subject + would/could/might + V-bare",
-      "explanation": "Câu điều kiện loại 2 diễn tả tình huống giả định, không có thực ở hiện tại hoặc tương lai.",
-      "example": "If I were a millionaire, I would travel the world.",
-      "commonMistakes": "Dùng 'was' thay 'were' trong văn viết trang trọng.",
-      "tags": [
-        "IELTS",
-        "Ngữ pháp nâng cao",
-        "Câu điều kiện"
-      ],
-      "ease_factor": 1.9,
-      "interval": 1,
-      "next_review_date": "2025-05-29T00:00:00Z",
-      "createdAt": "2025-01-20T10:00:00Z"
-    },
-    {
-      "id": "3",
-      "userId": "1",
-      "title": "Passive Voice",
-      "category": "Câu bị động",
-      "formula": "Subject + to be (chia theo thì) + Past Participle (V3) + (by + agent)",
-      "explanation": "Câu bị động được dùng khi chúng ta muốn nhấn mạnh vào đối tượng bị tác động thay vì người thực hiện hành động.",
-      "example": "The report was written by the manager. / English is spoken in many countries.",
-      "commonMistakes": "Không chia 'to be' đúng theo thì.",
-      "tags": [
-        "IELTS",
-        "TOEIC",
-        "Academic Writing"
-      ],
-      "ease_factor": 2.5,
-      "interval": 6,
-      "next_review_date": "2025-06-08T00:00:00Z",
-      "createdAt": "2025-02-01T10:00:00Z"
-    },
     {
       "id": "4",
       "userId": "1",
@@ -797,6 +827,53 @@
       "lastStudiedAt": "2025-05-29T07:00:00Z"
     }
   ],
+  "progress_history": [
+    {
+      "id": "h1",
+      "userId": "1",
+      "date": "2024-05-29",
+      "wordsLearned": 15,
+      "grammarCompleted": 2,
+      "quizScore": 5,
+      "studyTimeMinutes": 45
+    },
+    {
+      "id": "h2",
+      "userId": "1",
+      "date": "2024-05-28",
+      "wordsLearned": 10,
+      "grammarCompleted": 1,
+      "quizScore": 4,
+      "studyTimeMinutes": 30
+    },
+    {
+      "id": "h3",
+      "userId": "1",
+      "date": "2024-05-27",
+      "wordsLearned": 20,
+      "grammarCompleted": 3,
+      "quizScore": 5,
+      "studyTimeMinutes": 60
+    },
+    {
+      "id": "h4",
+      "userId": "1",
+      "date": "2024-05-26",
+      "wordsLearned": 5,
+      "grammarCompleted": 0,
+      "quizScore": 3,
+      "studyTimeMinutes": 15
+    },
+    {
+      "id": "h5",
+      "userId": "1",
+      "date": "2024-05-25",
+      "wordsLearned": 12,
+      "grammarCompleted": 1,
+      "quizScore": 4,
+      "studyTimeMinutes": 40
+    }
+  ],
   "notifications": [
     {
       "id": "1",
@@ -830,6 +907,73 @@
       "emailNotificationEnabled": true,
       "streakReminderEnabled": true,
       "updatedAt": "2025-04-20T07:00:00Z"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "1",
+      "grammarNoteId": "1",
+      "question": "He ___ to school every day.",
+      "options": [
+        "go",
+        "goes",
+        "going",
+        "went"
+      ],
+      "correctAnswer": "goes",
+      "explanation": "Với chủ ngữ số ít (He) trong thì hiện tại đơn, động từ phải thêm s/es."
+    },
+    {
+      "id": "2",
+      "grammarNoteId": "2",
+      "question": "They ___ watching TV now.",
+      "options": [
+        "is",
+        "am",
+        "are",
+        "do"
+      ],
+      "correctAnswer": "are",
+      "explanation": "Chủ ngữ số nhiều (They) đi với 'are' trong thì hiện tại tiếp diễn."
+    },
+    {
+      "id": "3",
+      "grammarNoteId": "1",
+      "question": "___ you like apple?",
+      "options": [
+        "Do",
+        "Does",
+        "Are",
+        "Is"
+      ],
+      "correctAnswer": "Do",
+      "explanation": "Câu hỏi với động từ thường ở hiện tại đơn dùng trợ động từ Do/Does."
+    },
+    {
+      "id": "4",
+      "grammarNoteId": "2",
+      "question": "I ___ doing my homework right now.",
+      "options": [
+        "is",
+        "am",
+        "are",
+        "do"
+      ],
+      "correctAnswer": "am",
+      "explanation": "I đi với to be 'am' trong thì tiếp diễn."
+    },
+    {
+      "id": "5",
+      "grammarNoteId": "1",
+      "question": "She ___ play football.",
+      "options": [
+        "don't",
+        "doesn't",
+        "not",
+        "isn't"
+      ],
+      "correctAnswer": "doesn't",
+      "explanation": "Phủ định hiện tại đơn với chủ ngữ số ít là doesn't + V_inf."
     }
   ]
 }
