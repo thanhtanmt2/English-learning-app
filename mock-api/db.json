@@ -632,7 +632,171 @@
       "lastStudiedAt": "2025-05-29T08:30:00Z"
     }
   ],
-  "progress_history": [],
-  "notifications": [],
-  "quiz": []
+  "progress_history": [
+    {
+      "id": "h1",
+      "userId": "1",
+      "date": "2026-05-30",
+      "wordsLearned": 15,
+      "grammarCompleted": 2,
+      "quizScore": 5,
+      "studyTimeMinutes": 45
+    },
+    {
+      "id": "h2",
+      "userId": "1",
+      "date": "2026-05-29",
+      "wordsLearned": 10,
+      "grammarCompleted": 1,
+      "quizScore": 4,
+      "studyTimeMinutes": 30
+    },
+    {
+      "id": "h3",
+      "userId": "1",
+      "date": "2026-05-28",
+      "wordsLearned": 20,
+      "grammarCompleted": 3,
+      "quizScore": 5,
+      "studyTimeMinutes": 60
+    },
+    {
+      "id": "h4",
+      "userId": "1",
+      "date": "2026-05-27",
+      "wordsLearned": 5,
+      "grammarCompleted": 0,
+      "quizScore": 3,
+      "studyTimeMinutes": 15
+    },
+    {
+      "id": "h5",
+      "userId": "1",
+      "date": "2026-05-26",
+      "wordsLearned": 12,
+      "grammarCompleted": 1,
+      "quizScore": 4,
+      "studyTimeMinutes": 40
+    },
+    {
+      "id": "h6",
+      "userId": "1",
+      "date": "2026-05-25",
+      "wordsLearned": 8,
+      "grammarCompleted": 1,
+      "quizScore": 5,
+      "studyTimeMinutes": 25
+    },
+    {
+      "id": "h7",
+      "userId": "1",
+      "date": "2026-05-24",
+      "wordsLearned": 20,
+      "grammarCompleted": 2,
+      "quizScore": 4,
+      "studyTimeMinutes": 50
+    }
+  ],
+  "notifications": [
+    {
+      "id": "1",
+      "userId": "1",
+      "dailyReminderEnabled": true,
+      "dailyReminderTime": "08:00",
+      "reviewReminderEnabled": true,
+      "pushNotificationEnabled": true,
+      "emailNotificationEnabled": false,
+      "streakReminderEnabled": true,
+      "updatedAt": "2025-05-01T08:00:00Z"
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "dailyReminderEnabled": true,
+      "dailyReminderTime": "20:00",
+      "reviewReminderEnabled": false,
+      "pushNotificationEnabled": true,
+      "emailNotificationEnabled": true,
+      "streakReminderEnabled": false,
+      "updatedAt": "2025-05-10T20:00:00Z"
+    },
+    {
+      "id": "3",
+      "userId": "3",
+      "dailyReminderEnabled": true,
+      "dailyReminderTime": "07:00",
+      "reviewReminderEnabled": true,
+      "pushNotificationEnabled": true,
+      "emailNotificationEnabled": true,
+      "streakReminderEnabled": true,
+      "updatedAt": "2025-04-20T07:00:00Z"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "1",
+      "grammarNoteId": "1",
+      "question": "He ___ to school every day.",
+      "options": [
+        "go",
+        "goes",
+        "going",
+        "went"
+      ],
+      "correctAnswer": "goes",
+      "explanation": "Với chủ ngữ số ít (He) trong thì hiện tại đơn, động từ phải thêm s/es."
+    },
+    {
+      "id": "2",
+      "grammarNoteId": "2",
+      "question": "They ___ watching TV now.",
+      "options": [
+        "is",
+        "am",
+        "are",
+        "do"
+      ],
+      "correctAnswer": "are",
+      "explanation": "Chủ ngữ số nhiều (They) đi với 'are' trong thì hiện tại tiếp diễn."
+    },
+    {
+      "id": "3",
+      "grammarNoteId": "1",
+      "question": "___ you like apple?",
+      "options": [
+        "Do",
+        "Does",
+        "Are",
+        "Is"
+      ],
+      "correctAnswer": "Do",
+      "explanation": "Câu hỏi với động từ thường ở hiện tại đơn dùng trợ động từ Do/Does."
+    },
+    {
+      "id": "4",
+      "grammarNoteId": "2",
+      "question": "I ___ doing my homework right now.",
+      "options": [
+        "is",
+        "am",
+        "are",
+        "do"
+      ],
+      "correctAnswer": "am",
+      "explanation": "I đi với to be 'am' trong thì tiếp diễn."
+    },
+    {
+      "id": "5",
+      "grammarNoteId": "1",
+      "question": "She ___ play football.",
+      "options": [
+        "don't",
+        "doesn't",
+        "not",
+        "isn't"
+      ],
+      "correctAnswer": "doesn't",
+      "explanation": "Phủ định hiện tại đơn với chủ ngữ số ít là doesn't + V_inf."
+    }
+  ]
 }

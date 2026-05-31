@@ -3,37 +3,33 @@ package com.example.english_learning_app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 
-// Auth (Nhut_frontend)
+// Auth
 import com.example.english_learning_app.ui.auth.AuthViewModel
 import com.example.english_learning_app.ui.auth.LoginScreen
 import com.example.english_learning_app.ui.auth.RegisterScreen
 import com.example.english_learning_app.ui.auth.ProfileScreen
 
-// Grammar (Nhut_frontend)
+// Grammar
 import com.example.english_learning_app.ui.grammar.*
 
-// Progress (Nhut_frontend)
+// Progress
 import com.example.english_learning_app.ui.progress.ProgressScreen
 import com.example.english_learning_app.ui.progress.ProgressViewModel
+import com.example.english_learning_app.ui.progress.ProgressDetailScreen
 
 // Home & Vocabulary (tan_frontend)
 import com.example.english_learning_app.ui.home.HomeScreen
@@ -43,6 +39,21 @@ import com.example.english_learning_app.ui.vocabulary.AddEditWordScreen
 import com.example.english_learning_app.ui.vocabulary.AddWordSetScreen
 import com.example.english_learning_app.ui.vocabulary.WordListScreen
 import com.example.english_learning_app.ui.vocabulary.WordSetListScreen
+
+// Me
+import com.example.english_learning_app.ui.me.MeScreen
+
+// ===================== Bottom Nav Items =====================
+enum class BottomNavItem(
+    val route: String,
+    val label: String,
+    val icon: ImageVector
+) {
+    HOME("home", "Home", Icons.Default.Home),
+    VOCABULARY("vocabulary", "Từ vựng", Icons.Default.MenuBook),
+    GRAMMAR("grammar", "Ngữ pháp", Icons.Default.Edit),
+    ME("me", "Tôi", Icons.Default.Person)
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,18 +67,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
-    val grammarViewModel: GrammarViewModel = viewModel()
-
+fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
     NavHost(navController = navController, startDestination = "login") {
 
-        // ===================== AUTH (Nhut_frontend) =====================
+        // ===================== AUTH (không có bottom bar) =====================
         composable("login") {
             LoginScreen(
                 viewModel = authViewModel,
                 onNavigateToRegister = { navController.navigate("register") },
                 onNavigateToHome = {
-                    navController.navigate("home") {
+                    navController.navigate("main") {
                         popUpTo("login") { inclusive = true }
                     }
                 }
@@ -79,111 +88,27 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
                 onNavigateToLogin = { navController.popBackStack() }
             )
         }
-        composable("profile") {
-            ProfileScreen(
-                viewModel = authViewModel,
-                onNavigateBack = { navController.popBackStack() }
-            )
+
+        // ===================== MAIN (có Bottom Nav Bar) =====================
+        composable("main") {
+            MainWithBottomNav(authViewModel = authViewModel, rootNavController = navController)
         }
 
-        // ===================== HOME (kết hợp cả hai) =====================
-        composable("home") {
-            HomeScreen(navController = navController)
-        }
+        // ===================== Sub-screens (không có bottom bar) =====================
 
-        // ===================== VOCABULARY (tan_frontend) =====================
-        composable(
-            route = "word_set_list?refresh={refresh}",
-            arguments = listOf(navArgument("refresh") {
-                type = NavType.BoolType
-                defaultValue = false
-            })
-        ) { backStackEntry ->
-            val refresh = backStackEntry.arguments?.getBoolean("refresh") ?: false
-            WordSetListScreen(navController, refresh)
-        }
-        composable("add_word_set") { AddWordSetScreen(navController) }
-        composable(
-            route = "word_list/{wordSetId}",
-            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
-            WordListScreen(navController, wordSetId)
-        }
-        composable(
-            route = "add_edit_word/{wordSetId}",
-            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
-            AddEditWordScreen(navController, wordSetId, null)
-        }
-        composable(
-            route = "add_edit_word/{wordSetId}/{wordId}",
-            arguments = listOf(
-                navArgument("wordSetId") { type = NavType.StringType },
-                navArgument("wordId") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
-            val wordId = backStackEntry.arguments?.getString("wordId")
-            AddEditWordScreen(navController, wordSetId, wordId)
-        }
-
-        // ===================== LEARNING (tan_frontend) =====================
-        composable(
-            route = "flashcard?wordSetId={wordSetId}",
-            arguments = listOf(navArgument("wordSetId") {
-                type = NavType.StringType
-                defaultValue = ""
-            })
-        ) { backStackEntry ->
-            val wordSetId = backStackEntry.arguments?.getString("wordSetId")
-            FlashcardScreen(navController, wordSetId)
-        }
-        composable(
-            route = "dictation?wordSetId={wordSetId}",
-            arguments = listOf(navArgument("wordSetId") {
-                type = NavType.StringType
-                defaultValue = ""
-            })
-        ) { backStackEntry ->
-            val wordSetId = backStackEntry.arguments?.getString("wordSetId")
-            DictationScreen(navController, wordSetId)
-        }
-
-        // ===================== GRAMMAR (Nhut_frontend) =====================
-        composable("grammar_list") {
-            GrammarListScreen(
-                viewModel = grammarViewModel,
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToAdd = { navController.navigate("add_edit_grammar") },
-                onNavigateToEdit = { id -> navController.navigate("add_edit_grammar?id=$id") },
-                onNavigateToQuiz = { navController.navigate("grammar_quiz") },
-                onNavigateToDetail = { note ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set("note", note)
-                    navController.navigate("grammar_detail")
-                }
-            )
-        }
+        // Grammar sub-screens
         composable(
             route = "add_edit_grammar?id={id}",
             arguments = listOf(navArgument("id") {
-                nullable = true
-                defaultValue = null
-                type = NavType.StringType
+                nullable = true; defaultValue = null; type = NavType.StringType
             })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
+            val grammarViewModel: GrammarViewModel = viewModel()
             AddEditGrammarScreen(
                 navController = navController,
                 viewModel = grammarViewModel,
                 noteId = id
-            )
-        }
-        composable("grammar_quiz") {
-            GrammarQuizScreen(
-                viewModel = grammarViewModel,
-                onNavigateBack = { navController.popBackStack() }
             )
         }
         composable("grammar_detail") {
@@ -193,26 +118,157 @@ private fun AppNavHost(navController: NavHostController, authViewModel: AuthView
                 GrammarDetailScreen(note = note, onNavigateBack = { navController.popBackStack() })
             }
         }
+        composable("grammar_quiz") {
+            val grammarViewModel: GrammarViewModel = viewModel()
+            GrammarQuizScreen(
+                viewModel = grammarViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
 
-        // ===================== PROGRESS (Nhut_frontend) =====================
+        // Progress sub-screen
         composable("progress") {
             val progressViewModel: ProgressViewModel = viewModel()
             ProgressScreen(
                 viewModel = progressViewModel,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToDetail = { date ->
-                    navController.navigate("progress_detail/$date")
-                }
+                onNavigateToDetail = { date -> navController.navigate("progress_detail/$date") }
             )
         }
         composable("progress_detail/{date}") { backStackEntry ->
             val date = backStackEntry.arguments?.getString("date")
-            Surface(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    TextButton(onClick = { navController.popBackStack() }) { Text("⬅ Quay lại") }
-                    Text("Chi tiết ngày: $date", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                    Text("Chức năng đang phát triển...")
+            val progressViewModel: ProgressViewModel = viewModel()
+            ProgressDetailScreen(
+                date = date,
+                viewModel = progressViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        // Vocabulary sub-screens
+        composable(
+            route = "word_list/{wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            WordListScreen(navController, backStackEntry.arguments?.getString("wordSetId") ?: "")
+        }
+        composable(
+            route = "add_edit_word/{wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            AddEditWordScreen(navController, backStackEntry.arguments?.getString("wordSetId") ?: "", null)
+        }
+        composable(
+            route = "add_edit_word/{wordSetId}/{wordId}",
+            arguments = listOf(
+                navArgument("wordSetId") { type = NavType.StringType },
+                navArgument("wordId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            AddEditWordScreen(
+                navController,
+                backStackEntry.arguments?.getString("wordSetId") ?: "",
+                backStackEntry.arguments?.getString("wordId")
+            )
+        }
+        composable(
+            route = "flashcard?wordSetId={wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType; defaultValue = "" })
+        ) { backStackEntry ->
+            FlashcardScreen(navController, backStackEntry.arguments?.getString("wordSetId"))
+        }
+        composable(
+            route = "dictation?wordSetId={wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType; defaultValue = "" })
+        ) { backStackEntry ->
+            DictationScreen(navController, backStackEntry.arguments?.getString("wordSetId"))
+        }
+        composable("add_word_set") { AddWordSetScreen(navController) }
+
+        // Profile edit
+        composable("edit_profile") {
+            ProfileScreen(
+                viewModel = authViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+    }
+}
+
+// ===================== Main Shell với Bottom Nav =====================
+@Composable
+fun MainWithBottomNav(authViewModel: AuthViewModel, rootNavController: NavHostController) {
+    val bottomNavController = rememberNavController()
+    val grammarViewModel: GrammarViewModel = viewModel()
+
+    // Lắng nghe route hiện tại để tô sáng đúng tab
+    val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar(tonalElevation = 4.dp) {
+                BottomNavItem.values().forEach { item ->
+                    NavigationBarItem(
+                        icon = { Icon(item.icon, contentDescription = item.label) },
+                        label = { Text(item.label) },
+                        selected = currentRoute == item.route,
+                        onClick = {
+                            bottomNavController.navigate(item.route) {
+                                // Tránh chồng chất stack khi bấm nhiều lần
+                                popUpTo(bottomNavController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
                 }
+            }
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = bottomNavController,
+            startDestination = BottomNavItem.HOME.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            // Tab HOME
+            composable(BottomNavItem.HOME.route) {
+                HomeScreen(navController = rootNavController, authViewModel = authViewModel)
+            }
+
+            // Tab VOCABULARY
+            composable(BottomNavItem.VOCABULARY.route) {
+                WordSetListScreen(navController = rootNavController, refresh = false)
+            }
+
+            // Tab GRAMMAR
+            composable(BottomNavItem.GRAMMAR.route) {
+                GrammarListScreen(
+                    viewModel = grammarViewModel,
+                    onNavigateBack = {},  // Không cần back vì đây là tab root
+                    onNavigateToAdd = { rootNavController.navigate("add_edit_grammar") },
+                    onNavigateToEdit = { id -> rootNavController.navigate("add_edit_grammar?id=$id") },
+                    onNavigateToQuiz = { rootNavController.navigate("grammar_quiz") },
+                    onNavigateToDetail = { note ->
+                        rootNavController.currentBackStackEntry?.savedStateHandle?.set("note", note)
+                        rootNavController.navigate("grammar_detail")
+                    }
+                )
+            }
+
+            // Tab ME
+            composable(BottomNavItem.ME.route) {
+                MeScreen(
+                    authViewModel = authViewModel,
+                    onNavigateToEditProfile = { rootNavController.navigate("edit_profile") },
+                    onLogout = {
+                        rootNavController.navigate("login") {
+                            popUpTo("main") { inclusive = true }
+                        }
+                    }
+                )
             }
         }
     }

@@ -154,11 +154,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             try {
-                // Giả định API cho phép PATCH hoặc PUT để sửa User
-                // Lưu ý: ApiService.kt cần có hàm updateProfile
                 val updatedUser = user.copy(name = newName, goal = newGoal, level = newLevel)
                 RetrofitClient.apiService.updateUser(user.id, updatedUser)
-                
                 currentUser.value = updatedUser
                 isUpdateSuccess.value = true
                 errorMessage.value = "Cập nhật thành công!"
@@ -168,5 +165,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 isLoading.value = false
             }
         }
+    }
+
+    // Hàm đăng xuất - xóa token và reset trạng thái
+    fun logout() {
+        tokenManager.clearToken()
+        currentUser.value = null
+        email.value = ""
+        password.value = ""
+        name.value = ""
+        errorMessage.value = ""
+        isLoginSuccess.value = false
+        isRegisterSuccess.value = false
     }
 }
