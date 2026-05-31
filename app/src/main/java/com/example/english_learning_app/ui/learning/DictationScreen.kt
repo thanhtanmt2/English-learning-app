@@ -1,6 +1,7 @@
 package com.example.english_learning_app.ui.learning
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,7 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.english_learning_app.ui.common.rememberTtsSpeaker
@@ -56,8 +65,23 @@ fun DictationScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Text(text = "Dictation", fontSize = 22.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+            IconButton(onClick = {
+                navController.navigate("main") {
+                    popUpTo("main") { inclusive = false }
+                    launchSingleTop = true
+                }
+            }) {
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
+            }
+            IconButton(onClick = { viewModel.clearSelection() }) {
+                Icon(imageVector = Icons.Filled.SwapHoriz, contentDescription = "Word set")
+            }
+        }
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = uiState.wordSet?.name ?: "Chon bo tu de bat dau",
             style = MaterialTheme.typography.bodySmall,
@@ -104,18 +128,27 @@ fun DictationScreen(
         }
 
         val word = uiState.words.getOrNull(uiState.currentIndex)
-        Button(
-            onClick = { speak(word?.word ?: "") },
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceEvenly
         ) {
-            Text(text = "Listen")
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = { viewModel.clearSelection() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Change word set")
+            IconButton(onClick = {
+                viewModel.previousWord()
+                answer = ""
+                feedback = null
+            }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.NavigateBefore, contentDescription = "Previous")
+            }
+            IconButton(onClick = { speak(word?.word ?: "") }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Listen")
+            }
+            IconButton(onClick = {
+                viewModel.nextWord()
+                answer = ""
+                feedback = null
+            }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.NavigateNext, contentDescription = "Next")
+            }
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -151,29 +184,6 @@ fun DictationScreen(
         if (feedback != null) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = feedback ?: "", color = Color(0xFF2B2D42))
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = {
-                viewModel.nextWord()
-                answer = ""
-                feedback = null
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Next")
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Back to Home")
         }
     }
 }

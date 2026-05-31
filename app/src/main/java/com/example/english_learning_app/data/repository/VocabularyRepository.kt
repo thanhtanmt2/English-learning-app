@@ -18,12 +18,32 @@ class VocabularyRepository(private val apiService: MockApiService) {
         return apiService.getWordSets(userId = userId)
     }
 
-    suspend fun loadWords(userId: String, wordSetId: String): List<Word> {
+    suspend fun loadWords(userId: String, wordSetId: String? = null): List<Word> {
         return apiService.getWords(wordSetId = wordSetId, userId = userId)
+    }
+
+    suspend fun loadAllWords(userId: String): List<Word> {
+        return apiService.getWords(userId = userId)
+    }
+
+    suspend fun loadWordsByWordSet(wordSetId: String): List<Word> {
+        return apiService.getWords(wordSetId = wordSetId)
     }
 
     suspend fun createWordSet(payload: WordSetPayload): WordSet {
         return apiService.createWordSet(payload)
+    }
+
+    suspend fun loadWordSet(wordSetId: String): WordSet {
+        return apiService.getWordSet(id = wordSetId)
+    }
+
+    suspend fun updateWordSet(wordSetId: String, payload: WordSetPayload): WordSet {
+        return apiService.updateWordSet(id = wordSetId, payload = payload)
+    }
+
+    suspend fun deleteWordSet(wordSetId: String) {
+        apiService.deleteWordSet(id = wordSetId)
     }
 
     suspend fun loadWord(wordId: String): Word {

@@ -70,6 +70,13 @@ class LearningViewModel : ViewModel() {
         val nextIndex = (state.currentIndex + 1) % state.words.size
         _uiState.value = state.copy(currentIndex = nextIndex)
     }
+
+    fun previousWord() {
+        val state = _uiState.value
+        if (state.words.isEmpty()) return
+        val prevIndex = if (state.currentIndex - 1 < 0) state.words.size - 1 else state.currentIndex - 1
+        _uiState.value = state.copy(currentIndex = prevIndex)
+    }
 }
 
 data class LearningUiState(

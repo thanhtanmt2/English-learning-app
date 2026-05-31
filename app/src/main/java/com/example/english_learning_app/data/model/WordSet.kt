@@ -6,5 +6,6 @@ data class WordSet(
     val name: String,
     val description: String,
     val totalWords: Int,
-    val learnedWords: Int
+    val learnedWords: Int,
+    val tags: List<String> = emptyList()
 )
