@@ -15,5 +15,7 @@
   "/api/v1/progress": "/progress",
   "/api/v1/progress_history": "/progress_history",
   "/api/v1/notifications": "/notifications",
-  "/api/v1/notifications/:id": "/notifications/:id"
+  "/api/v1/notifications/:id": "/notifications/:id",
+  "/api/v1/in-app-notifications": "/in_app_notifications",
+  "/api/v1/in-app-notifications/:id": "/in_app_notifications/:id"
 }

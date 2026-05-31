@@ -1,6 +1,7 @@
 package com.example.english_learning_app.ui.learning
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,7 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.english_learning_app.ui.common.rememberTtsSpeaker
@@ -58,8 +67,23 @@ fun DictationScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Text(text = "Dictation", fontSize = 22.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+            IconButton(onClick = {
+                navController.navigate("main") {
+                    popUpTo("main") { inclusive = false }
+                    launchSingleTop = true
+                }
+            }) {
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
+            }
+            IconButton(onClick = { viewModel.clearSelection() }) {
+                Icon(imageVector = Icons.Filled.SwapHoriz, contentDescription = "Word set")
+            }
+        }
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = uiState.wordSet?.name ?: "Chon bo tu de bat dau",
             style = MaterialTheme.typography.bodySmall,
@@ -109,7 +133,6 @@ fun DictationScreen(
         }
 
         val word = uiState.words.getOrNull(uiState.currentIndex)
-
         if (word == null && !uiState.isLoading) {
             Text(text = "Bộ từ này hiện chưa có từ vựng nào.", color = Color.Gray)
             Spacer(modifier = Modifier.height(16.dp))
@@ -119,11 +142,27 @@ fun DictationScreen(
             return@Column
         }
 
-        Button(
-            onClick = { speak(word?.word ?: "") },
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceEvenly
         ) {
-            Text(text = "Listen")
+            IconButton(onClick = {
+                viewModel.previousWord()
+                answer = ""
+                feedback = null
+            }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.NavigateBefore, contentDescription = "Previous")
+            }
+            IconButton(onClick = { speak(word?.word ?: "") }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Listen")
+            }
+            IconButton(onClick = {
+                viewModel.nextWord()
+                answer = ""
+                feedback = null
+            }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.NavigateNext, contentDescription = "Next")
+            }
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -167,18 +206,6 @@ fun DictationScreen(
                 color = if (isCorrect) Color(0xFF2D6A4F) else Color(0xFFB00020),
                 fontWeight = FontWeight.Bold
             )
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = {
-                viewModel.nextWord()
-                answer = ""
-                feedback = null
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color(0xFF4A4E69))
-        ) {
-            Text(text = "Next Word")
         }
         Spacer(modifier = Modifier.height(12.dp))
         androidx.compose.material3.TextButton(

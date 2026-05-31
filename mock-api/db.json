@@ -3,8 +3,8 @@
     {
       "id": "1",
       "name": "Nguyen Van An",
-      "email": "an.nguyen@email.com",
-      "password": "hashed_password_123",
+      "email": "hehe@gmail.com",
+      "password": "hehe",
       "goal": "IELTS",
       "level": "B1",
       "avatarUrl": "https://i.pravatar.cc/150?img=1",
@@ -111,23 +111,12 @@
   ],
   "words": [
     {
-      "id": "1",
-      "wordsetId": "1",
+      "example": "The politician gave an ambiguous answer that satisfied no one.",
+      "meaning": "mơ hồ, không rõ ràng",
       "userId": "1",
       "word": "ambiguous",
-      "pronunciation": "/æmˈbɪɡjuəs/",
-      "partOfSpeech": "adjective",
-      "meaning": "mơ hồ, không rõ ràng",
-      "description": "Open to more than one interpretation; not having one obvious meaning.",
-      "example": "The politician gave an ambiguous answer that satisfied no one.",
-      "collocation": "ambiguous statement, remain ambiguous, deliberately ambiguous",
-      "relatedWords": "ambiguity (n), ambiguously (adv), unambiguous (adj)",
-      "note": "Thường xuất hiện trong IELTS Reading và Writing Task 2",
-      "ease_factor": 2.5,
-      "interval": 1,
-      "repetitions": 0,
-      "next_review_date": "2025-06-01T00:00:00Z",
-      "createdAt": "2025-01-11T10:00:00Z"
+      "wordsetId": "1",
+      "id": "1"
     },
     {
       "id": "2",
@@ -707,6 +696,13 @@
       "pushNotificationEnabled": true,
       "emailNotificationEnabled": false,
       "streakReminderEnabled": true,
+      "dailyReminderMessage": "Hoc tap moi ngay nhe!",
+      "reviewReminderMessage": "Den gio on tap roi!",
+      "streakReminderMessage": "Giu chuoi hoc tap nhe!",
+      "inAppTitle": "Thong bao hoc tap",
+      "inAppMessage": "Hom nay hoc 10 tu moi nhe!",
+      "emailSubject": "Nhac hoc tieng Anh",
+      "emailMessage": "Hom nay ban hay hoc them tu vung de giu thoi quen.",
       "updatedAt": "2025-05-01T08:00:00Z"
     },
     {
@@ -718,6 +714,13 @@
       "pushNotificationEnabled": true,
       "emailNotificationEnabled": true,
       "streakReminderEnabled": false,
+      "dailyReminderMessage": "Hoc tap moi ngay nhe!",
+      "reviewReminderMessage": "Den gio on tap roi!",
+      "streakReminderMessage": "Giu chuoi hoc tap nhe!",
+      "inAppTitle": "Thong bao hoc tap",
+      "inAppMessage": "Hom nay hoc 10 tu moi nhe!",
+      "emailSubject": "Nhac hoc tieng Anh",
+      "emailMessage": "Hom nay ban hay hoc them tu vung de giu thoi quen.",
       "updatedAt": "2025-05-10T20:00:00Z"
     },
     {
@@ -729,9 +732,17 @@
       "pushNotificationEnabled": true,
       "emailNotificationEnabled": true,
       "streakReminderEnabled": true,
+      "dailyReminderMessage": "Hoc tap moi ngay nhe!",
+      "reviewReminderMessage": "Den gio on tap roi!",
+      "streakReminderMessage": "Giu chuoi hoc tap nhe!",
+      "inAppTitle": "Thong bao hoc tap",
+      "inAppMessage": "Hom nay hoc 10 tu moi nhe!",
+      "emailSubject": "Nhac hoc tieng Anh",
+      "emailMessage": "Hom nay ban hay hoc them tu vung de giu thoi quen.",
       "updatedAt": "2025-04-20T07:00:00Z"
     }
   ],
+  "in_app_notifications": [],
   "quiz": [
     {
       "id": "1",
