@@ -90,6 +90,53 @@ async function seed() {
 
   const total = Object.values(wordsByTopic).reduce((s, a) => s + a.length, 0);
   console.log(`\n✅ Seed xong! Tổng: ${total} từ, ${Object.keys(wordsByTopic).length} bộ từ`);
+
+  // 4. Đọc CSV Grammar và Import Ngữ pháp
+  const grammarNotes = [];
+  const grammarFilePath = path.join(__dirname, '../data/grammar.csv');
+
+  if (fs.existsSync(grammarFilePath)) {
+    await new Promise((resolve, reject) => {
+      fs.createReadStream(grammarFilePath)
+        .pipe(csv({ bom: true }))
+        .on('data', (row) => {
+          // Xử lý BOM có thể dính vào tên cột đầu tiên
+          const grammarKey = Object.keys(row).find(k => k.includes('Grammar Point'));
+          if (grammarKey && row[grammarKey]?.trim()) {
+            // Lưu lại key chuẩn để xài sau
+            row['Grammar Point'] = row[grammarKey];
+            grammarNotes.push(row);
+          }
+        })
+        .on('end', resolve)
+        .on('error', reject);
+    });
+
+    console.log('Bắt đầu thêm Ngữ pháp...');
+    const clean = (val) => (val === '-' || val === '' ? null : val?.trim());
+    for (const note of grammarNotes) {
+      const grammarPoint = note['Grammar Point']?.trim();
+      const sentenceType = note['Sentence Type']?.trim();
+
+      const title = sentenceType ? `${grammarPoint} (${sentenceType})` : grammarPoint;
+
+      await db.execute(
+        'INSERT INTO grammar_notes (user_id, title, formula, explanation, example, common_mistake) VALUES (?, ?, ?, ?, ?, ?)',
+        [
+          userId,
+          title,
+          clean(note['Structure']),      
+          clean(note['Meaning (VI)']),  
+          clean(note['Grammar Example']),
+          null                           
+        ]
+      );
+    }
+    console.log(`✓ Đã seed thành công ${grammarNotes.length} chủ điểm ngữ pháp.\n`);
+  } else {
+    console.log('⚠ Không tìm thấy file grammar.csv, bỏ qua bước seed ngữ pháp.\n');
+  }
+
   process.exit(0);
 }
 

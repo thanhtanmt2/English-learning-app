@@ -49,6 +49,92 @@ exports.getWordsBySet = async (req, res) => {
   }
 };
 
+// GET /api/wordsets/:id
+exports.getWordSetById = async (req, res) => {
+  const setId = req.params.id;
+  try {
+    const [[wordSet]] = await db.execute(
+      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      [setId, req.user.id]
+    );
+    if (!wordSet) return res.status(404).json({ message: 'Không tìm thấy bộ từ' });
+    res.json(wordSet);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// PUT /api/wordsets/:id
+exports.updateWordSet = async (req, res) => {
+  const setId = req.params.id;
+  const { name, description } = req.body;
+  if (!name) return res.status(400).json({ message: 'Tên bộ từ là bắt buộc' });
+
+  try {
+    const [[wordSet]] = await db.execute(
+      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      [setId, req.user.id]
+    );
+    if (!wordSet) return res.status(404).json({ message: 'Không tìm thấy bộ từ' });
+
+    await db.execute(
+      'UPDATE word_sets SET name = ?, description = ? WHERE id = ?',
+      [name, description || '', setId]
+    );
+    const [[updated]] = await db.execute('SELECT * FROM word_sets WHERE id = ?', [setId]);
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// DELETE /api/wordsets/:id
+exports.deleteWordSet = async (req, res) => {
+  const setId = req.params.id;
+  try {
+    const [[wordSet]] = await db.execute(
+      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      [setId, req.user.id]
+    );
+    if (!wordSet) return res.status(404).json({ message: 'Không tìm thấy bộ từ' });
+
+    await db.execute('DELETE FROM word_sets WHERE id = ?', [setId]);
+    res.json({ message: 'Xóa bộ từ thành công' });
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// GET /api/words (lấy tất cả từ vựng)
+exports.getAllWords = async (req, res) => {
+  try {
+    const [words] = await db.execute(
+      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id 
+       WHERE ws.user_id = ? OR ws.user_id = 1`,
+      [req.user.id]
+    );
+    res.json(words);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// GET /api/words/:id (lấy 1 từ vựng)
+exports.getWordById = async (req, res) => {
+  const wordId = req.params.id;
+  try {
+    const [[word]] = await db.execute(
+      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id 
+       WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
+      [wordId, req.user.id]
+    );
+    if (!word) return res.status(404).json({ message: 'Không tìm thấy từ' });
+    res.json(word);
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
 // POST /api/words
 exports.addWord = async (req, res) => {
   const { word_set_id, word, meaning, pronunciation, example } = req.body;
@@ -77,9 +163,9 @@ exports.updateWord = async (req, res) => {
   const { word, meaning, pronunciation, example } = req.body;
 
   try {
-    // Check ownership by joining with word_sets
+    // Check ownership - cho phép truy cập word của chính user HOẶC của Demo User (id=1)
     const [[existingWord]] = await db.execute(
-      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND ws.user_id = ?`,
+      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
       [wordId, req.user.id]
     );
     if (!existingWord) return res.status(404).json({ message: 'Không tìm thấy từ hoặc không có quyền' });
@@ -99,7 +185,7 @@ exports.deleteWord = async (req, res) => {
   const wordId = req.params.id;
   try {
     const [[existingWord]] = await db.execute(
-      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND ws.user_id = ?`,
+      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
       [wordId, req.user.id]
     );
     if (!existingWord) return res.status(404).json({ message: 'Không tìm thấy từ hoặc không có quyền' });
