@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english_learning_app.data.model.GrammarNote
 import com.example.english_learning_app.data.model.QuizQuestion
+import com.example.english_learning_app.data.remote.QuizScorePayload
 import com.example.english_learning_app.data.remote.RetrofitClient
 import kotlinx.coroutines.launch
 
@@ -157,9 +158,9 @@ class GrammarViewModel : ViewModel() {
     fun submitQuizScore(noteId: String, score: Int, total: Int) {
         viewModelScope.launch {
             try {
-                com.example.english_learning_app.data.remote.RetrofitClient.apiService.submitGrammarQuizScore(
+                RetrofitClient.apiService.submitGrammarQuizScore(
                     noteId,
-                    com.example.english_learning_app.data.remote.QuizScorePayload(score, total)
+                    QuizScorePayload(score, total)
                 )
                 // Gọi lại fetchGrammarNotes để cập nhật dữ liệu mới nhất (điểm số)
                 fetchGrammarNotes()

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordSet
-import com.example.english_learning_app.data.remote.RetrofitProvider
+import com.example.english_learning_app.data.remote.RetrofitClient
 import com.example.english_learning_app.data.repository.VocabularyRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LearningViewModel : ViewModel() {
-    private val repository = VocabularyRepository(com.example.english_learning_app.data.remote.RetrofitClient.apiService)
+    private val repository = VocabularyRepository(RetrofitClient.apiService)
 
     private val _uiState = MutableStateFlow(LearningUiState())
     val uiState: StateFlow<LearningUiState> = _uiState.asStateFlow()

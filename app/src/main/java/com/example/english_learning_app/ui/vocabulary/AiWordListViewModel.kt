@@ -7,7 +7,7 @@ import com.example.english_learning_app.data.model.AiWordListResult
 import com.example.english_learning_app.data.model.WordPayload
 import com.example.english_learning_app.data.model.WordSetPayload
 import com.example.english_learning_app.data.remote.GeminiService
-import com.example.english_learning_app.data.remote.RetrofitProvider
+import com.example.english_learning_app.data.remote.RetrofitClient
 import com.example.english_learning_app.data.repository.VocabularyRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AiWordListViewModel : ViewModel() {
-    private val repository = VocabularyRepository(RetrofitProvider.apiService)
+    private val repository = VocabularyRepository(RetrofitClient.apiService)
 
     private val _uiState = MutableStateFlow(AiWordListUiState())
     val uiState: StateFlow<AiWordListUiState> = _uiState.asStateFlow()
@@ -92,8 +92,7 @@ class AiWordListViewModel : ViewModel() {
 
                 result.words.forEach { aiWord ->
                     val wordPayload = WordPayload(
-                        wordsetId = wordSet.id,
-                        userId = user.id,
+                        wordSetId = wordSet.id,
                         word = aiWord.word,
                         meaning = aiWord.meaning,
                         example = aiWord.example.ifBlank { null },

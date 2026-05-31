@@ -185,6 +185,13 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
 
         // Vocabulary sub-screens
         composable(
+            route = "word_set_list?refresh={refresh}",
+            arguments = listOf(navArgument("refresh") { type = NavType.BoolType; defaultValue = false })
+        ) { backStackEntry ->
+            val refresh = backStackEntry.arguments?.getBoolean("refresh") ?: false
+            WordSetListScreen(navController = navController, refresh = refresh)
+        }
+        composable(
             route = "word_list/{wordSetId}",
             arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
         ) { backStackEntry ->
