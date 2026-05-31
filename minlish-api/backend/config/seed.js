@@ -27,10 +27,14 @@ async function seed() {
   const wordsByTopic = {};
 
   await new Promise((resolve, reject) => {
+    // Sử dụng stream mặc định và để csv-parser tự xử lý BOM
     fs.createReadStream(path.join(__dirname, '../data/vocab.csv'))
-      .pipe(csv({ bom: true })) // bom: true xử lý ký tự thừa đầu file
+      .pipe(csv({ bom: true }))
       .on('data', (row) => {
-        const topic = row['Topic']?.trim();
+        // Hàm lọc bỏ ký tự lạ rác
+        const cleanStr = (str) => str ? str.replace(/[\uFFFD\uFFFE\uFEFF]/g, "") : "";
+
+        const topic = cleanStr(row['Topic']?.trim());
         if (!topic) return;
         if (!wordsByTopic[topic]) wordsByTopic[topic] = [];
         wordsByTopic[topic].push(row);

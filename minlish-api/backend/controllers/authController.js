@@ -50,6 +50,7 @@ exports.register = async (req, res) => {
 // POST /api/auth/login
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  console.log(`[Login Attempt] Email: ${email}, Password: ${password}`);
 
   if (!email || !password) {
     return res.status(400).json({ message: 'Vui lòng nhập email và password' });
@@ -60,13 +61,16 @@ exports.login = async (req, res) => {
     const [[user]] = await db.execute(
       'SELECT * FROM users WHERE email = ?', [email]
     );
+
     if (!user) {
+      console.log(`[Login Failed] User not found: ${email}`);
       return res.status(401).json({ message: 'Email hoặc password không đúng' });
     }
 
     // So sánh password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log(`[Login Failed] Password mismatch for: ${email}`);
       return res.status(401).json({ message: 'Email hoặc password không đúng' });
     }
 
