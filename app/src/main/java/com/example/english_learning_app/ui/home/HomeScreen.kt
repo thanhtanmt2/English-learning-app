@@ -179,9 +179,10 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── Retention Rate ─────────────────────────────────
-            val retentionRate = if (history.isEmpty()) 0
-            else (history.sumOf { it.quizScore } * 100) / (history.size * 5)
+            // ── Retention Rate (7 ngày gần nhất) ─────────────────────────────────
+            val recentHistory = history.take(7)
+            val retentionRate = if (recentHistory.isEmpty()) 0
+            else (recentHistory.sumOf { it.quizScore } * 100) / (recentHistory.size * 5)
 
             Card(
                 modifier = Modifier

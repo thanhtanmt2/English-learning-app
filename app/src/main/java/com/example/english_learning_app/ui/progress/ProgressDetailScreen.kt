@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,13 @@ fun ProgressDetailScreen(
 ) {
     // Lấy dữ liệu của ngày cụ thể từ ViewModel
     val record = viewModel.progressRecords.value.find { it.date == date }
+
+    // Tự động tải dữ liệu nếu chưa có (khi mở trực tiếp màn hình này)
+    LaunchedEffect(Unit) {
+        if (viewModel.progressRecords.value.isEmpty()) {
+            viewModel.fetchProgress()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -110,7 +118,7 @@ fun ProgressDetailScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier.fillMaxWidth().padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("Điểm Quiz", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.secondary)
@@ -119,7 +127,7 @@ fun ProgressDetailScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
-                            .background(if (isPerfect) Color(0xFF81C784) else MaterialTheme.colorScheme.primary),
+                            .background(Color(0xFF4CAF50)), // Màu xanh nổi bật
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
