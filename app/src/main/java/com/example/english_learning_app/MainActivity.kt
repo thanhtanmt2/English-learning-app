@@ -11,11 +11,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
+import androidx.annotation.StringRes
 
 // Auth
 import com.example.english_learning_app.ui.auth.AuthViewModel
@@ -42,26 +47,37 @@ import com.example.english_learning_app.ui.vocabulary.WordListScreen
 import com.example.english_learning_app.ui.vocabulary.WordQuizScreen
 import com.example.english_learning_app.ui.vocabulary.WordQuizSetupScreen
 import com.example.english_learning_app.ui.vocabulary.WordSetListScreen
+import com.example.english_learning_app.data.local.LanguagePreferences
 
 // Me
 import com.example.english_learning_app.ui.me.MeScreen
+import com.example.english_learning_app.ui.me.LanguageSettingsScreen
+import com.example.english_learning_app.ui.me.NotificationSettingsScreen
 
 // ===================== Bottom Nav Items =====================
 enum class BottomNavItem(
     val route: String,
-    val label: String,
+    @StringRes val labelResId: Int,
     val icon: ImageVector
 ) {
-    HOME("home", "Home", Icons.Default.Home),
-    VOCABULARY("vocabulary", "Từ vựng", Icons.Default.MenuBook),
-    GRAMMAR("grammar", "Ngữ pháp", Icons.Default.Edit),
-    ME("me", "Tôi", Icons.Default.Person)
+    HOME("home", R.string.bottom_nav_home, Icons.Default.Home),
+    VOCABULARY("vocabulary", R.string.bottom_nav_vocabulary, Icons.Default.MenuBook),
+    GRAMMAR("grammar", R.string.bottom_nav_grammar, Icons.Default.Edit),
+    ME("me", R.string.bottom_nav_me, Icons.Default.Person)
 }
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val context = LocalContext.current
+            val languageTag by LanguagePreferences.languageFlow(context)
+                .collectAsState(initial = LanguagePreferences.DEFAULT_LANGUAGE)
+            LaunchedEffect(languageTag) {
+                AppCompatDelegate.setApplicationLocales(
+                    LocaleListCompat.forLanguageTags(languageTag)
+                )
+            }
             val navController = rememberNavController()
             val authViewModel: AuthViewModel = viewModel()
             AppNavHost(navController = navController, authViewModel = authViewModel)
@@ -222,6 +238,15 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
                 onNavigateBack = { navController.popBackStack() }
             )
         }
+        composable("language_settings") {
+            LanguageSettingsScreen(onNavigateBack = { navController.popBackStack() })
+        }
+        composable("notification_settings") {
+            NotificationSettingsScreen(
+                authViewModel = authViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -240,8 +265,8 @@ fun MainWithBottomNav(authViewModel: AuthViewModel, rootNavController: NavHostCo
             NavigationBar(tonalElevation = 4.dp) {
                 BottomNavItem.values().forEach { item ->
                     NavigationBarItem(
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
+                        icon = { Icon(item.icon, contentDescription = stringResource(item.labelResId)) },
+                        label = { Text(stringResource(item.labelResId)) },
                         selected = currentRoute == item.route,
                         onClick = {
                             bottomNavController.navigate(item.route) {
@@ -293,6 +318,8 @@ fun MainWithBottomNav(authViewModel: AuthViewModel, rootNavController: NavHostCo
                 MeScreen(
                     authViewModel = authViewModel,
                     onNavigateToEditProfile = { rootNavController.navigate("edit_profile") },
+                    onNavigateToLanguage = { rootNavController.navigate("language_settings") },
+                    onNavigateToNotifications = { rootNavController.navigate("notification_settings") },
                     onLogout = {
                         rootNavController.navigate("login") {
                             popUpTo("main") { inclusive = true }

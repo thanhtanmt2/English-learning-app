@@ -17,12 +17,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.english_learning_app.ui.auth.AuthViewModel
+import com.example.english_learning_app.R
 
 @Composable
 fun MeScreen(
     authViewModel: AuthViewModel,
     onNavigateToEditProfile: () -> Unit,
+    onNavigateToLanguage: () -> Unit,
+    onNavigateToNotifications: () -> Unit,
     onLogout: () -> Unit
 ) {
     val user = authViewModel.currentUser.value
@@ -63,7 +67,7 @@ fun MeScreen(
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = user?.name ?: "Người dùng",
+                    text = user?.name ?: stringResource(R.string.me_default_user),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary
@@ -99,38 +103,40 @@ fun MeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Nhóm: Tài khoản
-        SectionLabel("Tài khoản")
+        SectionLabel(stringResource(R.string.me_section_account))
         SettingItem(
             icon = Icons.Default.Edit,
-            title = "Chỉnh sửa hồ sơ",
-            subtitle = "Tên, mục tiêu, trình độ",
+            title = stringResource(R.string.me_edit_profile_title),
+            subtitle = stringResource(R.string.me_edit_profile_subtitle),
             onClick = onNavigateToEditProfile
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         // Nhóm: Cài đặt
-        SectionLabel("Cài đặt")
+        SectionLabel(stringResource(R.string.me_section_settings))
         SettingItem(
             icon = Icons.Default.Notifications,
-            title = "Thông báo",
-            subtitle = "Nhắc học hàng ngày"
+            title = stringResource(R.string.me_notifications_title),
+            subtitle = stringResource(R.string.me_notifications_subtitle),
+            onClick = onNavigateToNotifications
         )
         SettingItem(
             icon = Icons.Default.Language,
-            title = "Ngôn ngữ",
-            subtitle = "Tiếng Việt"
+            title = stringResource(R.string.me_language_title),
+            subtitle = stringResource(R.string.me_language_subtitle),
+            onClick = onNavigateToLanguage
         )
         SettingItem(
             icon = Icons.Default.Info,
-            title = "Về ứng dụng",
-            subtitle = "MinLish v1.0.0"
+            title = stringResource(R.string.me_about_title),
+            subtitle = stringResource(R.string.me_about_subtitle)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         // Nhóm: Đăng xuất
-        SectionLabel("Khác")
+        SectionLabel(stringResource(R.string.me_section_other))
 
         // Nút Đăng xuất
         Card(
@@ -157,7 +163,7 @@ fun MeScreen(
                 )
                 Spacer(modifier = Modifier.width(14.dp))
                 Text(
-                    text = "Đăng xuất",
+                    text = stringResource(R.string.me_logout),
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFFD32F2F),
                     fontSize = 15.sp

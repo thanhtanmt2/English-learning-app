@@ -6,10 +6,15 @@ import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordPayload
 import com.example.english_learning_app.data.model.WordSet
 import com.example.english_learning_app.data.model.WordSetPayload
+import com.example.english_learning_app.data.model.InAppNotification
+import com.example.english_learning_app.data.model.InAppNotificationPayload
+import com.example.english_learning_app.data.model.NotificationSettings
+import com.example.english_learning_app.data.model.NotificationSettingsPayload
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PATCH
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -77,4 +82,30 @@ interface MockApiService {
     suspend fun getProgress(
         @Query("userId") userId: String
     ): List<Progress>
+
+    @GET("api/v1/notifications")
+    suspend fun getNotificationSettings(
+        @Query("userId") userId: String
+    ): List<NotificationSettings>
+
+    @POST("api/v1/notifications")
+    suspend fun createNotificationSettings(
+        @Body payload: NotificationSettingsPayload
+    ): NotificationSettings
+
+    @PATCH("api/v1/notifications/{id}")
+    suspend fun updateNotificationSettings(
+        @Path("id") id: String,
+        @Body payload: NotificationSettingsPayload
+    ): NotificationSettings
+
+    @GET("api/v1/in-app-notifications")
+    suspend fun getInAppNotifications(
+        @Query("userId") userId: String
+    ): List<InAppNotification>
+
+    @POST("api/v1/in-app-notifications")
+    suspend fun createInAppNotification(
+        @Body payload: InAppNotificationPayload
+    ): InAppNotification
 }

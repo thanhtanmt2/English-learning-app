@@ -891,6 +891,13 @@
       "pushNotificationEnabled": true,
       "emailNotificationEnabled": false,
       "streakReminderEnabled": true,
+      "dailyReminderMessage": "Hoc tap moi ngay nhe!",
+      "reviewReminderMessage": "Den gio on tap roi!",
+      "streakReminderMessage": "Giu chuoi hoc tap nhe!",
+      "inAppTitle": "Thong bao hoc tap",
+      "inAppMessage": "Hom nay hoc 10 tu moi nhe!",
+      "emailSubject": "Nhac hoc tieng Anh",
+      "emailMessage": "Hom nay ban hay hoc them tu vung de giu thoi quen.",
       "updatedAt": "2025-05-01T08:00:00Z"
     },
     {
@@ -902,6 +909,13 @@
       "pushNotificationEnabled": true,
       "emailNotificationEnabled": true,
       "streakReminderEnabled": false,
+      "dailyReminderMessage": "Hoc tap moi ngay nhe!",
+      "reviewReminderMessage": "Den gio on tap roi!",
+      "streakReminderMessage": "Giu chuoi hoc tap nhe!",
+      "inAppTitle": "Thong bao hoc tap",
+      "inAppMessage": "Hom nay hoc 10 tu moi nhe!",
+      "emailSubject": "Nhac hoc tieng Anh",
+      "emailMessage": "Hom nay ban hay hoc them tu vung de giu thoi quen.",
       "updatedAt": "2025-05-10T20:00:00Z"
     },
     {
@@ -913,9 +927,17 @@
       "pushNotificationEnabled": true,
       "emailNotificationEnabled": true,
       "streakReminderEnabled": true,
+      "dailyReminderMessage": "Hoc tap moi ngay nhe!",
+      "reviewReminderMessage": "Den gio on tap roi!",
+      "streakReminderMessage": "Giu chuoi hoc tap nhe!",
+      "inAppTitle": "Thong bao hoc tap",
+      "inAppMessage": "Hom nay hoc 10 tu moi nhe!",
+      "emailSubject": "Nhac hoc tieng Anh",
+      "emailMessage": "Hom nay ban hay hoc them tu vung de giu thoi quen.",
       "updatedAt": "2025-04-20T07:00:00Z"
     }
   ],
+  "in_app_notifications": [],
   "quiz": [
     {
       "id": "1",

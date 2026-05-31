@@ -1,3 +1,53 @@
 <resources>
-    <string name="app_name">English_learning_app</string>
+    <string name="app_name">MinLish</string>
+
+    <string name="bottom_nav_home">Trang chu</string>
+    <string name="bottom_nav_vocabulary">Tu vung</string>
+    <string name="bottom_nav_grammar">Ngu phap</string>
+    <string name="bottom_nav_me">Toi</string>
+
+    <string name="me_default_user">Nguoi dung</string>
+    <string name="me_section_account">Tai khoan</string>
+    <string name="me_edit_profile_title">Chinh sua ho so</string>
+    <string name="me_edit_profile_subtitle">Ten, muc tieu, trinh do</string>
+
+    <string name="me_section_settings">Cai dat</string>
+    <string name="me_notifications_title">Thong bao</string>
+    <string name="me_notifications_subtitle">Nhac hoc hang ngay</string>
+    <string name="me_language_title">Ngon ngu</string>
+    <string name="me_language_subtitle">Tieng Viet</string>
+    <string name="me_about_title">Ve ung dung</string>
+    <string name="me_about_subtitle">MinLish v1.0.0</string>
+
+    <string name="me_section_other">Khac</string>
+    <string name="me_logout">Dang xuat</string>
+
+    <string name="language_settings_title">Ngon ngu</string>
+    <string name="language_settings_subtitle">Chon ngon ngu cho toan bo ung dung</string>
+    <string name="language_option_vi">Tieng Viet</string>
+    <string name="language_option_en">English</string>
+    <string name="common_back">Quay lai</string>
+
+    <string name="notification_settings_title">Thong bao</string>
+    <string name="notification_settings_login_required">Vui long dang nhap de quan ly thong bao</string>
+    <string name="notification_settings_section_reminders">Nhac nho</string>
+    <string name="notification_settings_daily_reminder">Nhac hoc hang ngay</string>
+    <string name="notification_settings_daily_time">Gio hoc (HH:mm)</string>
+    <string name="notification_settings_review_reminder">Nhac on tap</string>
+    <string name="notification_settings_streak_reminder">Nhac duy tri streak</string>
+    <string name="notification_settings_daily_message">Noi dung nhac hang ngay</string>
+    <string name="notification_settings_review_message">Noi dung nhac on tap</string>
+    <string name="notification_settings_streak_message">Noi dung nhac streak</string>
+    <string name="notification_settings_section_in_app">Thong bao trong app</string>
+    <string name="notification_settings_enable_in_app">Bat thong bao trong app</string>
+    <string name="notification_settings_in_app_title">Tieu de thong bao</string>
+    <string name="notification_settings_in_app_message">Noi dung thong bao</string>
+    <string name="notification_settings_send_test_in_app">Gui thong bao test</string>
+    <string name="notification_settings_section_email">Email</string>
+    <string name="notification_settings_enable_email">Bat email</string>
+    <string name="notification_settings_email_subject">Tieu de email</string>
+    <string name="notification_settings_email_message">Noi dung email</string>
+    <string name="notification_settings_saving">Dang luu...</string>
+    <string name="notification_settings_save">Luu cai dat</string>
+    <string name="notification_settings_recent_in_app">Thong bao gan day</string>
 </resources>
