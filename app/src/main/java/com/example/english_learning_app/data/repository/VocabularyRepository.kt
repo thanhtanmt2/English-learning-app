@@ -5,21 +5,19 @@ import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordPayload
 import com.example.english_learning_app.data.model.WordSet
 import com.example.english_learning_app.data.model.WordSetPayload
-import com.example.english_learning_app.data.remote.MockApiService
+import com.example.english_learning_app.data.remote.ApiService
 
-class VocabularyRepository(private val apiService: MockApiService) {
+class VocabularyRepository(private val apiService: ApiService) {
     suspend fun loadUser(): User {
-        val users = apiService.login()
-        return users.firstOrNull()
-            ?: throw IllegalStateException("No users returned from mock API")
+        return User(id = "0", name = "", email = "", goal = "", level = "", avatarUrl = null, createdAt = null)
     }
 
     suspend fun loadWordSets(userId: String): List<WordSet> {
-        return apiService.getWordSets(userId = userId)
+        return apiService.getWordSets()
     }
 
     suspend fun loadWords(userId: String, wordSetId: String): List<Word> {
-        return apiService.getWords(wordSetId = wordSetId, userId = userId)
+        return apiService.getWordsInSet(wordSetId.toIntOrNull() ?: 0)
     }
 
     suspend fun createWordSet(payload: WordSetPayload): WordSet {
@@ -35,10 +33,14 @@ class VocabularyRepository(private val apiService: MockApiService) {
     }
 
     suspend fun updateWord(wordId: String, payload: WordPayload): Word {
-        return apiService.updateWord(id = wordId, payload = payload)
+        return apiService.updateWord(id = wordId.toIntOrNull() ?: 0, word = payload)
     }
 
     suspend fun deleteWord(wordId: String) {
-        apiService.deleteWord(id = wordId)
+        apiService.deleteWord(id = wordId.toIntOrNull() ?: 0)
+    }
+
+    suspend fun submitReview(wordId: Int, quality: Int) {
+        apiService.reviewWord(id = wordId, reviewData = mapOf("quality" to quality))
     }
 }

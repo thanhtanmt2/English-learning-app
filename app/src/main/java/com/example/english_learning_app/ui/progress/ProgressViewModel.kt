@@ -25,15 +25,12 @@ class ProgressViewModel : ViewModel() {
         errorMessage.value = ""
         viewModelScope.launch {
             try {
-                // Tải tổng quan
-                val overviews = RetrofitClient.apiService.getProgressOverview()
-                if (overviews.isNotEmpty()) {
-                    progressOverview.value = overviews.first() // Lấy cái của User hiện tại (giả định)
-                }
-
-                // Tải lịch sử chi tiết
-                val history = RetrofitClient.apiService.getProgress()
-                progressRecords.value = history.reversed() // Hiện ngày mới nhất lên đầu
+                // Tải tổng quan (Trong đó có chứa cả danh sách daily_activity)
+                val overview = RetrofitClient.apiService.getProgressOverview()
+                progressOverview.value = overview
+                
+                // Lấy danh sách lịch sử từ chính overview để vẽ biểu đồ
+                progressRecords.value = overview.dailyActivity
             } catch (e: Exception) {
                 errorMessage.value = "Lỗi tải tiến độ: ${e.message}"
             } finally {

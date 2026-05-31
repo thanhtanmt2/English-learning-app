@@ -90,7 +90,7 @@ fun WordSetListScreen(
                         Text(text = wordSet.name, fontWeight = FontWeight.SemiBold)
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = wordSet.description,
+                            text = wordSet.description ?: "",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFF6C757D)
                         )

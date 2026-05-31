@@ -3,7 +3,7 @@ package com.example.english_learning_app.ui.vocabulary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english_learning_app.data.model.WordPayload
-import com.example.english_learning_app.data.remote.RetrofitProvider
+import com.example.english_learning_app.data.remote.RetrofitClient
 import com.example.english_learning_app.data.repository.VocabularyRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AddEditWordViewModel : ViewModel() {
-    private val repository = VocabularyRepository(RetrofitProvider.apiService)
+    private val repository = VocabularyRepository(RetrofitClient.apiService)
 
     private val _uiState = MutableStateFlow(AddEditWordUiState())
     val uiState: StateFlow<AddEditWordUiState> = _uiState.asStateFlow()
@@ -59,10 +59,8 @@ class AddEditWordViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = state.copy(isSaving = true, errorMessage = null)
             try {
-                val user = repository.loadUser()
                 val payload = WordPayload(
-                    wordsetId = state.wordSetId,
-                    userId = user.id,
+                    wordSetId = state.wordSetId.toIntOrNull() ?: 0,
                     word = state.word.trim(),
                     meaning = state.meaning.trim(),
                     example = state.example.trim().ifBlank { null }

@@ -1,25 +1,30 @@
 package com.example.english_learning_app.data.repository
 
-import com.example.english_learning_app.data.model.Progress
+import com.example.english_learning_app.data.model.ProgressOverview
 import com.example.english_learning_app.data.model.User
 import com.example.english_learning_app.data.model.WordSet
-import com.example.english_learning_app.data.remote.MockApiService
+import com.example.english_learning_app.data.remote.ApiService
 
-class HomeRepository(private val apiService: MockApiService) {
+class HomeRepository(private val apiService: ApiService) {
     suspend fun loadHomeData(): HomeData {
-        val users = apiService.login()
-        val user = users.firstOrNull()
-            ?: throw IllegalStateException("No users returned from mock API")
+        // Lưu ý: Real Backend dùng token để lấy user hiện tại, 
+        // ở đây ta lấy danh sách wordsets chung hoặc theo user_id nếu có
+        val wordSets = apiService.getWordSets()
+        val progress = try {
+            apiService.getProgressOverview()
+        } catch (e: Exception) {
+            null
+        }
+        
+        // Tạo User giả từ dữ liệu có sẵn vì API getWordSets không trả về user
+        val dummyUser = User(id = "1", name = "Người học", email = "", goal = "", level = "", avatarUrl = null, createdAt = null)
 
-        val wordSets = apiService.getWordSets(userId = user.id)
-        val progress = apiService.getProgress(userId = user.id).firstOrNull()
-
-        return HomeData(user = user, wordSets = wordSets, progress = progress)
+        return HomeData(user = dummyUser, wordSets = wordSets, progress = progress)
     }
 }
 
 data class HomeData(
     val user: User,
     val wordSets: List<WordSet>,
-    val progress: Progress?
+    val progress: ProgressOverview?
 )

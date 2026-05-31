@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.english_learning_app.data.model.Progress
+import com.example.english_learning_app.data.model.ProgressOverview
 import com.example.english_learning_app.data.model.WordSet
 
 @Composable
@@ -248,16 +248,12 @@ private fun progressValue(value: Int?, suffix: String): String {
     return if (value == null) "--" else "$value $suffix"
 }
 
-private fun goalValue(progress: Progress?): String {
-    val plan = progress?.dailyPlan ?: return "--"
-    val target = plan.newWordsTarget + plan.reviewWordsTarget
-    return "$target words"
+private fun goalValue(progress: ProgressOverview?): String {
+    return if (progress == null) "--" else "${progress.totalWords} words"
 }
 
-private fun doneValue(progress: Progress?): String {
-    val plan = progress?.dailyPlan ?: return "--"
-    val done = plan.newWordsDone + plan.reviewWordsDone
-    return "$done words"
+private fun doneValue(progress: ProgressOverview?): String {
+    return if (progress == null) "--" else "${progress.learnedWords} words"
 }
 
 private fun wordSetTitle(wordSet: WordSet?): String {

@@ -1,10 +1,12 @@
 package com.example.english_learning_app.data.remote
 
+import com.example.english_learning_app.AppConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitProvider {
-    private const val BASE_URL = "http://10.0.2.2:3000/"
+    // Sử dụng chung cấu hình BASE_URL từ AppConfig
+    private val BASE_URL = AppConfig.BASE_URL.replace("api/v1/", "")
 
     val apiService: MockApiService by lazy {
         Retrofit.Builder()

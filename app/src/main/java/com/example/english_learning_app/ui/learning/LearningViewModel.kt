@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LearningViewModel : ViewModel() {
-    private val repository = VocabularyRepository(RetrofitProvider.apiService)
+    private val repository = VocabularyRepository(com.example.english_learning_app.data.remote.RetrofitClient.apiService)
 
     private val _uiState = MutableStateFlow(LearningUiState())
     val uiState: StateFlow<LearningUiState> = _uiState.asStateFlow()
@@ -26,13 +26,13 @@ class LearningViewModel : ViewModel() {
             try {
                 val user = repository.loadUser()
                 val wordSets = repository.loadWordSets(user.id)
-                _uiState.value = LearningUiState(
+                _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     userId = user.id,
                     wordSets = wordSets
                 )
             } catch (ex: Exception) {
-                _uiState.value = LearningUiState(isLoading = false, errorMessage = ex.message)
+                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = ex.message)
             }
         }
     }
@@ -42,7 +42,7 @@ class LearningViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch {
             try {
-                val words = repository.loadWords(userId = userId, wordSetId = wordSet.id)
+                val words = repository.loadWords(userId = userId, wordSetId = wordSet.id.toString())
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     wordSet = wordSet,
@@ -56,7 +56,7 @@ class LearningViewModel : ViewModel() {
     }
 
     fun selectWordSetById(wordSetId: String) {
-        val set = _uiState.value.wordSets.firstOrNull { it.id == wordSetId } ?: return
+        val set = _uiState.value.wordSets.firstOrNull { it.id.toString() == wordSetId } ?: return
         selectWordSet(set)
     }
 
@@ -69,6 +69,18 @@ class LearningViewModel : ViewModel() {
         if (state.words.isEmpty()) return
         val nextIndex = (state.currentIndex + 1) % state.words.size
         _uiState.value = state.copy(currentIndex = nextIndex)
+    }
+
+    fun submitReview(quality: Int) {
+        val word = _uiState.value.words.getOrNull(_uiState.value.currentIndex) ?: return
+        viewModelScope.launch {
+            try {
+                repository.submitReview(word.id, quality)
+            } catch (ex: Exception) {
+                // Ta không chặn UI nếu lỗi lưu tiến độ, chỉ log ra
+                android.util.Log.e("LearningViewModel", "Error submitting review: ${ex.message}")
+            }
+        }
     }
 }
 

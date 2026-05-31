@@ -121,7 +121,7 @@ fun WordListScreen(
                             TextButton(onClick = { speak(word.word) }) {
                                 Text(text = "Speak")
                             }
-                            TextButton(onClick = { viewModel.deleteWord(word.id) }) {
+                            TextButton(onClick = { viewModel.deleteWord(word.id.toString()) }) {
                                 Text(text = "Delete")
                             }
                         }

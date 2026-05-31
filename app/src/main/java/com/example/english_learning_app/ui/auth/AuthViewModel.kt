@@ -30,12 +30,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     // Hàm gọi khi user bấm nút "Đăng nhập"
     fun login() {
+        val trimmedEmail = email.value.trim()
+        val trimmedPassword = password.value.trim()
+
         // Bắt lỗi cơ bản (Validation)
-        if (email.value.isBlank() || password.value.isBlank()) {
+        if (trimmedEmail.isBlank() || trimmedPassword.isBlank()) {
             errorMessage.value = "Vui lòng nhập đầy đủ Email và Mật khẩu!"
             return
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()) {
+        
+        // Kiểm tra email đơn giản để tránh lỗi máy ảo
+        if (!trimmedEmail.contains("@") || !trimmedEmail.contains(".")) {
             errorMessage.value = "Email không đúng định dạng!"
             return
         }
@@ -48,25 +53,31 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         // Chạy luồng phụ (coroutines) để không đơ UI
         viewModelScope.launch {
             try {
-                // Gọi lên mạng để tìm kiếm User
-                val users = RetrofitClient.apiService.login(email.value, password.value)
+                val authRequest = LoginRequest(trimmedEmail, trimmedPassword)
+                val authResponse = RetrofitClient.apiService.login(authRequest)
                 
-                if (users.isNotEmpty()) {
-                    val user = users[0] // Lấy người đầu tiên tìm thấy
-                    currentUser.value = user
-                    // Lưu token vào TokenManager
-                    tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
-                    
-                    // Hiển thị thông báo và bật cờ chuyển trang
-                    errorMessage.value = "Thành công! Xin chào ${user.name}"
-                    isLoginSuccess.value = true
-                } else {
-                    // Trả về danh sách rỗng tức là không tìm thấy
-                    errorMessage.value = "Sai Email hoặc Mật khẩu!"
-                }
+                val user = authResponse.user
+                currentUser.value = user
+                
+                // Lưu token thực từ backend thay vì token giả
+                tokenManager.saveToken(authResponse.token)
+                
+                // Hiển thị thông báo và bật cờ chuyển trang
+                errorMessage.value = authResponse.message
+                isLoginSuccess.value = true
             } catch (e: Exception) {
-                // Bắt lỗi nếu sai pass hoặc sập mạng
-                errorMessage.value = "Lỗi: ${e.message}"
+                // Hiển thị lỗi chi tiết từ server
+                if (e is retrofit2.HttpException) {
+                    val rawError = e.response()?.errorBody()?.string()
+                    try {
+                        val json = com.google.gson.JsonParser.parseString(rawError).asJsonObject
+                        errorMessage.value = json.get("message").asString
+                    } catch (parseEx: Exception) {
+                        errorMessage.value = "Lỗi ${e.code()}: $rawError"
+                    }
+                } else {
+                    errorMessage.value = "Lỗi: ${e.message}"
+                }
             } finally {
                 // Tắt trạng thái tải
                 isLoading.value = false
@@ -75,16 +86,22 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
     // Hàm Đăng ký
     fun register(goal: String, level: String) {
+        val trimmedName = name.value.trim()
+        val trimmedEmail = email.value.trim()
+        val trimmedPassword = password.value.trim()
+
         // Bắt lỗi Form (Validation) cực kỳ quan trọng cho Đăng ký
-        if (name.value.isBlank() || email.value.isBlank() || password.value.isBlank()) {
+        if (trimmedName.isBlank() || trimmedEmail.isBlank() || trimmedPassword.isBlank()) {
             errorMessage.value = "Vui lòng nhập đầy đủ Tên, Email và Mật khẩu!"
             return
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()) {
+        
+        // Kiểm tra email đơn giản để tránh lỗi máy ảo
+        if (!trimmedEmail.contains("@") || !trimmedEmail.contains(".")) {
             errorMessage.value = "Email không đúng định dạng!"
             return
         }
-        if (password.value.length < 6) {
+        if (trimmedPassword.length < 6) {
             errorMessage.value = "Mật khẩu phải dài từ 6 ký tự trở lên!"
             return
         }
@@ -94,24 +111,34 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         isRegisterSuccess.value = false
         viewModelScope.launch {
             try {
-                // Đóng gói dữ liệu gửi đi với đầy đủ 5 thông tin
                 val request = RegisterRequest(
-                    name = name.value,
-                    email = email.value,
-                    password = password.value,
+                    name = trimmedName,
+                    email = trimmedEmail,
+                    password = trimmedPassword,
                     goal = goal,
                     level = level
                 )
-                val user = RetrofitClient.apiService.register(request)
-                currentUser.value = user
+                val authResponse = RetrofitClient.apiService.register(request)
+                currentUser.value = authResponse.user
                 
                 // Lưu token sau khi đăng ký thành công
-                tokenManager.saveToken("fake_jwt_token_for_user_${user.id}")
+                tokenManager.saveToken(authResponse.token)
                 
-                errorMessage.value = "Đăng ký thành công! Chào ${user.name}"
+                errorMessage.value = authResponse.message
                 isRegisterSuccess.value = true
             } catch (e: Exception) {
-                errorMessage.value = "Lỗi: ${e.message}"
+                // Hiển thị lỗi chi tiết từ server
+                if (e is retrofit2.HttpException) {
+                    val rawError = e.response()?.errorBody()?.string()
+                    try {
+                        val json = com.google.gson.JsonParser.parseString(rawError).asJsonObject
+                        errorMessage.value = json.get("message").asString
+                    } catch (parseEx: Exception) {
+                        errorMessage.value = "Lỗi ${e.code()}: $rawError"
+                    }
+                } else {
+                    errorMessage.value = "Lỗi: ${e.message}"
+                }
             } finally {
                 isLoading.value = false
             }

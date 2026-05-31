@@ -4,16 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 // Khuôn dữ liệu cho Tổng quan tiến độ (Dashboard)
 data class ProgressOverview(
-    @SerializedName("id") val id: String,
-    @SerializedName("userId") val userId: String,
     @SerializedName("streak") val streak: Int,
-    @SerializedName("totalWordsLearned") val totalWordsLearned: Int,
-    @SerializedName("totalWordsMastered") val totalWordsMastered: Int,
-    @SerializedName("accuracyRate") val accuracyRate: Int,
-    @SerializedName("totalReviews") val totalReviews: Int,
-    @SerializedName("totalCorrect") val totalCorrect: Int,
-    @SerializedName("level") val level: String,
-    @SerializedName("lastStudiedAt") val lastStudiedAt: String
+    @SerializedName("total_words") val totalWords: Int,
+    @SerializedName("learned_words") val learnedWords: Int,
+    @SerializedName("review_today") val reviewToday: Int,
+    @SerializedName("accuracy") val accuracyRate: Int,
+    @SerializedName("daily_activity") val dailyActivity: List<ProgressRecord> = emptyList()
 )
 
 // Khuôn dữ liệu cho Lịch sử Tiến độ hàng ngày

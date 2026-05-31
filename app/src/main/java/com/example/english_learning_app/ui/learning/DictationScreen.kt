@@ -40,14 +40,16 @@ fun DictationScreen(
     var answer by remember { mutableStateOf("") }
     var feedback by remember { mutableStateOf<String?>(null) }
     val speak = rememberTtsSpeaker()
+    var hasSelectedInitialSet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.load()
     }
 
     LaunchedEffect(wordSetId, uiState.wordSets) {
-        if (!wordSetId.isNullOrBlank() && uiState.wordSet == null && uiState.wordSets.isNotEmpty()) {
+        if (!hasSelectedInitialSet && !wordSetId.isNullOrBlank() && uiState.wordSets.isNotEmpty()) {
             viewModel.selectWordSetById(wordSetId)
+            hasSelectedInitialSet = true
         }
     }
 
@@ -83,7 +85,10 @@ fun DictationScreen(
             LazyColumn(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)) {
                 items(uiState.wordSets) { set ->
                     Card(
-                        onClick = { viewModel.selectWordSet(set) },
+                        onClick = { 
+                            viewModel.selectWordSet(set)
+                            hasSelectedInitialSet = true
+                        },
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9F2)),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                         modifier = Modifier.fillMaxWidth()
@@ -92,7 +97,7 @@ fun DictationScreen(
                             Text(text = set.name, fontWeight = FontWeight.SemiBold)
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = set.description,
+                                text = set.description ?: "",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF6C757D)
                             )
@@ -104,18 +109,21 @@ fun DictationScreen(
         }
 
         val word = uiState.words.getOrNull(uiState.currentIndex)
+
+        if (word == null && !uiState.isLoading) {
+            Text(text = "Bộ từ này hiện chưa có từ vựng nào.", color = Color.Gray)
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { viewModel.clearSelection() }) {
+                Text("Chọn bộ từ khác")
+            }
+            return@Column
+        }
+
         Button(
             onClick = { speak(word?.word ?: "") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Listen")
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = { viewModel.clearSelection() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Change word set")
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -131,17 +139,20 @@ fun DictationScreen(
                 feedback = null
             },
             label = { Text("Type the word") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
                 val target = word?.word?.trim()?.lowercase() ?: ""
                 val typed = answer.trim().lowercase()
-                feedback = if (typed.isNotEmpty() && typed == target) {
-                    "Correct!"
+                if (typed.isNotEmpty() && typed == target) {
+                    feedback = "Correct!"
+                    viewModel.submitReview(5) // 5 điểm cho câu trả lời đúng
                 } else {
-                    "Try again"
+                    feedback = "Try again"
+                    viewModel.submitReview(0) // 0 điểm cho câu trả lời sai
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -149,8 +160,13 @@ fun DictationScreen(
             Text(text = "Check")
         }
         if (feedback != null) {
+            val isCorrect = feedback == "Correct!"
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = feedback ?: "", color = Color(0xFF2B2D42))
+            Text(
+                text = feedback ?: "", 
+                color = if (isCorrect) Color(0xFF2D6A4F) else Color(0xFFB00020),
+                fontWeight = FontWeight.Bold
+            )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Button(
@@ -159,21 +175,17 @@ fun DictationScreen(
                 answer = ""
                 feedback = null
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color(0xFF4A4E69))
         ) {
-            Text(text = "Next")
+            Text(text = "Next Word")
         }
         Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = false }
-                    launchSingleTop = true
-                }
-            },
+        androidx.compose.material3.TextButton(
+            onClick = { viewModel.clearSelection() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Back to Home")
+            Text(text = "Change word set", color = Color.Gray)
         }
     }
 }

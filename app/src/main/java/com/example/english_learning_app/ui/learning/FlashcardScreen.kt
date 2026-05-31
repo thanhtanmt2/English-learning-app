@@ -99,7 +99,7 @@ fun FlashcardScreen(
                             Text(text = set.name, fontWeight = FontWeight.SemiBold)
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = set.description,
+                                text = set.description ?: "",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF6C757D)
                             )
@@ -152,7 +152,7 @@ fun FlashcardScreen(
                         if (!word?.example.isNullOrBlank()) {
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Example: ${word?.example}",
+                                text = "Example: ${word.example}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF6C757D)
                             )
@@ -179,12 +179,16 @@ fun FlashcardScreen(
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
+                // Nếu đã lật thẻ xem nghĩa thì tính là đã học (quality 4)
+                if (isFlipped) {
+                    viewModel.submitReview(4)
+                }
                 viewModel.nextWord()
                 isFlipped = false
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Next")
+            Text(text = "Next Word")
         }
         Spacer(modifier = Modifier.height(12.dp))
         Button(

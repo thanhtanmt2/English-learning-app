@@ -11,13 +11,22 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object RetrofitClient {
 
+    // Khởi tạo OkHttpClient và gắn AuthInterceptor vào
+    private val client: okhttp3.OkHttpClient by lazy {
+        okhttp3.OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
+    }
+
     // Khởi tạo Retrofit
     // lazy: Có nghĩa là chỉ khi nào biến 'instance' được gọi lần đầu tiên, 
     // thì đoạn code bên trong mới chạy.
     private val instance: Retrofit by lazy {
         Retrofit.Builder()
-            // Chỉ định địa chỉ gốc (Ví dụ: http://10.0.2.2:3000/api/v1/)
+            // Chỉ định địa chỉ gốc (Ví dụ: http://10.0.2.2:3000/api/)
             .baseUrl(AppConfig.BASE_URL)
+            // Cấu hình OkHttpClient để tự động gắn token
+            .client(client)
             // Khai báo công cụ chuyển đổi JSON -> Kotlin Object (Ở đây dùng Gson)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
