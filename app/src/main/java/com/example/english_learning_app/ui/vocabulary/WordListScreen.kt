@@ -1,4 +1,4 @@
-package com.example.english_learning_app.ui.vocabulary
+﻿package com.example.english_learning_app.ui.vocabulary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,7 +56,7 @@ fun WordListScreen(
                 Text(text = "Word List", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = "Danh sach tu trong bo tu da chon.",
+                    text = "Danh sách từ trong bộ từ đã chọn.",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFF6C757D)
                 )
@@ -145,3 +145,4 @@ fun WordListScreen(
         }
     }
 }
+

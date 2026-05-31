@@ -1,4 +1,4 @@
-package com.example.english_learning_app.ui.vocabulary
+﻿package com.example.english_learning_app.ui.vocabulary
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +47,7 @@ fun AddEditWordScreen(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Nhap thong tin tu vung moi.",
+            text = "Nhập thông tin từ vựng mới.",
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6C757D)
         )
@@ -60,7 +60,7 @@ fun AddEditWordScreen(
 
         if (uiState.errorMessage != null) {
             Text(
-                text = "Khong the tai du lieu: ${uiState.errorMessage}",
+                text = "Không thể tải dữ liệu: ${uiState.errorMessage}",
                 color = Color(0xFFB00020),
                 style = MaterialTheme.typography.bodySmall
             )
@@ -103,3 +103,4 @@ fun AddEditWordScreen(
         }
     }
 }
+

@@ -1,53 +1,53 @@
-<resources>
+﻿<resources>
     <string name="app_name">MinLish</string>
 
-    <string name="bottom_nav_home">Trang chu</string>
-    <string name="bottom_nav_vocabulary">Tu vung</string>
-    <string name="bottom_nav_grammar">Ngu phap</string>
-    <string name="bottom_nav_me">Toi</string>
+    <string name="bottom_nav_home">Trang chủ</string>
+    <string name="bottom_nav_vocabulary">Từ vựng</string>
+    <string name="bottom_nav_grammar">Ngữ pháp</string>
+    <string name="bottom_nav_me">Tôi</string>
 
-    <string name="me_default_user">Nguoi dung</string>
-    <string name="me_section_account">Tai khoan</string>
-    <string name="me_edit_profile_title">Chinh sua ho so</string>
-    <string name="me_edit_profile_subtitle">Ten, muc tieu, trinh do</string>
+    <string name="me_default_user">Người dùng</string>
+    <string name="me_section_account">Tài khoản</string>
+    <string name="me_edit_profile_title">Chỉnh sửa hồ sơ</string>
+    <string name="me_edit_profile_subtitle">Tên, mục tiêu, trình độ</string>
 
-    <string name="me_section_settings">Cai dat</string>
-    <string name="me_notifications_title">Thong bao</string>
-    <string name="me_notifications_subtitle">Nhac hoc hang ngay</string>
-    <string name="me_language_title">Ngon ngu</string>
-    <string name="me_language_subtitle">Tieng Viet</string>
-    <string name="me_about_title">Ve ung dung</string>
+    <string name="me_section_settings">Cài đặt</string>
+    <string name="me_notifications_title">Thông báo</string>
+    <string name="me_notifications_subtitle">Nhắc học hàng ngày</string>
+    <string name="me_language_title">Ngôn ngữ</string>
+    <string name="me_language_subtitle">Tiếng Việt</string>
+    <string name="me_about_title">Về ứng dụng</string>
     <string name="me_about_subtitle">MinLish v1.0.0</string>
 
-    <string name="me_section_other">Khac</string>
-    <string name="me_logout">Dang xuat</string>
+    <string name="me_section_other">Khác</string>
+    <string name="me_logout">Đăng xuất</string>
 
-    <string name="language_settings_title">Ngon ngu</string>
-    <string name="language_settings_subtitle">Chon ngon ngu cho toan bo ung dung</string>
-    <string name="language_option_vi">Tieng Viet</string>
+    <string name="language_settings_title">Ngôn ngữ</string>
+    <string name="language_settings_subtitle">Chọn ngôn ngữ cho toàn bộ ứng dụng</string>
+    <string name="language_option_vi">Tiếng Việt</string>
     <string name="language_option_en">English</string>
-    <string name="common_back">Quay lai</string>
+    <string name="common_back">Quay lại</string>
 
     <string name="notification_settings_title">Thong bao</string>
-    <string name="notification_settings_login_required">Vui long dang nhap de quan ly thong bao</string>
-    <string name="notification_settings_section_reminders">Nhac nho</string>
-    <string name="notification_settings_daily_reminder">Nhac hoc hang ngay</string>
-    <string name="notification_settings_daily_time">Gio hoc (HH:mm)</string>
-    <string name="notification_settings_review_reminder">Nhac on tap</string>
-    <string name="notification_settings_streak_reminder">Nhac duy tri streak</string>
-    <string name="notification_settings_daily_message">Noi dung nhac hang ngay</string>
-    <string name="notification_settings_review_message">Noi dung nhac on tap</string>
-    <string name="notification_settings_streak_message">Noi dung nhac streak</string>
-    <string name="notification_settings_section_in_app">Thong bao trong app</string>
-    <string name="notification_settings_enable_in_app">Bat thong bao trong app</string>
-    <string name="notification_settings_in_app_title">Tieu de thong bao</string>
-    <string name="notification_settings_in_app_message">Noi dung thong bao</string>
-    <string name="notification_settings_send_test_in_app">Gui thong bao test</string>
+    <string name="notification_settings_login_required">Vui lòng đăng nhập để quản lý thông báo</string>
+    <string name="notification_settings_section_reminders">Nhắc nhở</string>
+    <string name="notification_settings_daily_reminder">Nhắc học hàng ngày</string>
+    <string name="notification_settings_daily_time">Giờ học (HH:mm)</string>
+    <string name="notification_settings_review_reminder">Nhắc ôn tập</string>
+    <string name="notification_settings_streak_reminder">Nhắc duy trì chuỗi</string>
+    <string name="notification_settings_daily_message">Nội dung nhắc hàng ngày</string>
+    <string name="notification_settings_review_message">Nội dung nhắc ôn tập</string>
+    <string name="notification_settings_streak_message">Nội dung nhắc chuỗi</string>
+    <string name="notification_settings_section_in_app">Thông báo trong ứng dụng</string>
+    <string name="notification_settings_enable_in_app">Bật thông báo trong ứng dụng</string>
+    <string name="notification_settings_in_app_title">Tiêu đề thông báo</string>
+    <string name="notification_settings_in_app_message">Nội dung thông báo</string>
+    <string name="notification_settings_send_test_in_app">Gửi thông báo thử</string>
     <string name="notification_settings_section_email">Email</string>
-    <string name="notification_settings_enable_email">Bat email</string>
-    <string name="notification_settings_email_subject">Tieu de email</string>
-    <string name="notification_settings_email_message">Noi dung email</string>
-    <string name="notification_settings_saving">Dang luu...</string>
-    <string name="notification_settings_save">Luu cai dat</string>
-    <string name="notification_settings_recent_in_app">Thong bao gan day</string>
+    <string name="notification_settings_enable_email">Bật email</string>
+    <string name="notification_settings_email_subject">Tiêu đề email</string>
+    <string name="notification_settings_email_message">Nội dung email</string>
+    <string name="notification_settings_saving">Đang lưu...</string>
+    <string name="notification_settings_save">Lưu cài đặt</string>
+    <string name="notification_settings_recent_in_app">Thông báo gần đây</string>
 </resources>

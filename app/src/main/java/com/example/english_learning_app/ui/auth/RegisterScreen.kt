@@ -59,75 +59,7 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 4. Mục tiêu học tập (Goal)
-        var expandedGoal by remember { mutableStateOf(false) }
-        var selectedGoal by remember { mutableStateOf("IELTS") }
-        val goals = listOf("IELTS", "TOEIC", "Giao tiếp")
 
-        Box(modifier = Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                value = selectedGoal,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Mục tiêu học tập") },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    IconButton(onClick = { expandedGoal = !expandedGoal }) {
-                        Text("▼")
-                    }
-                }
-            )
-            DropdownMenu(
-                expanded = expandedGoal,
-                onDismissRequest = { expandedGoal = false }
-            ) {
-                goals.forEach { goal ->
-                    DropdownMenuItem(
-                        text = { Text(goal) },
-                        onClick = {
-                            selectedGoal = goal
-                            expandedGoal = false
-                        }
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // 5. Trình độ hiện tại (Level)
-        var expandedLevel by remember { mutableStateOf(false) }
-        var selectedLevel by remember { mutableStateOf("A1") }
-        val levels = listOf("A1", "A2", "B1", "B2", "C1", "C2")
-
-        Box(modifier = Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                value = selectedLevel,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Trình độ hiện tại") },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    IconButton(onClick = { expandedLevel = !expandedLevel }) {
-                        Text("▼")
-                    }
-                }
-            )
-            DropdownMenu(
-                expanded = expandedLevel,
-                onDismissRequest = { expandedLevel = false }
-            ) {
-                levels.forEach { level ->
-                    DropdownMenuItem(
-                        text = { Text(level) },
-                        onClick = {
-                            selectedLevel = level
-                            expandedLevel = false
-                        }
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
 
         // Hiển thị báo lỗi / thành công
         if (viewModel.errorMessage.value.isNotEmpty()) {
@@ -135,9 +67,8 @@ fun RegisterScreen(viewModel: AuthViewModel, onNavigateToLogin: () -> Unit = {})
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Nút Đăng ký
         Button(
-            onClick = { viewModel.register(selectedGoal, selectedLevel) },
+            onClick = { viewModel.register("", "") },
             modifier = Modifier.fillMaxWidth(),
             enabled = !viewModel.isLoading.value
         ) {

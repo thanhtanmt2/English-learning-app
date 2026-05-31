@@ -1,4 +1,4 @@
-package com.example.english_learning_app.ui.vocabulary
+﻿package com.example.english_learning_app.ui.vocabulary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,7 +33,7 @@ class WordQuizViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 if (wordSetIds.isEmpty()) {
-                    _uiState.value = WordQuizUiState(errorMessage = "Hay chon it nhat 1 word set.")
+                    _uiState.value = WordQuizUiState(errorMessage = "Hãy chọn ít nhất 1 word set.")
                     return@launch
                 }
 
@@ -42,7 +42,7 @@ class WordQuizViewModel : ViewModel() {
                 val selectedWords = allWords.filter { wordSetIds.contains(it.wordSetId.toString()) }
 
                 if (selectedWords.isEmpty()) {
-                    _uiState.value = WordQuizUiState(errorMessage = "Khong tim thay tu vung nao trong word set da chon.")
+                    _uiState.value = WordQuizUiState(errorMessage = "Không tìm thấy từ vựng nào trong word set đã chọn.")
                     return@launch
                 }
 
@@ -59,7 +59,7 @@ class WordQuizViewModel : ViewModel() {
                     selectedWordCount = selectedWords.size
                 )
             } catch (ex: Exception) {
-                _uiState.value = WordQuizUiState(errorMessage = ex.message ?: "Khong the tai du lieu.")
+                _uiState.value = WordQuizUiState(errorMessage = ex.message ?: "Không thể tải dữ liệu.")
             }
         }
     }
@@ -130,3 +130,4 @@ data class WordQuizUiState(
     val selectedWordCount: Int = 0,
     val errorMessage: String? = null
 )
+

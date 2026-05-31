@@ -1,4 +1,4 @@
-package com.example.english_learning_app.ui.vocabulary
+﻿package com.example.english_learning_app.ui.vocabulary
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -70,7 +70,7 @@ fun WordQuizScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "TRAC NGHIEM TU VUNG",
+                text = "TRẮC NGHIỆM TỪ VỰNG",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier.weight(1f)
@@ -325,8 +325,8 @@ fun WordQuizErrorState(message: String, onRetry: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Loi: $message", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
-        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Thu lai") }
+        Text(text = "Lỗi: $message", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
+        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Thử lại") }
     }
 }
 
@@ -341,3 +341,4 @@ fun WordQuizEmptyState(onRetry: () -> Unit) {
         Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Tai lai") }
     }
 }
+
