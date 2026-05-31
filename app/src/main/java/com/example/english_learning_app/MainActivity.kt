@@ -42,6 +42,7 @@ import com.example.english_learning_app.ui.learning.DictationScreen
 import com.example.english_learning_app.ui.learning.FlashcardScreen
 import com.example.english_learning_app.ui.vocabulary.AddEditWordScreen
 import com.example.english_learning_app.ui.vocabulary.AddWordSetScreen
+import com.example.english_learning_app.ui.vocabulary.AiWordListScreen
 import com.example.english_learning_app.ui.vocabulary.EditWordSetScreen
 import com.example.english_learning_app.ui.vocabulary.WordListScreen
 import com.example.english_learning_app.ui.vocabulary.WordQuizScreen
@@ -221,6 +222,7 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
             )
         }
         composable("add_word_set") { AddWordSetScreen(navController) }
+        composable("ai_word_list") { AiWordListScreen(navController) }
         composable(
             route = "edit_word_set/{wordSetId}",
             arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
