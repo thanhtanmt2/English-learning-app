@@ -36,7 +36,7 @@ class WordSetListViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val words = repository.loadWordsByWordSet(wordSetId)
-                words.forEach { word -> repository.deleteWord(word.id) }
+                words.forEach { word -> repository.deleteWord(word.id.toString()) }
                 repository.deleteWordSet(wordSetId)
                 load(force = true)
             } catch (ex: Exception) {

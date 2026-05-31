@@ -18,10 +18,11 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun GrammarQuizScreen(
     viewModel: GrammarViewModel,
+    noteId: String,
     onNavigateBack: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
-        viewModel.fetchQuizQuestions()
+        viewModel.fetchQuizQuestions(noteId)
     }
 
     val questions = viewModel.quizQuestions.value
@@ -35,12 +36,6 @@ fun GrammarQuizScreen(
     ) {
         // --- PHẦN TIÊU ĐỀ (CỐ ĐỊNH Ở TRÊN) ---
         Spacer(modifier = Modifier.height(16.dp))
-        TextButton(
-            onClick = onNavigateBack,
-            contentPadding = PaddingValues(0.dp)
-        ) {
-            Text("⬅ Quay lại", fontSize = 16.sp)
-        }
 
         val score = questions.count { selectedAnswers[it.id] == it.correctAnswer }
         val total = questions.size
@@ -83,9 +78,9 @@ fun GrammarQuizScreen(
                 CircularProgressIndicator()
             }
         } else if (viewModel.errorMessage.value.isNotEmpty()) {
-            ErrorState(message = viewModel.errorMessage.value) { viewModel.fetchQuizQuestions() }
+            ErrorState(message = viewModel.errorMessage.value) { viewModel.fetchQuizQuestions(noteId) }
         } else if (questions.isEmpty()) {
-            EmptyState { viewModel.fetchQuizQuestions() }
+            EmptyState { viewModel.fetchQuizQuestions(noteId) }
         } else {
             LazyColumn(
                 modifier = Modifier.weight(1f),
@@ -117,7 +112,10 @@ fun GrammarQuizScreen(
                     val allAnswered = selectedAnswers.size == questions.size
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Button(
-                            onClick = { isSubmitted = true },
+                            onClick = { 
+                                isSubmitted = true 
+                                viewModel.submitQuizScore(noteId, score, total)
+                            },
                             modifier = Modifier.fillMaxWidth().height(56.dp),
                             enabled = allAnswered,
                             shape = MaterialTheme.shapes.large

@@ -1,7 +1,7 @@
 package com.example.english_learning_app
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -66,17 +66,26 @@ enum class BottomNavItem(
     ME("me", R.string.bottom_nav_me, Icons.Default.Person)
 }
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
+            
+            // Lấy ngôn ngữ hiện tại đang được áp dụng để làm giá trị khởi tạo, tránh loop
+            val currentLocales = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+            val initialLang = if (currentLocales.isNotEmpty()) currentLocales else LanguagePreferences.DEFAULT_LANGUAGE
+            
             val languageTag by LanguagePreferences.languageFlow(context)
-                .collectAsState(initial = LanguagePreferences.DEFAULT_LANGUAGE)
+                .collectAsState(initial = initialLang)
+                
             LaunchedEffect(languageTag) {
-                AppCompatDelegate.setApplicationLocales(
-                    LocaleListCompat.forLanguageTags(languageTag)
-                )
+                val current = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+                if (current != languageTag) {
+                    AppCompatDelegate.setApplicationLocales(
+                        LocaleListCompat.forLanguageTags(languageTag)
+                    )
+                }
             }
             val navController = rememberNavController()
             val authViewModel: AuthViewModel = viewModel()
@@ -134,13 +143,22 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
             val note = navController.previousBackStackEntry?.savedStateHandle
                 ?.get<com.example.english_learning_app.data.model.GrammarNote>("note")
             if (note != null) {
-                GrammarDetailScreen(note = note, onNavigateBack = { navController.popBackStack() })
+                GrammarDetailScreen(
+                    note = note, 
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToQuiz = { id -> navController.navigate("grammar_quiz/$id") }
+                )
             }
         }
-        composable("grammar_quiz") {
+        composable(
+            route = "grammar_quiz/{noteId}",
+            arguments = listOf(navArgument("noteId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
             val grammarViewModel: GrammarViewModel = viewModel()
             GrammarQuizScreen(
                 viewModel = grammarViewModel,
+                noteId = noteId,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
@@ -305,7 +323,6 @@ fun MainWithBottomNav(authViewModel: AuthViewModel, rootNavController: NavHostCo
                     onNavigateBack = {},  // Không cần back vì đây là tab root
                     onNavigateToAdd = { rootNavController.navigate("add_edit_grammar") },
                     onNavigateToEdit = { id -> rootNavController.navigate("add_edit_grammar?id=$id") },
-                    onNavigateToQuiz = { rootNavController.navigate("grammar_quiz") },
                     onNavigateToDetail = { note ->
                         rootNavController.currentBackStackEntry?.savedStateHandle?.set("note", note)
                         rootNavController.navigate("grammar_detail")

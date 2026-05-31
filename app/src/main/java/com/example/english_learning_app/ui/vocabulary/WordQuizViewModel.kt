@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordQuizDirection
 import com.example.english_learning_app.data.model.WordQuizQuestion
-import com.example.english_learning_app.data.remote.RetrofitProvider
+import com.example.english_learning_app.data.remote.RetrofitClient
 import com.example.english_learning_app.data.repository.VocabularyRepository
 import kotlin.math.min
 import kotlin.random.Random
@@ -15,12 +15,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class WordQuizViewModel : ViewModel() {
-    private val repository = VocabularyRepository(RetrofitProvider.apiService)
+    private val repository = VocabularyRepository(RetrofitClient.apiService)
 
     private val _uiState = MutableStateFlow(WordQuizUiState())
     val uiState: StateFlow<WordQuizUiState> = _uiState.asStateFlow()
 
-    private var lastWordSetIds: List<String> = emptyList()
+    private var lastWordSetIds: List<String> =  emptyList()
     private var lastRequestedCount: Int = 0
 
     fun load(wordSetIds: List<String>, requestedCount: Int) {
@@ -39,7 +39,7 @@ class WordQuizViewModel : ViewModel() {
 
                 val user = repository.loadUser()
                 val allWords = repository.loadAllWords(user.id)
-                val selectedWords = allWords.filter { wordSetIds.contains(it.wordSetId) }
+                val selectedWords = allWords.filter { wordSetIds.contains(it.wordSetId.toString()) }
 
                 if (selectedWords.isEmpty()) {
                     _uiState.value = WordQuizUiState(errorMessage = "Khong tim thay tu vung nao trong word set da chon.")
@@ -95,7 +95,7 @@ class WordQuizViewModel : ViewModel() {
 
             WordQuizQuestion(
                 id = "${word.id}-${direction.name}",
-                wordId = word.id,
+                wordId = word.id.toString(),
                 question = questionText,
                 options = options,
                 correctAnswer = correctAnswer,

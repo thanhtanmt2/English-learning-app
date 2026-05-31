@@ -116,7 +116,7 @@ fun WordSetListScreen(
                             TextButton(onClick = { navController.navigate("edit_word_set/${wordSet.id}") }) {
                                 Text(text = "Edit")
                             }
-                            TextButton(onClick = { pendingDeleteId = wordSet.id }) {
+                            TextButton(onClick = { pendingDeleteId = wordSet.id.toString() }) {
                                 Text(text = "Delete", color = Color(0xFFB00020))
                             }
                         }

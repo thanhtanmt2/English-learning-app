@@ -17,7 +17,9 @@ data class GrammarNote(
     @SerializedName("tags") val tags: List<String>? = emptyList(),
     @SerializedName("ease_factor") val easeFactor: Double? = 2.5,
     @SerializedName("interval") val interval: Int? = 0,
-    @SerializedName("next_review_date") val nextReviewDate: String? = ""
+    @SerializedName("next_review_date") val nextReviewDate: String? = "",
+    @SerializedName("highestScore") val highestScore: Int? = null,
+    @SerializedName("totalQuestions") val totalQuestions: Int? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -31,7 +33,9 @@ data class GrammarNote(
         parcel.createStringArrayList(),
         parcel.readValue(Double::class.java.classLoader) as? Double,
         parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readString()
+        parcel.readString(),
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        parcel.readValue(Int::class.java.classLoader) as? Int
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -47,6 +51,8 @@ data class GrammarNote(
         parcel.writeValue(easeFactor)
         parcel.writeValue(interval)
         parcel.writeString(nextReviewDate)
+        parcel.writeValue(highestScore)
+        parcel.writeValue(totalQuestions)
     }
 
     override fun describeContents(): Int = 0

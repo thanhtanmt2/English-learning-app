@@ -23,7 +23,6 @@ fun GrammarListScreen(
     onNavigateBack: () -> Unit = {}, // Thêm callback quay lại
     onNavigateToAdd: () -> Unit = {},
     onNavigateToEdit: (String) -> Unit = {},
-    onNavigateToQuiz: () -> Unit = {},
     onNavigateToDetail: (GrammarNote) -> Unit = {}
 ) {
     // Ngay khi mở màn hình, tự động gọi API lấy danh sách bài học
@@ -36,23 +35,12 @@ fun GrammarListScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Thêm nút Quay lại ở trên cùng
+        // Tiêu đề
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-            }
             Text(text = "BÀI HỌC NGỮ PHÁP", fontSize = 22.sp, fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Nút đi tới màn hình làm bài Trắc nghiệm
-        Button(
-            onClick = onNavigateToQuiz,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Làm bài Trắc nghiệm")
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -68,16 +56,35 @@ fun GrammarListScreen(
             // LazyColumn dùng để vẽ danh sách cuộn được (giống RecyclerView)
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(viewModel.grammarNotes.value) { note ->
+                    val isCompleted = note.highestScore != null
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .clickable { onNavigateToDetail(note) },
-                        elevation = CardDefaults.cardElevation(4.dp)
+                        elevation = CardDefaults.cardElevation(4.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isCompleted) androidx.compose.ui.graphics.Color(0xFFE8F5E9) else MaterialTheme.colorScheme.surface
+                        )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = note.title, fontSize = 20.sp)
+                            Text(
+                                text = note.title, 
+                                fontSize = 20.sp, 
+                                color = if (isCompleted) androidx.compose.ui.graphics.Color(0xFF2E7D32) else androidx.compose.ui.graphics.Color.Unspecified
+                            )
                             Text(text = note.category, color = MaterialTheme.colorScheme.secondary)
+                            
+                            if (isCompleted) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Điểm cao nhất: ${note.highestScore}/${note.totalQuestions}",
+                                    color = androidx.compose.ui.graphics.Color(0xFF2E7D32),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                            }
+                            
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                                 IconButton(onClick = { onNavigateToEdit(note.id) }) {

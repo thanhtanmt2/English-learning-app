@@ -14,7 +14,8 @@ import com.example.english_learning_app.data.model.GrammarNote
 @Composable
 fun GrammarDetailScreen(
     note: GrammarNote,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToQuiz: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -22,11 +23,7 @@ fun GrammarDetailScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        TextButton(onClick = onNavigateBack) {
-            Text("⬅ Quay lại")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         
         Text(text = note.title, fontSize = 28.sp, fontWeight = FontWeight.Bold)
         Text(text = note.category, fontSize = 16.sp, color = MaterialTheme.colorScheme.secondary)
@@ -43,6 +40,15 @@ fun GrammarDetailScreen(
         
         note.level?.let {
             DetailSection(title = "Trình độ", content = it)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Button(
+            onClick = { onNavigateToQuiz(note.id) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Làm bài Trắc nghiệm")
         }
     }
 }

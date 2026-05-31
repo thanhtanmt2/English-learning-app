@@ -52,10 +52,22 @@ interface ApiService {
     // Tạo bộ từ mới
     @POST("wordsets")
     suspend fun createWordSet(@Body payload: WordSetPayload): WordSet
+
+    // Cập nhật bộ từ
+    @PUT("wordsets/{id}")
+    suspend fun updateWordSet(@RetrofitPath("id") id: Int, @Body payload: WordSetPayload): WordSet
+
+    // Xóa bộ từ
+    @DELETE("wordsets/{id}")
+    suspend fun deleteWordSet(@RetrofitPath("id") id: Int)
     
     // Lấy thông tin 1 từ
     @GET("words/{id}")
     suspend fun getWord(@RetrofitPath("id") id: String): Word
+
+    // Lấy tất cả từ vựng (hoặc theo bộ từ)
+    @GET("words")
+    suspend fun getWords(@Query("wordSetId") wordSetId: String? = null): List<Word>
     
     // Lấy các từ trong bộ từ
     @GET("wordsets/{id}/words")
@@ -87,7 +99,7 @@ interface ApiService {
 
     // Lấy danh sách câu hỏi trắc nghiệm
     @GET("quiz_questions")
-    suspend fun getGrammarQuizzes(): List<QuizQuestion>
+    suspend fun getGrammarQuizzes(@Query("noteId") noteId: String): List<QuizQuestion>
 
     // Thêm một bài học Ngữ pháp mới
     @POST("grammar")
@@ -108,4 +120,15 @@ interface ApiService {
     // Lấy Tổng quan tiến độ (Streak, Accuracy...)
     @GET("progress")
     suspend fun getProgressOverview(): ProgressOverview
+
+    @POST("grammar/{id}/score")
+    suspend fun submitGrammarQuizScore(
+        @RetrofitPath("id") noteId: String,
+        @Body payload: QuizScorePayload
+    )
 }
+
+data class QuizScorePayload(
+    val score: Int,
+    val total: Int
+)

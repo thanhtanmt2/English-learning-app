@@ -17,15 +17,19 @@ class VocabularyRepository(private val apiService: ApiService) {
     }
 
     suspend fun loadWords(userId: String, wordSetId: String? = null): List<Word> {
-        return apiService.getWords(wordSetId = wordSetId, userId = userId)
+        return if (wordSetId != null) {
+            apiService.getWordsInSet(wordSetId.toIntOrNull() ?: 0)
+        } else {
+            apiService.getWords()
+        }
     }
 
     suspend fun loadAllWords(userId: String): List<Word> {
-        return apiService.getWords(userId = userId)
+        return apiService.getWords()
     }
 
     suspend fun loadWordsByWordSet(wordSetId: String): List<Word> {
-        return apiService.getWords(wordSetId = wordSetId)
+        return apiService.getWordsInSet(wordSetId.toIntOrNull() ?: 0)
     }
 
     suspend fun createWordSet(payload: WordSetPayload): WordSet {
@@ -33,15 +37,15 @@ class VocabularyRepository(private val apiService: ApiService) {
     }
 
     suspend fun loadWordSet(wordSetId: String): WordSet {
-        return apiService.getWordSet(id = wordSetId)
+        return apiService.getWordSet(id = wordSetId.toIntOrNull() ?: 0)
     }
 
     suspend fun updateWordSet(wordSetId: String, payload: WordSetPayload): WordSet {
-        return apiService.updateWordSet(id = wordSetId, payload = payload)
+        return apiService.updateWordSet(id = wordSetId.toIntOrNull() ?: 0, payload = payload)
     }
 
     suspend fun deleteWordSet(wordSetId: String) {
-        apiService.deleteWordSet(id = wordSetId)
+        apiService.deleteWordSet(id = wordSetId.toIntOrNull() ?: 0)
     }
 
     suspend fun loadWord(wordId: String): Word {

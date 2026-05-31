@@ -3,7 +3,7 @@ package com.example.english_learning_app.ui.vocabulary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.english_learning_app.data.model.WordSetPayload
-import com.example.english_learning_app.data.remote.RetrofitProvider
+import com.example.english_learning_app.data.remote.RetrofitClient
 import com.example.english_learning_app.data.repository.VocabularyRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class EditWordSetViewModel : ViewModel() {
-    private val repository = VocabularyRepository(RetrofitProvider.apiService)
+    private val repository = VocabularyRepository(RetrofitClient.apiService)
 
     private val _uiState = MutableStateFlow(EditWordSetUiState())
     val uiState: StateFlow<EditWordSetUiState> = _uiState.asStateFlow()
@@ -26,11 +26,11 @@ class EditWordSetViewModel : ViewModel() {
                 val wordSet = repository.loadWordSet(wordSetId)
                 _uiState.value = EditWordSetUiState(
                     isLoading = false,
-                    wordSetId = wordSet.id,
-                    userId = wordSet.userId,
+                    wordSetId = wordSet.id.toString(),
+                    userId = wordSet.userId.toString(),
                     name = wordSet.name,
-                    description = wordSet.description,
-                    tags = wordSet.tags.joinToString(", ")
+                    description = wordSet.description ?: "",
+                    tags = "" // Model WordSet hien tai khong co tags
                 )
             } catch (ex: Exception) {
                 _uiState.value = _uiState.value.copy(

@@ -22,8 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,7 +43,7 @@ fun WordQuizSetupScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedSetIds = remember { mutableStateListOf<String>() }
-    var questionCount by remember { mutableStateOf(15) }
+    var questionCount by remember { mutableIntStateOf(15) }
 
     LaunchedEffect(Unit) {
         viewModel.load()
@@ -104,7 +104,8 @@ fun WordQuizSetupScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(uiState.wordSets) { wordSet ->
-                val isChecked = selectedSetIds.contains(wordSet.id)
+                val wordSetIdStr = wordSet.id.toString()
+                val isChecked = selectedSetIds.contains(wordSetIdStr)
                 Card(
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9F2)),
                     modifier = Modifier.fillMaxWidth()
@@ -119,11 +120,11 @@ fun WordQuizSetupScreen(
                             checked = isChecked,
                             onCheckedChange = { checked ->
                                 if (checked) {
-                                    if (!selectedSetIds.contains(wordSet.id)) {
-                                        selectedSetIds.add(wordSet.id)
+                                    if (!selectedSetIds.contains(wordSetIdStr)) {
+                                        selectedSetIds.add(wordSetIdStr)
                                     }
                                 } else {
-                                    selectedSetIds.remove(wordSet.id)
+                                    selectedSetIds.remove(wordSetIdStr)
                                 }
                             }
                         )

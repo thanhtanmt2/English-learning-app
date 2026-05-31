@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -141,10 +142,10 @@ fun HomeScreen(
                 )
                 HomeStatCard(
                     modifier = Modifier.weight(1f),
-                    icon = Icons.Default.MenuBook,
+                    icon = Icons.AutoMirrored.Filled.MenuBook,
                     iconColor = Color(0xFF2196F3),
                     label = "Đã học",
-                    value = "${overview?.totalWordsLearned ?: 0} từ"
+                    value = "${overview?.learnedWords ?: 0} từ"
                 )
             }
 

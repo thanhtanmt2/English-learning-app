@@ -37,12 +37,12 @@ class GrammarViewModel : ViewModel() {
     }
 
     // Hàm gọi mạng để tải danh sách Trắc nghiệm
-    fun fetchQuizQuestions() {
+    fun fetchQuizQuestions(noteId: String) {
         isLoading.value = true
         errorMessage.value = ""
         viewModelScope.launch {
             try {
-                val quizzes = RetrofitClient.apiService.getGrammarQuizzes()
+                val quizzes = RetrofitClient.apiService.getGrammarQuizzes(noteId)
                 quizQuestions.value = quizzes
             } catch (e: Exception) {
                 errorMessage.value = "Lỗi tải trắc nghiệm: ${e.message}"
@@ -152,5 +152,21 @@ class GrammarViewModel : ViewModel() {
     // Hàm hỗ trợ lấy bài học theo ID từ danh sách hiện có
     fun getGrammarNoteById(id: String): GrammarNote? {
         return grammarNotes.value.find { it.id == id }
+    }
+
+    fun submitQuizScore(noteId: String, score: Int, total: Int) {
+        viewModelScope.launch {
+            try {
+                com.example.english_learning_app.data.remote.RetrofitClient.apiService.submitGrammarQuizScore(
+                    noteId,
+                    com.example.english_learning_app.data.remote.QuizScorePayload(score, total)
+                )
+                // Gọi lại fetchGrammarNotes để cập nhật dữ liệu mới nhất (điểm số)
+                fetchGrammarNotes()
+            } catch (e: Exception) {
+                // Có thể log lỗi nếu cần thiết
+                e.printStackTrace()
+            }
+        }
     }
 }
