@@ -30,6 +30,22 @@ interface MockApiService {
         @Body payload: WordSetPayload
     ): WordSet
 
+    @GET("api/v1/wordsets/{id}")
+    suspend fun getWordSet(
+        @Path("id") id: String
+    ): WordSet
+
+    @PUT("api/v1/wordsets/{id}")
+    suspend fun updateWordSet(
+        @Path("id") id: String,
+        @Body payload: WordSetPayload
+    ): WordSet
+
+    @DELETE("api/v1/wordsets/{id}")
+    suspend fun deleteWordSet(
+        @Path("id") id: String
+    )
+
     @GET("api/v1/words")
     suspend fun getWords(
         @Query("wordsetId") wordSetId: String? = null,

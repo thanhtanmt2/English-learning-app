@@ -31,6 +31,19 @@ class WordSetListViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteWordSet(wordSetId: String) {
+        viewModelScope.launch {
+            try {
+                val words = repository.loadWordsByWordSet(wordSetId)
+                words.forEach { word -> repository.deleteWord(word.id) }
+                repository.deleteWordSet(wordSetId)
+                load(force = true)
+            } catch (ex: Exception) {
+                _uiState.value = _uiState.value.copy(errorMessage = ex.message)
+            }
+        }
+    }
 }
 
 data class WordSetListUiState(

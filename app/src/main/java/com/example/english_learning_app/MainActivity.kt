@@ -37,7 +37,10 @@ import com.example.english_learning_app.ui.learning.DictationScreen
 import com.example.english_learning_app.ui.learning.FlashcardScreen
 import com.example.english_learning_app.ui.vocabulary.AddEditWordScreen
 import com.example.english_learning_app.ui.vocabulary.AddWordSetScreen
+import com.example.english_learning_app.ui.vocabulary.EditWordSetScreen
 import com.example.english_learning_app.ui.vocabulary.WordListScreen
+import com.example.english_learning_app.ui.vocabulary.WordQuizScreen
+import com.example.english_learning_app.ui.vocabulary.WordQuizSetupScreen
 import com.example.english_learning_app.ui.vocabulary.WordSetListScreen
 
 // Me
@@ -183,7 +186,34 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
         ) { backStackEntry ->
             DictationScreen(navController, backStackEntry.arguments?.getString("wordSetId"))
         }
+        composable("word_quiz_setup") {
+            WordQuizSetupScreen(navController = navController)
+        }
+        composable(
+            route = "word_quiz?wordSetIds={wordSetIds}&count={count}",
+            arguments = listOf(
+                navArgument("wordSetIds") { type = NavType.StringType; defaultValue = "" },
+                navArgument("count") { type = NavType.IntType; defaultValue = 15 }
+            )
+        ) { backStackEntry ->
+            val wordSetIds = backStackEntry.arguments?.getString("wordSetIds") ?: ""
+            val count = backStackEntry.arguments?.getInt("count") ?: 15
+            WordQuizScreen(
+                navController = navController,
+                wordSetIdsParam = wordSetIds,
+                countParam = count
+            )
+        }
         composable("add_word_set") { AddWordSetScreen(navController) }
+        composable(
+            route = "edit_word_set/{wordSetId}",
+            arguments = listOf(navArgument("wordSetId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            EditWordSetScreen(
+                navController = navController,
+                wordSetId = backStackEntry.arguments?.getString("wordSetId") ?: ""
+            )
+        }
 
         // Profile edit
         composable("edit_profile") {
