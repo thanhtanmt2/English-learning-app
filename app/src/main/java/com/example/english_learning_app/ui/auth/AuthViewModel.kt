@@ -73,6 +73,37 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    // Hàm giả lập Đăng nhập bằng Google
+    fun loginWithGoogleMock() {
+        isLoading.value = true
+        errorMessage.value = ""
+        isLoginSuccess.value = false
+
+        viewModelScope.launch {
+            try {
+                // Giả lập độ trễ mạng
+                kotlinx.coroutines.delay(1000)
+                
+                // Mặc định đăng nhập bằng user đầu tiên (hehe@gmail.com)
+                val users = RetrofitClient.apiService.login("hehe@gmail.com", "hehe")
+                
+                if (users.isNotEmpty()) {
+                    val user = users[0]
+                    currentUser.value = user
+                    tokenManager.saveToken("fake_google_token_for_user_${user.id}")
+                    errorMessage.value = "Google Login thành công! Xin chào ${user.name}"
+                    isLoginSuccess.value = true
+                } else {
+                    errorMessage.value = "Lỗi giả lập: Không tìm thấy tài khoản Google"
+                }
+            } catch (e: Exception) {
+                errorMessage.value = "Lỗi kết nối: ${e.message}"
+            } finally {
+                isLoading.value = false
+            }
+        }
+    }
     // Hàm Đăng ký
     fun register(goal: String, level: String) {
         // Bắt lỗi Form (Validation) cực kỳ quan trọng cho Đăng ký

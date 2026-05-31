@@ -2,39 +2,22 @@ package com.example.english_learning_app.ui.vocabulary
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -136,24 +119,38 @@ fun WordQuizScreen(
                 viewModel.reload()
             }
         } else {
-            LazyColumn(
+            val pagerState = rememberPagerState(pageCount = { uiState.questions.size })
+            val coroutineScope = rememberCoroutineScope()
+
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Câu ${pagerState.currentPage + 1} / ${uiState.questions.size}",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 16.sp
+                )
+            }
+
+            HorizontalPager(
+                state = pagerState,
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(
-                    items = uiState.questions,
-                    key = { it.id }
-                ) { quiz ->
-                    WordQuizCard(
-                        quiz = quiz,
-                        selectedOption = selectedAnswers[quiz.id],
-                        isSubmitted = isSubmitted,
-                        onOptionSelected = { option ->
-                            if (!isSubmitted) selectedAnswers[quiz.id] = option
+                pageSpacing = 16.dp
+            ) { page ->
+                val quiz = uiState.questions[page]
+                WordQuizCard(
+                    quiz = quiz,
+                    selectedOption = selectedAnswers[quiz.id],
+                    isSubmitted = isSubmitted,
+                    onOptionSelected = { option ->
+                        if (!isSubmitted) {
+                            selectedAnswers[quiz.id] = option
                         }
-                    )
-                }
+                    }
+                )
             }
 
             Box(
@@ -164,35 +161,64 @@ fun WordQuizScreen(
                 if (!isSubmitted) {
                     val allAnswered = selectedAnswers.size == uiState.questions.size
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        // Thanh điều hướng câu hỏi
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                            contentPadding = PaddingValues(horizontal = 8.dp)
+                        ) {
+                            items(count = uiState.questions.size) { index ->
+                                val quizId = uiState.questions[index].id
+                                val isAnswered = selectedAnswers.containsKey(quizId)
+                                val isCurrentPage = pagerState.currentPage == index
+                                
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            if (isAnswered) MaterialTheme.colorScheme.primary 
+                                            else MaterialTheme.colorScheme.surface
+                                        )
+                                        .border(
+                                            width = if (isCurrentPage) 2.dp else 1.dp,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            shape = CircleShape
+                                        )
+                                        .clickable {
+                                            coroutineScope.launch {
+                                                pagerState.animateScrollToPage(index)
+                                            }
+                                        },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "${index + 1}",
+                                        color = if (isAnswered) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+
                         Button(
                             onClick = { isSubmitted = true },
                             modifier = Modifier.fillMaxWidth().height(56.dp),
                             enabled = allAnswered,
                             shape = MaterialTheme.shapes.large
                         ) {
-                            Text("NOP BAI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text("NỘP BÀI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         }
                         if (!allAnswered) {
                             Text(
-                                text = "Hoan thanh ${selectedAnswers.size}/${uiState.questions.size} cau de nop bai",
+                                text = "Hoàn thành ${selectedAnswers.size}/${uiState.questions.size} câu để nộp bài",
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.secondary,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                         }
-                    }
-                } else {
-                    OutlinedButton(
-                        onClick = {
-                            isSubmitted = false
-                            selectedAnswers.clear()
-                            viewModel.reload()
-                        },
-                        modifier = Modifier.fillMaxWidth().height(56.dp),
-                        shape = MaterialTheme.shapes.large,
-                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-                    ) {
-                        Text("LAM LAI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -230,21 +256,21 @@ fun WordQuizCard(
 
                 val containerColor = when {
                     isSubmitted && isCorrect -> Color(0xFFE8F5E9)
-                    isSubmitted && isThisOptionSelected && !isCorrect -> Color(0xFFFFEBEE)
+                    isSubmitted && isThisOptionSelected -> Color(0xFFFFEBEE)
                     !isSubmitted && isThisOptionSelected -> MaterialTheme.colorScheme.primaryContainer
                     else -> Color.Transparent
                 }
 
                 val contentColor = when {
                     isSubmitted && isCorrect -> Color(0xFF2E7D32)
-                    isSubmitted && isThisOptionSelected && !isCorrect -> Color(0xFFC62828)
+                    isSubmitted && isThisOptionSelected -> Color(0xFFC62828)
                     !isSubmitted && isThisOptionSelected -> MaterialTheme.colorScheme.primary
                     else -> MaterialTheme.colorScheme.onSurface
                 }
 
                 val borderColor = when {
                     isSubmitted && isCorrect -> Color(0xFF4CAF50)
-                    isSubmitted && isThisOptionSelected && !isCorrect -> Color(0xFFF44336)
+                    isSubmitted && isThisOptionSelected -> Color(0xFFF44336)
                     !isSubmitted && isThisOptionSelected -> MaterialTheme.colorScheme.primary
                     else -> MaterialTheme.colorScheme.outlineVariant
                 }

@@ -27,6 +27,7 @@ fun MeScreen(
     onNavigateToEditProfile: () -> Unit,
     onNavigateToLanguage: () -> Unit,
     onNavigateToNotifications: () -> Unit,
+    onNavigateToAbout: () -> Unit,
     onLogout: () -> Unit
 ) {
     val user = authViewModel.currentUser.value
@@ -130,7 +131,8 @@ fun MeScreen(
         SettingItem(
             icon = Icons.Default.Info,
             title = stringResource(R.string.me_about_title),
-            subtitle = stringResource(R.string.me_about_subtitle)
+            subtitle = stringResource(R.string.me_about_subtitle),
+            onClick = onNavigateToAbout
         )
 
         Spacer(modifier = Modifier.height(12.dp))
