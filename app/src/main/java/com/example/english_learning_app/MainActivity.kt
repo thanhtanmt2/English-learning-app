@@ -265,6 +265,11 @@ fun AppNavHost(navController: NavHostController, authViewModel: AuthViewModel) {
                 onNavigateBack = { navController.popBackStack() }
             )
         }
+        composable("about_app") {
+            com.example.english_learning_app.ui.me.AboutScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -337,6 +342,7 @@ fun MainWithBottomNav(authViewModel: AuthViewModel, rootNavController: NavHostCo
                     onNavigateToEditProfile = { rootNavController.navigate("edit_profile") },
                     onNavigateToLanguage = { rootNavController.navigate("language_settings") },
                     onNavigateToNotifications = { rootNavController.navigate("notification_settings") },
+                    onNavigateToAbout = { rootNavController.navigate("about_app") },
                     onLogout = {
                         rootNavController.navigate("login") {
                             popUpTo("main") { inclusive = true }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Nền trắng hình tròn -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,24C44,12.954 35.046,4 24,4C12.954,4 4,12.954 4,24C4,35.046 12.954,44 24,44C35.046,44 44,35.046 44,24Z"/>
+    <!-- Phần đỏ (top-left arc) -->
+    <path
+        android:fillColor="#EA4335"
+        android:pathData="M24,9.5C27.374,9.5 30.43,10.724 32.784,12.726L38.634,6.876C34.894,3.496 30.182,1.5 24,1.5C15.288,1.5 7.8,6.668 4.306,14.078L11.178,19.428C12.866,14.882 18.024,9.5 24,9.5Z"/>
+    <!-- Phần vàng (bottom-left) -->
+    <path
+        android:fillColor="#FBBC05"
+        android:pathData="M9.5,24C9.5,22.332 9.776,20.73 10.27,19.222L3.398,13.872C2.004,16.826 1.5,20.306 1.5,24C1.5,27.63 2.386,31.048 3.938,34.066L10.886,28.722C10.014,27.25 9.5,25.682 9.5,24Z"/>
+    <!-- Phần xanh dương (right) -->
+    <path
+        android:fillColor="#4285F4"
+        android:pathData="M24,46.5C30.29,46.5 35.074,44.468 38.45,41.252L31.888,36.142C30.078,37.38 27.784,38.154 24,38.154C18.076,38.154 12.952,33.994 11.178,28.518L4.306,33.872C7.8,41.286 15.288,46.5 24,46.5Z"/>
+    <!-- Phần xanh lá (bottom-right) -->
+    <path
+        android:fillColor="#34A853"
+        android:pathData="M38.45,41.252C35.074,44.468 30.29,46.5 24,46.5L24,38.154C27.784,38.154 30.078,37.38 31.888,36.142L38.45,41.252Z"/>
+    <!-- Thanh ngang của chữ G (xanh dương) -->
+    <path
+        android:fillColor="#4285F4"
+        android:pathData="M46.5,24C46.5,22.5 46.346,21.046 46.044,19.636L24,19.636L24,28.364L36.664,28.364C35.9,31.538 33.666,34.072 31.888,36.142L38.45,41.252C43.406,36.72 46.5,30.83 46.5,24Z"/>
+</vector>
