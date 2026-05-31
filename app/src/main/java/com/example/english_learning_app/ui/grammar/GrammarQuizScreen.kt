@@ -24,12 +24,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import com.example.english_learning_app.data.model.QuizQuestion
 
 @Composable
 fun GrammarQuizScreen(
     viewModel: GrammarViewModel,
-    noteId: String
+    noteId: String,
+    onNavigateBack: () -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.fetchQuizQuestions(noteId)
@@ -39,35 +42,47 @@ fun GrammarQuizScreen(
     val selectedAnswers = remember { mutableStateMapOf<String, String>() }
     var isSubmitted by remember { mutableStateOf(value = false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        // --- PHẦN TIÊU ĐỀ (CỐ ĐỊNH Ở TRÊN) ---
-        Spacer(modifier = Modifier.height(16.dp))
-
-        val score = questions.count { selectedAnswers[it.id] == it.correctAnswer }
-        val total = questions.size
-
-        Row(
+    Scaffold(
+        topBar = {
+            Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                    Text(
+                        text = "BÀI TẬP TRẮC NGHIỆM",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                HorizontalDivider()
+            }
+        }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
         ) {
-            Text(
-                text = "BÀI TẬP TRẮC NGHIỆM", 
-                fontSize = 22.sp, 
-                fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.weight(1f)
-            )
-            
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val score = questions.count { selectedAnswers[it.id] == it.correctAnswer }
+            val total = questions.size
+
             if (isSubmitted) {
                 Surface(
                     color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 8.dp)
                 ) {
                     Text(
                         text = "Điểm: $score/$total",
@@ -78,123 +93,121 @@ fun GrammarQuizScreen(
                     )
                 }
             }
-        }
-        
-        HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            
+            // --- PHẦN NỘI DUNG (CÓ THỂ CUỘN LÊN XUỐNG) ---
+            if (viewModel.isLoading.value) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (viewModel.errorMessage.value.isNotEmpty()) {
+                ErrorState(message = viewModel.errorMessage.value) { viewModel.fetchQuizQuestions(noteId) }
+            } else if (questions.isEmpty()) {
+                EmptyState { viewModel.fetchQuizQuestions(noteId) }
+            } else {
+                val pagerState = rememberPagerState { questions.size }
+                val coroutineScope = rememberCoroutineScope()
 
-        // --- PHẦN NỘI DUNG (CÓ THỂ CUỘN LÊN XUỐNG) ---
-        if (viewModel.isLoading.value) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else if (viewModel.errorMessage.value.isNotEmpty()) {
-            ErrorState(message = viewModel.errorMessage.value) { viewModel.fetchQuizQuestions(noteId) }
-        } else if (questions.isEmpty()) {
-            EmptyState { viewModel.fetchQuizQuestions(noteId) }
-        } else {
-            val pagerState = rememberPagerState { questions.size }
-            val coroutineScope = rememberCoroutineScope()
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Câu ${pagerState.currentPage + 1} / ${questions.size}",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp
+                    )
+                }
 
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Câu ${pagerState.currentPage + 1} / ${questions.size}",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 16.sp
-                )
-            }
-
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp),
-                pageSpacing = 16.dp
-            ) { page ->
-                val quiz = questions[page]
-                QuizCard(
-                    quiz = quiz,
-                    selectedOption = selectedAnswers[quiz.id],
-                    isSubmitted = isSubmitted,
-                    onOptionSelected = { option ->
-                        if (!isSubmitted) {
-                            selectedAnswers[quiz.id] = option
-                        }
-                    }
-                )
-            }
-
-            // --- PHẦN NÚT BẤM (CỐ ĐỊNH Ở DƯỚI) ---
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            ) {
-                if (!isSubmitted) {
-                    val allAnswered = selectedAnswers.size == questions.size
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Thanh điều hướng câu hỏi
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
-                            contentPadding = PaddingValues(horizontal = 8.dp)
-                        ) {
-                            items(count = questions.size) { index ->
-                                val quizId = questions[index].id
-                                val isAnswered = selectedAnswers.containsKey(quizId)
-                                val isCurrentPage = pagerState.currentPage == index
-                                
-                                Box(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape)
-                                        .background(
-                                            if (isAnswered) MaterialTheme.colorScheme.primary 
-                                            else MaterialTheme.colorScheme.surface
-                                        )
-                                        .border(
-                                            width = if (isCurrentPage) 2.dp else 1.dp,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            shape = CircleShape
-                                        )
-                                        .clickable {
-                                            coroutineScope.launch {
-                                                pagerState.animateScrollToPage(index)
-                                            }
-                                        },
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = (index + 1).toString(),
-                                        color = if (isAnswered) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp),
+                    pageSpacing = 16.dp
+                ) { page ->
+                    val quiz = questions[page]
+                    QuizCard(
+                        quiz = quiz,
+                        selectedOption = selectedAnswers[quiz.id],
+                        isSubmitted = isSubmitted,
+                        onOptionSelected = { option ->
+                            if (!isSubmitted) {
+                                selectedAnswers[quiz.id] = option
                             }
                         }
+                    )
+                }
 
-                        Button(
-                            onClick = { 
-                                isSubmitted = true 
-                                viewModel.submitQuizScore(noteId, score, total)
-                            },
-                            modifier = Modifier.fillMaxWidth().height(56.dp),
-                            enabled = allAnswered,
-                            shape = MaterialTheme.shapes.large
-                        ) {
-                            Text("NỘP BÀI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        }
-                        if (!allAnswered) {
-                            Text(
-                                text = "Hoàn thành ${selectedAnswers.size}/${questions.size} câu để nộp bài",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.secondary,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
+                // --- PHẦN NÚT BẤM (CỐ ĐỊNH Ở DƯỚI) ---
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                ) {
+                    if (!isSubmitted) {
+                        val allAnswered = selectedAnswers.size == questions.size
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            // Thanh điều hướng câu hỏi
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                                contentPadding = PaddingValues(horizontal = 8.dp)
+                            ) {
+                                items(count = questions.size) { index ->
+                                    val quizId = questions[index].id
+                                    val isAnswered = selectedAnswers.containsKey(quizId)
+                                    val isCurrentPage = pagerState.currentPage == index
+                                    
+                                    Box(
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .clip(CircleShape)
+                                            .background(
+                                                if (isAnswered) MaterialTheme.colorScheme.primary 
+                                                else MaterialTheme.colorScheme.surface
+                                            )
+                                            .border(
+                                                width = if (isCurrentPage) 2.dp else 1.dp,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                shape = CircleShape
+                                            )
+                                            .clickable {
+                                                coroutineScope.launch {
+                                                    pagerState.animateScrollToPage(index)
+                                                }
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = (index + 1).toString(),
+                                            color = if (isAnswered) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+
+                            Button(
+                                onClick = { 
+                                    isSubmitted = true 
+                                    viewModel.submitQuizScore(noteId, score, total)
+                                },
+                                modifier = Modifier.fillMaxWidth().height(56.dp),
+                                enabled = allAnswered,
+                                shape = MaterialTheme.shapes.large
+                            ) {
+                                Text("NỘP BÀI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            }
+                            if (!allAnswered) {
+                                Text(
+                                    text = "Hoàn thành ${selectedAnswers.size}/${questions.size} câu để nộp bài",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
                         }
                     }
                 }

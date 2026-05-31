@@ -97,17 +97,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 kotlinx.coroutines.delay(1000)
                 
                 // Mặc định đăng nhập bằng user đầu tiên (hehe@gmail.com)
-                val users = RetrofitClient.apiService.login("hehe@gmail.com", "hehe")
+                val request = LoginRequest("demo@minlish.com", "demo123")
+                val response = RetrofitClient.apiService.login(request)
                 
-                if (users.isNotEmpty()) {
-                    val user = users[0]
-                    currentUser.value = user
-                    tokenManager.saveToken("fake_google_token_for_user_${user.id}")
-                    errorMessage.value = "Google Login thành công! Xin chào ${user.name}"
-                    isLoginSuccess.value = true
-                } else {
-                    errorMessage.value = "Lỗi giả lập: Không tìm thấy tài khoản Google"
-                }
+                val user = response.user
+                currentUser.value = user
+                tokenManager.saveToken(response.token)
+                errorMessage.value = "Google Login thành công! Xin chào ${user.name}"
+                isLoginSuccess.value = true
             } catch (e: Exception) {
                 errorMessage.value = "Lỗi kết nối: ${e.message}"
             } finally {
