@@ -35,6 +35,10 @@ interface ApiService {
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): AuthResponse
 
+    // API Đăng nhập Google
+    @POST("auth/google")
+    suspend fun googleLogin(@Body request: Map<String, String>): AuthResponse
+
     // Cập nhật User
     @PATCH("users/{id}")
     suspend fun updateUser(@RetrofitPath("id") id: String, @Body user: User): User

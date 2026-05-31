@@ -91,3 +91,62 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
 };
+
+// POST /api/auth/google
+exports.googleLogin = async (req, res) => {
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(400).json({ message: 'Thiếu idToken của Google' });
+  }
+
+  try {
+    const { OAuth2Client } = require('google-auth-library');
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    
+    // 1. Verify idToken
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name, sub: google_id, picture: avatar } = payload;
+
+    // 2. Kiểm tra user trong database
+    const [[user]] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+
+    let userId = null;
+
+    if (user) {
+      userId = user.id;
+      // Nếu user chưa có google_id thì cập nhật
+      if (!user.google_id) {
+        await db.execute('UPDATE users SET google_id = ?, avatar = ? WHERE id = ?', [google_id, avatar, userId]);
+      }
+    } else {
+      // 3. Tạo user mới
+      const [result] = await db.execute(
+        'INSERT INTO users (name, email, password, google_id, avatar) VALUES (?, ?, ?, ?, ?)',
+        [name, email, null, google_id, avatar]
+      );
+      userId = result.insertId;
+    }
+
+    // 4. Tạo JWT token
+    const token = jwt.sign(
+      { id: userId, email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.json({
+      message: 'Đăng nhập Google thành công',
+      token,
+      user: { id: userId, name, email, avatar }
+    });
+
+  } catch (err) {
+    console.error('[Google Login Error]', err);
+    res.status(401).json({ message: 'Xác thực Google thất bại', error: err.message });
+  }
+};

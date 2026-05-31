@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,7 +18,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.english_learning_app.R
-
+import androidx.compose.ui.platform.LocalContext
+import android.util.Log
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.CustomCredential
+import androidx.credentials.exceptions.GetCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 // Giao diện Đăng nhập
 @Composable
 fun LoginScreen(
@@ -29,6 +39,40 @@ fun LoginScreen(
     LaunchedEffect(viewModel.isLoginSuccess.value) {
         if (viewModel.isLoginSuccess.value) {
             onNavigateToHome()
+        }
+    }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val credentialManager = CredentialManager.create(context)
+
+    // Hàm xử lý đăng nhập Google bằng Credential Manager (thay thế GoogleSignIn đã bị khai tử)
+    val handleGoogleSignIn = {
+        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId("678416534524-n1ts162jalhukdv8bktqf26f2ilgo62v.apps.googleusercontent.com")
+            .setAutoSelectEnabled(false)
+            .build()
+
+        val request: GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        coroutineScope.launch {
+            try {
+                val result = credentialManager.getCredential(
+                    request = request,
+                    context = context
+                )
+                val credential = result.credential
+                if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                    viewModel.loginWithGoogleReal(googleIdTokenCredential.idToken)
+                }
+            } catch (e: GetCredentialException) {
+                Log.e("GoogleSignIn", "Error: ${e.message}")
+                viewModel.errorMessage.value = "Đăng nhập Google thất bại"
+            }
         }
     }
 
@@ -111,7 +155,10 @@ fun LoginScreen(
 
         // Nút Đăng nhập bằng Google (trông giống thật)
         OutlinedButton(
-            onClick = { viewModel.loginWithGoogleMock() },
+            onClick = { 
+                viewModel.errorMessage.value = ""
+                handleGoogleSignIn()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

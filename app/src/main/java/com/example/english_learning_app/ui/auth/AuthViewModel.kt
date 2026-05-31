@@ -9,6 +9,8 @@ import com.example.english_learning_app.data.model.LoginRequest
 import com.example.english_learning_app.data.model.RegisterRequest
 import com.example.english_learning_app.data.remote.RetrofitClient
 import kotlinx.coroutines.launch
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
 
 // "Bộ não" xử lý logic cho phần Auth
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
@@ -85,20 +87,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Hàm giả lập Đăng nhập bằng Google
-    fun loginWithGoogleMock() {
+    // Hàm Đăng nhập bằng Google thật
+    fun loginWithGoogleReal(idToken: String) {
         isLoading.value = true
         errorMessage.value = ""
         isLoginSuccess.value = false
 
         viewModelScope.launch {
             try {
-                // Giả lập độ trễ mạng
-                kotlinx.coroutines.delay(1000)
-                
-                // Mặc định đăng nhập bằng user đầu tiên (hehe@gmail.com)
-                val request = LoginRequest("demo@minlish.com", "demo123")
-                val response = RetrofitClient.apiService.login(request)
+                val request = mapOf("idToken" to idToken)
+                val response = RetrofitClient.apiService.googleLogin(request)
                 
                 val user = response.user
                 currentUser.value = user
@@ -106,7 +104,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 errorMessage.value = "Google Login thành công! Xin chào ${user.name}"
                 isLoginSuccess.value = true
             } catch (e: Exception) {
-                errorMessage.value = "Lỗi kết nối: ${e.message}"
+                if (e is retrofit2.HttpException) {
+                    val rawError = e.response()?.errorBody()?.string()
+                    try {
+                        val json = com.google.gson.JsonParser.parseString(rawError).asJsonObject
+                        errorMessage.value = json.get("message").asString
+                    } catch (parseEx: Exception) {
+                        errorMessage.value = "Lỗi ${e.code()}: $rawError"
+                    }
+                } else {
+                    errorMessage.value = "Lỗi kết nối: ${e.message}"
+                }
             } finally {
                 isLoading.value = false
             }
@@ -205,5 +213,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         errorMessage.value = ""
         isLoginSuccess.value = false
         isRegisterSuccess.value = false
+
+        // Xóa trạng thái đăng nhập của Google (Credential Manager) để Google luôn hiện lại bảng chọn tài khoản
+        viewModelScope.launch {
+            try {
+                val credentialManager = CredentialManager.create(getApplication())
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }
