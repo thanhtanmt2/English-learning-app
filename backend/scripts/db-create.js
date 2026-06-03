@@ -25,6 +25,8 @@ async function createDb() {
     console.log('Cleaning old tables...');
     await connection2.query(`
       SET FOREIGN_KEY_CHECKS = 0;
+      DROP TABLE IF EXISTS grammar_quizzes;
+      DROP TABLE IF EXISTS notification_settings;
       DROP TABLE IF EXISTS user_progress;
       DROP TABLE IF EXISTS words;
       DROP TABLE IF EXISTS word_sets;
@@ -39,7 +41,7 @@ async function createDb() {
 
     await connection2.query(schema);
     console.log('Schema imported successfully (UTF-8 enabled).');
-    
+
     process.exit(0);
   } catch (error) {
     console.error('Error creating database:', error);

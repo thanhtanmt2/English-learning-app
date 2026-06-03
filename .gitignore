@@ -1,6 +1,7 @@
 # Android
 *.iml
-.gradle
+.gradle/
+.idea/
 android/local.properties
 android/.idea/caches
 android/.idea/libraries

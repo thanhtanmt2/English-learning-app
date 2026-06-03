@@ -1,7 +1,5 @@
-USE minlish;
-
 -- Đảm bảo database dùng UTF-8
-ALTER DATABASE minlish CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- (ALTER DATABASE được thực hiện bởi db-create.js nếu cần, schema chỉ tạo bảng)
 
 -- 1. Bảng người dùng
 CREATE TABLE users (
