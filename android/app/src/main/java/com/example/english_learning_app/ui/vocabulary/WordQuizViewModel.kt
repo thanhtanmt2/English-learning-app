@@ -40,8 +40,7 @@ class WordQuizViewModel @Inject constructor(
                     return@launch
                 }
 
-                val user = repository.loadUser()
-                val allWords = repository.loadAllWords(user.id)
+                val allWords = repository.loadAllWords()
                 val selectedWords = allWords.filter { wordSetIds.contains(it.wordSetId.toString()) }
 
                 if (selectedWords.isEmpty()) {

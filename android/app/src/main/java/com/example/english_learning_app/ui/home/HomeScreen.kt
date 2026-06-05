@@ -21,35 +21,32 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.english_learning_app.data.model.ProgressOverview
+import com.example.english_learning_app.R
 import com.example.english_learning_app.data.model.ProgressRecord
-import com.example.english_learning_app.data.model.WordSet
 import com.example.english_learning_app.ui.auth.AuthViewModel
-import com.example.english_learning_app.ui.progress.ProgressViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel(),
-    progressViewModel: ProgressViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val authUiState by authViewModel.uiState.collectAsStateWithLifecycle()
-    val progressUiState by progressViewModel.uiState.collectAsStateWithLifecycle()
+    val homeUiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     val user = authUiState.currentUser
-    val overview = progressUiState.progressOverview
-    val history = progressUiState.progressRecords
+    val history = homeUiState.dailyActivity
 
     LaunchedEffect(Unit) {
-        progressViewModel.fetchProgress()
+        homeViewModel.load()
     }
 
     Column(
@@ -92,12 +89,12 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Xin chào! 👋",
+                            text = stringResource(R.string.home_greeting),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                         )
                         Text(
-                            text = user?.name ?: "Người học",
+                            text = user?.name ?: stringResource(R.string.home_default_learner),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary
@@ -120,7 +117,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         // ── Dashboard: Streak + Accuracy ─────────────────────────────
-        if (progressUiState.isLoading) {
+        if (homeUiState.isLoading) {
             Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
@@ -135,22 +132,22 @@ fun HomeScreen(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.Whatshot,
                     iconColor = Color(0xFFFF5722),
-                    label = "Streak",
-                    value = "${overview?.streak ?: 0} Ngày"
+                    label = stringResource(R.string.home_stat_streak),
+                    value = stringResource(R.string.home_stat_streak_days, homeUiState.streak)
                 )
                 HomeStatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.AdsClick,
                     iconColor = Color(0xFF4CAF50),
-                    label = "Accuracy",
-                    value = "${overview?.accuracyRate ?: 0}%"
+                    label = stringResource(R.string.home_stat_accuracy),
+                    value = "${homeUiState.accuracyRate}%"
                 )
                 HomeStatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.AutoMirrored.Filled.MenuBook,
                     iconColor = Color(0xFF2196F3),
-                    label = "Đã học",
-                    value = "${overview?.learnedWords ?: 0} từ"
+                    label = stringResource(R.string.home_stat_learned),
+                    value = stringResource(R.string.home_stat_learned_words, homeUiState.learnedWords)
                 )
             }
 
@@ -167,7 +164,7 @@ fun HomeScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "⏱ Daily Activity (Phút)",
+                        text = "⏱ ${stringResource(R.string.home_daily_activity_title)}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -177,7 +174,7 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth().height(120.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Chưa có dữ liệu", color = MaterialTheme.colorScheme.secondary)
+                            Text(stringResource(R.string.home_no_data), color = MaterialTheme.colorScheme.secondary)
                         }
                     } else {
                         HomeBarChart(records = history)
@@ -187,10 +184,8 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── Retention Rate (7 ngày gần nhất) ─────────────────────────────────
-            val recentHistory = history.take(7)
-            val retentionRate = if (recentHistory.isEmpty()) 0
-            else (recentHistory.sumOf { it.quizScore } * 100) / (recentHistory.size * 5)
+            // ── Retention Rate ─────
+            val retentionRate = homeUiState.retentionRate
 
             Card(
                 modifier = Modifier
@@ -207,7 +202,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "🧠 Retention Rate",
+                            text = "🧠 ${stringResource(R.string.home_retention_rate_title)}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
@@ -224,7 +219,7 @@ fun HomeScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Tỷ lệ nhớ đúng trong các buổi ôn tập gần đây",
+                        text = stringResource(R.string.home_retention_rate_desc),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -256,9 +251,9 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = when {
-                            retentionRate >= 80 -> "🌟 Tuyệt vời! Bạn đang nhớ tốt"
-                            retentionRate >= 50 -> "💪 Khá ổn, hãy ôn tập thêm"
-                            else -> "📚 Cần cố gắng ôn tập nhiều hơn"
+                            retentionRate >= 80 -> "🌟 ${stringResource(R.string.home_retention_excellent)}"
+                            retentionRate >= 50 -> "💪 ${stringResource(R.string.home_retention_good)}"
+                            else -> "📚 ${stringResource(R.string.home_retention_poor)}"
                         },
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.secondary
@@ -270,12 +265,21 @@ fun HomeScreen(
 
             // ── Level Estimation ────────────────────────────────
             val userLevel = user?.level ?: "A1"
+            val beginnerDesc = stringResource(R.string.home_level_beginner_desc)
+            val intermediateDesc = stringResource(R.string.home_level_intermediate_desc)
+            val advancedDesc = stringResource(R.string.home_level_advanced_desc)
+            val defaultDesc = stringResource(R.string.home_level_default_desc)
+
             val (_, levelColor, levelDesc) = when (userLevel) {
-                "A1", "A2" -> Triple("Beginner 🟢", Color(0xFF4CAF50), "Bạn đang ở mức cơ bản. Hãy học đều đặn mỗi ngày!")
-                "B1", "B2" -> Triple("Intermediate 🟡", Color(0xFFFF9800), "Bạn đã có nền tảng tốt. Tiếp tục phát triển!")
-                "C1", "C2" -> Triple("Advanced 🔴", Color(0xFFF44336), "Tuyệt vời! Bạn đang ở mức nâng cao.")
-                else -> Triple("Beginner 🟢", Color(0xFF4CAF50), "Hãy bắt đầu hành trình học tập!")
+                "A1", "A2" -> Triple("Beginner 🟢", Color(0xFF4CAF50), beginnerDesc)
+                "B1", "B2" -> Triple("Intermediate 🟡", Color(0xFFFF9800), intermediateDesc)
+                "C1", "C2" -> Triple("Advanced 🔴", Color(0xFFF44336), advancedDesc)
+                else -> Triple("Beginner 🟢", Color(0xFF4CAF50), defaultDesc)
             }
+
+            val beginnerLabel = stringResource(R.string.home_beginner)
+            val intermediateLabel = stringResource(R.string.home_intermediate)
+            val advancedLabel = stringResource(R.string.home_advanced)
 
             Card(
                 modifier = Modifier
@@ -287,22 +291,21 @@ fun HomeScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "🎓 Level Estimation",
+                        text = "🎓 ${stringResource(R.string.home_level_estimation)}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // 3 mức Beginner / Intermediate / Advanced
                         listOf(
-                            Triple("A1", "A2", "Beginner"),
-                            Triple("B1", "B2", "Intermediate"),
-                            Triple("C1", "C2", "Advanced")
+                            Triple("A1", "A2", beginnerLabel),
+                            Triple("B1", "B2", intermediateLabel),
+                            Triple("C1", "C2", advancedLabel)
                         ).forEach { (l1, l2, label) ->
                             val isActive = userLevel == l1 || userLevel == l2
                             val color = when (label) {
-                                "Beginner" -> Color(0xFF4CAF50)
-                                "Intermediate" -> Color(0xFFFF9800)
+                                beginnerLabel -> Color(0xFF4CAF50)
+                                intermediateLabel -> Color(0xFFFF9800)
                                 else -> Color(0xFFF44336)
                             }
                             Column(
@@ -317,7 +320,7 @@ fun HomeScreen(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = if (label == "Beginner") "🟢" else if (label == "Intermediate") "🟡" else "🔴",
+                                        text = if (label == beginnerLabel) "🟢" else if (label == intermediateLabel) "🟡" else "🔴",
                                         fontSize = if (isActive) 22.sp else 16.sp
                                     )
                                 }
@@ -352,7 +355,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // ── Lịch sử gần đây (3 ngày) ─────────────────────────────
+            // ── Lịch sử gần đây ─────────────────────────────
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -360,7 +363,7 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "📋 Lịch sử học tập",
+                        text = "📋 ${stringResource(R.string.home_study_history)}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -420,7 +423,6 @@ private fun HomeStatCard(
 
 @Composable
 private fun HomeBarChart(records: List<ProgressRecord>) {
-    // Sắp xếp tăng dần theo ngày và lấy đúng 7 ngày gần nhất
     val chartData = records.sortedBy { it.date }.takeLast(7)
     val maxTime = chartData.maxOfOrNull { it.studyTimeMinutes.toFloat() }?.coerceAtLeast(1f) ?: 1f
 
@@ -439,16 +441,14 @@ private fun HomeBarChart(records: List<ProgressRecord>) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier.height(140.dp)
+                modifier = Modifier.height(150.dp)
             ) {
-                // Nhãn số phút
                 Text(
                     text = "${record.studyTimeMinutes}m",
                     fontSize = 10.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                // Cột biểu đồ
                 Box(
                     modifier = Modifier
                         .width(28.dp)
@@ -461,8 +461,11 @@ private fun HomeBarChart(records: List<ProgressRecord>) {
                         )
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                // Nhãn ngày (chỉ lấy MM-DD)
-                val dateLabel = if (record.date.length >= 10) record.date.substring(5) else record.date
+                val dateLabel = if (record.date.length >= 10) {
+                    val m = record.date.substring(5, 7)
+                    val d = record.date.substring(8, 10)
+                    "$d/$m"
+                } else record.date
                 Text(
                     text = dateLabel,
                     fontSize = 10.sp,
@@ -475,6 +478,8 @@ private fun HomeBarChart(records: List<ProgressRecord>) {
 
 @Composable
 private fun HomeHistoryItem(record: ProgressRecord, onClick: () -> Unit) {
+    val wordsText = stringResource(R.string.home_history_words_time, record.wordsLearned)
+
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(1.dp),
@@ -505,17 +510,12 @@ private fun HomeHistoryItem(record: ProgressRecord, onClick: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = record.date, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                 Text(
-                    text = "${record.wordsLearned} từ • ${record.studyTimeMinutes} phút",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    text = wordsText,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.Medium
                 )
             }
-            Text(
-                text = "✓ ${record.quizScore}/5",
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF4CAF50),
-                fontSize = 13.sp
-            )
         }
     }
 }

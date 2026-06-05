@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -27,15 +26,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.english_learning_app.R
 
 @Composable
 fun ProgressScreen(
     viewModel: ProgressViewModel,
-    onNavigateBack: () -> Unit = {},
     onNavigateToDetail: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -48,22 +48,13 @@ fun ProgressScreen(
         topBar = {
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                    Text(
-                        text = "TIẾN ĐỘ HỌC TẬP",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f),
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.width(48.dp))
-                }
+                Text(
+                    text = stringResource(R.string.progress_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider()
             }
         }
@@ -94,14 +85,14 @@ fun ProgressScreen(
                     ) {
                         StatCard(
                             modifier = Modifier.weight(1f),
-                            title = "Streak",
-                            value = "${overview?.streak ?: 0} Ngày",
+                            title = stringResource(R.string.home_stat_streak),
+                            value = stringResource(R.string.home_stat_streak_days, overview?.streak ?: 0),
                             icon = Icons.Default.Whatshot,
                             color = Color(0xFFFF5722)
                         )
                         StatCard(
                             modifier = Modifier.weight(1f),
-                            title = "Accuracy",
+                            title = stringResource(R.string.home_stat_accuracy),
                             value = "${overview?.accuracyRate ?: 0}%",
                             icon = Icons.Default.AdsClick,
                             color = Color(0xFF4CAF50)
@@ -111,7 +102,7 @@ fun ProgressScreen(
 
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
-                    Text(text = "Thời gian học (Phút)", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(text = stringResource(R.string.progress_study_time_chart), fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -124,7 +115,7 @@ fun ProgressScreen(
 
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "Chi tiết các ngày", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(text = stringResource(R.string.progress_day_details), fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
@@ -193,14 +184,14 @@ fun HistoryItem(record: com.example.english_learning_app.data.model.ProgressReco
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = record.date, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Text(
-                    text = "Đã học: ${record.wordsLearned} từ • ${record.studyTimeMinutes} phút",
+                    text = stringResource(R.string.home_history_words_time, record.wordsLearned, record.studyTimeMinutes),
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
             
             Column(horizontalAlignment = Alignment.End) {
-                Text(text = "Đúng: ${record.quizScore}/5", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
+                Text(text = stringResource(R.string.home_quiz_score, record.quizScore), fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
                 Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.outline)
             }
         }
@@ -211,7 +202,7 @@ fun HistoryItem(record: com.example.english_learning_app.data.model.ProgressReco
 fun StudyTimeBarChart(records: List<com.example.english_learning_app.data.model.ProgressRecord>) {
     if (records.isEmpty()) {
         Box(modifier = Modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.Center) {
-            Text("Chưa có dữ liệu")
+            Text(stringResource(R.string.progress_no_data))
         }
         return
     }

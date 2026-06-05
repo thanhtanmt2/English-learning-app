@@ -26,8 +26,7 @@ class WordListViewModel @Inject constructor(
         _uiState.value = WordListUiState(isLoading = true, wordSetId = wordSetId)
         viewModelScope.launch {
             try {
-                val user = repository.loadUser()
-                val words = repository.loadWords(userId = user.id, wordSetId = wordSetId)
+                val words = repository.loadWords(wordSetId = wordSetId)
                 _uiState.value = WordListUiState(isLoading = false, wordSetId = wordSetId, words = words)
             } catch (ex: Exception) {
                 _uiState.value = WordListUiState(

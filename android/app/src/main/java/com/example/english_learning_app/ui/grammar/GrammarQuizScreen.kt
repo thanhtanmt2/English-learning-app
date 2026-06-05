@@ -25,15 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
+import com.example.english_learning_app.R
 import com.example.english_learning_app.data.model.QuizQuestion
 
 @Composable
 fun GrammarQuizScreen(
     viewModel: GrammarViewModel,
     noteId: String,
-    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -49,23 +48,13 @@ fun GrammarQuizScreen(
         topBar = {
             Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                    Text(
-                        text = "BÀI TẬP TRẮC NGHIỆM",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                Text(
+                    text = stringResource(R.string.grammar_quiz_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider()
             }
         }
@@ -78,7 +67,11 @@ fun GrammarQuizScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            val score = questions.count { selectedAnswers[it.id] == it.correctAnswer }
+            val score = questions.count { q ->
+                val correctIdx = listOf("A", "B", "C", "D").indexOf(q.correctAnswer)
+                val correctOptionText = q.options.getOrNull(correctIdx)
+                selectedAnswers[q.id] == correctOptionText
+            }
             val total = questions.size
 
             if (isSubmitted) {
@@ -88,7 +81,7 @@ fun GrammarQuizScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 8.dp)
                 ) {
                     Text(
-                        text = "Điểm: $score/$total",
+                        text = stringResource(R.string.grammar_quiz_score, score, total),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -115,7 +108,7 @@ fun GrammarQuizScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Câu ${pagerState.currentPage + 1} / ${questions.size}",
+                        text = stringResource(R.string.grammar_quiz_question_counter, pagerState.currentPage + 1, questions.size),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 16.sp
@@ -201,11 +194,11 @@ fun GrammarQuizScreen(
                                 enabled = allAnswered,
                                 shape = MaterialTheme.shapes.large
                             ) {
-                                Text("NỘP BÀI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                                Text(stringResource(R.string.grammar_quiz_submit), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                             }
                             if (!allAnswered) {
                                 Text(
-                                    text = "Hoàn thành ${selectedAnswers.size}/${questions.size} câu để nộp bài",
+                                    text = "${selectedAnswers.size}/${questions.size}",
                                     fontSize = 12.sp,
                                     color = MaterialTheme.colorScheme.secondary,
                                     modifier = Modifier.padding(top = 8.dp)
@@ -235,7 +228,7 @@ fun QuizCard(
         Column(modifier = Modifier.padding(16.dp)) {
             // Đảm bảo Text hiển thị câu hỏi luôn có mặt
             Text(
-                text = "Hỏi: ${quiz.question}",
+                text = stringResource(R.string.grammar_quiz_question_prefix) + quiz.question,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 24.sp,
@@ -246,7 +239,8 @@ fun QuizCard(
 
             quiz.options.forEach { option ->
                 val isThisOptionSelected = selectedOption == option
-                val isCorrect = option == quiz.correctAnswer
+                val correctIdx = listOf("A", "B", "C", "D").indexOf(quiz.correctAnswer)
+                val isCorrect = option == quiz.options.getOrNull(correctIdx)
 
                 val containerColor = when {
                     isSubmitted && isCorrect -> Color(0xFFE8F5E9)
@@ -297,7 +291,7 @@ fun QuizCard(
                 Column(modifier = Modifier.padding(top = 12.dp)) {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(
-                        text = "Giải thích: ${quiz.explanation}",
+                        text = "${stringResource(R.string.grammar_quiz_explanation)}${quiz.explanation}",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary,
                         fontStyle = FontStyle.Italic
@@ -315,8 +309,8 @@ fun ErrorState(message: String, onRetry: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "❌ Lỗi: $message", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
-        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Thử lại") }
+        Text(text = "❌ ${stringResource(R.string.common_error_prefix)}$message", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
+        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text(stringResource(R.string.grammar_quiz_retry)) }
     }
 }
 
@@ -327,7 +321,7 @@ fun EmptyState(onRetry: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "📭 Không có dữ liệu câu hỏi.")
-        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Tải lại") }
+        Text(text = "📭 ${stringResource(R.string.grammar_quiz_no_data)}")
+        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text(stringResource(R.string.grammar_quiz_reload)) }
     }
 }

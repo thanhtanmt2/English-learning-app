@@ -29,6 +29,8 @@ android {
             localProperties.load(localPropertiesFile.inputStream())
         }
         buildConfigField("String", "GEMINI_API_KEY", "\"${localProperties.getProperty("GEMINI_API_KEY", "")}\"")
+        // Base URL mặc định (emulator). Override qua ServerSettings UI khi demo trên thiết bị thật.
+        buildConfigField("String", "DEFAULT_BASE_URL", "\"http://10.0.2.2:3000/api/\"")
     }
 
     buildTypes {
@@ -38,11 +40,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "DEFAULT_BASE_URL", "\"\"")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         viewBinding = true
@@ -52,7 +55,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {
@@ -84,6 +87,8 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.compiler.androidx)
 
     // Lifecycle runtime compose (collectAsStateWithLifecycle)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -96,7 +101,24 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
+    // Encrypted token storage
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // Image loading (avatar)
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Room offline database
+    implementation("androidx.room:room-runtime:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
+    ksp("androidx.room:room-compiler:2.7.1")
+
+    // WorkManager for local notifications
+    implementation("androidx.work:work-runtime-ktx:2.10.1")
+
     testImplementation(libs.junit)
+    testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

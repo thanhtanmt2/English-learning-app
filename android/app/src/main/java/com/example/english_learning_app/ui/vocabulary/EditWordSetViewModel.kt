@@ -30,7 +30,7 @@ class EditWordSetViewModel @Inject constructor(
                 _uiState.value = EditWordSetUiState(
                     isLoading = false,
                     wordSetId = wordSet.id.toString(),
-                    userId = wordSet.userId.toString(),
+                    userId = wordSet.userId?.toString() ?: "",
                     name = wordSet.name,
                     description = wordSet.description ?: "",
                     tags = ""

@@ -30,7 +30,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
@@ -52,8 +51,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -71,9 +68,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.R
 import com.example.english_learning_app.data.model.AiGeneratedWord
 
 // ─── Màu sắc chủ đạo ───────────────────────────────────────────────────────
@@ -94,34 +92,6 @@ fun AiWordListScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.AutoAwesome,
-                            contentDescription = null,
-                            tint = GoldAccent,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "AI Word Generator",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = GradientStart
-                )
-            )
-        },
         containerColor = Color(0xFFF3F2FF)
     ) { paddingValues ->
         if (uiState.result == null) {
@@ -473,7 +443,7 @@ private fun PreviewStep(
                     }
                     Spacer(Modifier.height(14.dp))
 
-                    Text(text = "Tên bộ từ", fontSize = 12.sp, color = Color(0xFF888888))
+                    Text(text = stringResource(R.string.word_list_title), fontSize = 12.sp, color = Color(0xFF888888))
                     Spacer(Modifier.height(4.dp))
                     OutlinedTextField(
                         value = result.name,
@@ -491,7 +461,7 @@ private fun PreviewStep(
                     )
                     Spacer(Modifier.height(10.dp))
 
-                    Text(text = "Mô tả", fontSize = 12.sp, color = Color(0xFF888888))
+                    Text(text = stringResource(R.string.add_word_set_description_label), fontSize = 12.sp, color = Color(0xFF888888))
                     Spacer(Modifier.height(4.dp))
                     OutlinedTextField(
                         value = result.description,
@@ -608,7 +578,7 @@ private fun PreviewStep(
                                 modifier = Modifier.size(18.dp),
                                 strokeWidth = 2.dp
                             )
-                            Text("Đang lưu...", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.add_edit_word_saving), color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     } else {
                         Text(
@@ -710,7 +680,7 @@ private fun AiWordCard(
                 ) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = "Xóa từ",
+                        contentDescription = stringResource(R.string.word_list_delete),
                         tint = Color(0xFFCCCCDD),
                         modifier = Modifier.size(16.dp)
                     )

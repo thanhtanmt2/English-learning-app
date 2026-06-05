@@ -2,55 +2,35 @@ package com.example.english_learning_app.ui.learning
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.NavigateBefore
 import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.R
 import com.example.english_learning_app.ui.utils.rememberTtsSpeaker
 
 @Composable
 fun FlashcardScreen(
     navController: NavHostController,
     wordSetId: String? = null,
-    viewModel: LearningViewModel = hiltViewModel()
+    onWordSetChanged: (Int) -> Unit = {},
+    viewModel: FlashcardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var isFlipped by remember { mutableStateOf(false) }
@@ -75,49 +55,37 @@ fun FlashcardScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-            }
-            IconButton(onClick = {
-                navController.navigate("main") {
-                    popUpTo("main") { inclusive = false }
-                    launchSingleTop = true
-                }
-            }) {
-                Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
-            }
-            IconButton(onClick = { viewModel.clearSelection() }) {
-                Icon(imageVector = Icons.Filled.SwapHoriz, contentDescription = "Word set")
-            }
-        }
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = uiState.wordSet?.name ?: "Chon bo tu de bat dau",
+            text = uiState.wordSet?.name ?: stringResource(R.string.learning_choose_set),
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6C757D)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         if (uiState.isLoading) {
-            Text(text = "Dang tai du lieu...", color = Color(0xFF6C757D))
+            Text(text = stringResource(R.string.learning_loading), color = Color(0xFF6C757D))
             return@Column
         }
 
         if (uiState.errorMessage != null) {
             Text(
-                text = "Khong the tai du lieu: ${uiState.errorMessage}",
+                text = "${stringResource(R.string.learning_load_error)}${uiState.errorMessage}",
                 color = Color(0xFFB00020),
                 style = MaterialTheme.typography.bodySmall
             )
             return@Column
         }
 
+        // Danh sách chọn bộ từ
         if (uiState.wordSet == null) {
-            LazyColumn(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)) {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(uiState.wordSets) { set ->
                     Card(
-                        onClick = { viewModel.selectWordSet(set) },
+                        onClick = {
+                            viewModel.selectWordSet(set)
+                            onWordSetChanged(set.id)
+                        },
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9F2)),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                         modifier = Modifier.fillMaxWidth()
@@ -137,6 +105,7 @@ fun FlashcardScreen(
             return@Column
         }
 
+        // Flashcard
         val word = uiState.words.getOrNull(uiState.currentIndex)
         Card(
             onClick = { isFlipped = !isFlipped },
@@ -153,11 +122,15 @@ fun FlashcardScreen(
             Box(modifier = Modifier.fillMaxSize().padding(20.dp)) {
                 if (rotation <= 90f) {
                     Column(
-                        modifier = Modifier.fillMaxWidth().align(Alignment.Center).padding(bottom = 48.dp).alpha(1f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center)
+                            .padding(bottom = 48.dp)
+                            .alpha(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = word?.word ?: "No words",
+                            text = word?.word ?: "",
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary,
@@ -165,7 +138,7 @@ fun FlashcardScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Tap to flip",
+                            text = stringResource(R.string.learning_choose_set),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFF6C757D)
                         )
@@ -190,7 +163,7 @@ fun FlashcardScreen(
                         if (!word?.example.isNullOrBlank()) {
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Example: ${word.example}",
+                                text = "${stringResource(R.string.word_list_example_prefix)}${word!!.example}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF6C757D),
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -199,41 +172,96 @@ fun FlashcardScreen(
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 8.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = {
-                        viewModel.previousWord()
-                        isFlipped = false
-                    }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.NavigateBefore, contentDescription = "Previous")
-                    }
-                    IconButton(onClick = { speak(word?.word ?: "") }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Listen")
-                    }
-                    IconButton(onClick = {
-                        if (isFlipped) {
-                            viewModel.submitReview(4)
+                // Khi chưa lật: nút Prev + Phát âm + Next (không submit)
+                // Khi đã lật: 3 nút đánh giá SM-2
+                if (!isFlipped) {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 8.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = {
+                            viewModel.previousWord()
+                            isFlipped = false
+                        }) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.NavigateBefore, contentDescription = stringResource(R.string.flashcard_cd_prev))
                         }
-                        viewModel.nextWord()
-                        isFlipped = false
-                    }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.NavigateNext, contentDescription = "Next")
+                        IconButton(onClick = { speak(word?.word ?: "") }) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.flashcard_cd_listen))
+                        }
+                        IconButton(onClick = {
+                            viewModel.nextWord()
+                        }) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.NavigateNext, contentDescription = stringResource(R.string.flashcard_cd_next))
+                        }
                     }
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Nút đánh giá SM-2 — chỉ hiện sau khi lật thẻ
+        if (isFlipped) {
+            Text(
+                text = stringResource(R.string.flashcard_recall_question),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Khó — quality 1: backend reset interval về 1
+                OutlinedButton(
+                    onClick = {
+                        viewModel.submitReview(1)
+                        viewModel.nextWord()
+                        isFlipped = false
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text(stringResource(R.string.flashcard_difficulty_hard), fontSize = 13.sp)
+                }
+                // Được — quality 3: interval tăng bình thường
+                Button(
+                    onClick = {
+                        viewModel.submitReview(3)
+                        viewModel.nextWord()
+                        isFlipped = false
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                ) {
+                    Text(stringResource(R.string.flashcard_difficulty_ok), fontSize = 13.sp)
+                }
+                // Dễ — quality 5: interval tăng nhanh
+                Button(
+                    onClick = {
+                        viewModel.submitReview(5)
+                        viewModel.nextWord()
+                        isFlipped = false
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
+                ) {
+                    Text(stringResource(R.string.flashcard_difficulty_easy), fontSize = 13.sp)
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         Button(
             onClick = { viewModel.clearSelection() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Change word set")
+            Text(text = stringResource(R.string.learning_change_set))
         }
     }
 }

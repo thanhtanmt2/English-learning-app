@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,32 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.english_learning_app.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(onNavigateBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Về ứng dụng") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Quay lại")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-        }
-    ) { paddingValues ->
+fun AboutScreen() {
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -60,7 +43,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = "App Logo",
+                    contentDescription = stringResource(R.string.about_logo_cd),
                     modifier = Modifier.size(60.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -70,7 +53,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
 
             // App Name
             Text(
-                text = "Minlish - Học tiếng Anh",
+                text = stringResource(R.string.about_app_full_name),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -80,7 +63,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
 
             // App Version
             Text(
-                text = "Phiên bản 1.0.0",
+                text = stringResource(R.string.about_version),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -99,7 +82,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Minlish là ứng dụng hỗ trợ học tiếng Anh thông minh, giúp bạn cái thiện từ vựng, ngữ pháp và theo dõi tiến độ mỗi ngày. Chúng tôi mong muốn mang đến trải nghiệm học tập tốt nhất cho bạn.",
+                        text = stringResource(R.string.about_description),
                         fontSize = 15.sp,
                         textAlign = TextAlign.Center,
                         lineHeight = 22.sp,
@@ -112,7 +95,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
 
             // Copyright
             Text(
-                text = "© 2026 Minlish Team.\nAll rights reserved.",
+                text = stringResource(R.string.about_copyright),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,

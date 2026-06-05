@@ -18,7 +18,17 @@ data class GrammarUiState(
     val quizQuestions: List<QuizQuestion> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String = "",
-    val isAddSuccess: Boolean = false
+    val isAddSuccess: Boolean = false,
+    // Editing state — dùng cho AddEditGrammarScreen
+    val editingTitle: String = "",
+    val editingCategory: String = "",
+    val editingFormula: String = "",
+    val editingExplanation: String = "",
+    val editingExample: String = "",
+    val editingCommonMistakes: String = "",
+    val originalNote: GrammarNote? = null,
+    val hasUnsavedChanges: Boolean = false,
+    val isEditDataLoaded: Boolean = false
 )
 
 @HiltViewModel
@@ -135,6 +145,84 @@ class GrammarViewModel @Inject constructor(
 
     fun getGrammarNoteById(id: String): GrammarNote? =
         _uiState.value.grammarNotes.find { it.id == id }
+
+    // Gọi khi mở màn edit: fetch notes nếu chưa có, rồi populate editing fields
+    fun loadNoteForEdit(noteId: String) {
+        _uiState.update { it.copy(isEditDataLoaded = false) }
+        viewModelScope.launch {
+            // Fetch mới nhất từ server để đảm bảo dữ liệu không stale
+            try {
+                val notes = repository.getGrammarNotes()
+                _uiState.update { it.copy(grammarNotes = notes) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = "Lỗi tải ngữ pháp: ${e.message}") }
+            }
+            val note = _uiState.value.grammarNotes.find { it.id == noteId }
+            if (note != null) {
+                _uiState.update {
+                    it.copy(
+                        editingTitle = note.title,
+                        editingCategory = note.category,
+                        editingFormula = note.formula,
+                        editingExplanation = note.explanation,
+                        editingExample = note.example,
+                        editingCommonMistakes = note.commonMistakes,
+                        originalNote = note,
+                        hasUnsavedChanges = false,
+                        isEditDataLoaded = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateEditingTitle(value: String) {
+        _uiState.update { it.copy(editingTitle = value, hasUnsavedChanges = computeHasChanges(it.copy(editingTitle = value))) }
+    }
+
+    fun updateEditingCategory(value: String) {
+        _uiState.update { it.copy(editingCategory = value, hasUnsavedChanges = computeHasChanges(it.copy(editingCategory = value))) }
+    }
+
+    fun updateEditingFormula(value: String) {
+        _uiState.update { it.copy(editingFormula = value, hasUnsavedChanges = computeHasChanges(it.copy(editingFormula = value))) }
+    }
+
+    fun updateEditingExplanation(value: String) {
+        _uiState.update { it.copy(editingExplanation = value, hasUnsavedChanges = computeHasChanges(it.copy(editingExplanation = value))) }
+    }
+
+    fun updateEditingExample(value: String) {
+        _uiState.update { it.copy(editingExample = value, hasUnsavedChanges = computeHasChanges(it.copy(editingExample = value))) }
+    }
+
+    fun updateEditingCommonMistakes(value: String) {
+        _uiState.update { it.copy(editingCommonMistakes = value, hasUnsavedChanges = computeHasChanges(it.copy(editingCommonMistakes = value))) }
+    }
+
+    fun clearEditingState() {
+        _uiState.update {
+            it.copy(
+                editingTitle = "", editingCategory = "", editingFormula = "",
+                editingExplanation = "", editingExample = "", editingCommonMistakes = "",
+                originalNote = null, hasUnsavedChanges = false, isEditDataLoaded = false
+            )
+        }
+    }
+
+    private fun computeHasChanges(state: GrammarUiState): Boolean {
+        val orig = state.originalNote ?: return (
+            state.editingTitle.isNotBlank() || state.editingCategory.isNotBlank() ||
+            state.editingFormula.isNotBlank() || state.editingExplanation.isNotBlank() ||
+            state.editingExample.isNotBlank() || state.editingCommonMistakes.isNotBlank()
+        )
+        return state.editingTitle != orig.title ||
+            state.editingCategory != orig.category ||
+            state.editingFormula != orig.formula ||
+            state.editingExplanation != orig.explanation ||
+            state.editingExample != orig.example ||
+            state.editingCommonMistakes != orig.commonMistakes
+    }
 
     fun submitQuizScore(noteId: String, score: Int, total: Int) {
         viewModelScope.launch {

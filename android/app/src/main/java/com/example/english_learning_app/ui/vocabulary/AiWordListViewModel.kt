@@ -84,9 +84,8 @@ class AiWordListViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = state.copy(isSaving = true, errorMessage = null)
             try {
-                val user = repository.loadUser()
                 val wordSetPayload = WordSetPayload(
-                    userId = user.id,
+                    userId = "",
                     name = result.name,
                     description = result.description,
                     tags = result.tags

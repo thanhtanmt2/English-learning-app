@@ -1,14 +1,21 @@
 package com.example.english_learning_app.ui.me
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.english_learning_app.data.model.NotificationSettings
 import com.example.english_learning_app.data.repository.NotificationRepository
+import com.example.english_learning_app.ui.utils.NotificationHelper
+import com.example.english_learning_app.workers.DailyReminderWorker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class NotificationSettingsUiState(
     val isLoading: Boolean = false,
@@ -18,9 +25,11 @@ data class NotificationSettingsUiState(
     val errorMessage: String? = null
 )
 
-class NotificationSettingsViewModel(
+@HiltViewModel
+class NotificationSettingsViewModel @Inject constructor(
+    application: Application,
     private val repository: NotificationRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(NotificationSettingsUiState())
     val uiState: StateFlow<NotificationSettingsUiState> = _uiState.asStateFlow()
@@ -59,10 +68,36 @@ class NotificationSettingsViewModel(
             try {
                 val updated = repository.updateSettings(_uiState.value.settings)
                 _uiState.update { it.copy(isSaving = false, settings = updated, statusMessage = "Đã lưu") }
+
+                val ctx = getApplication<Application>()
+                if (updated.dailyReminder) {
+                    NotificationHelper.scheduleReminder(ctx, updated.reminderTime)
+                } else {
+                    NotificationHelper.cancelReminder(ctx)
+                }
+                if (updated.quizReminders) {
+                    NotificationHelper.scheduleQuizReminder(ctx)
+                } else {
+                    NotificationHelper.cancelQuizReminder(ctx)
+                }
+                if (updated.progressUpdates) {
+                    NotificationHelper.scheduleProgressUpdate(ctx)
+                } else {
+                    NotificationHelper.cancelProgressUpdate(ctx)
+                }
             } catch (e: Exception) {
                 _uiState.update { it.copy(isSaving = false, errorMessage = e.message) }
             }
         }
+    }
+
+    // Bắn thông báo thử ngay lập tức — không cần đợi đến giờ hẹn
+    // Dùng OneTimeWorkRequest: chạy Worker đúng 1 lần, delay = 0
+    fun testNotification() {
+        val ctx = getApplication<Application>()
+        val testRequest = OneTimeWorkRequestBuilder<DailyReminderWorker>().build()
+        WorkManager.getInstance(ctx).enqueue(testRequest)
+        _uiState.update { it.copy(statusMessage = "Đang gửi thông báo thử...") }
     }
 
     fun clearStatus() {

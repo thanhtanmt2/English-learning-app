@@ -1,32 +1,28 @@
 package com.example.english_learning_app.ui.vocabulary
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.R
 
 @Composable
 fun AddWordSetScreen(
@@ -40,21 +36,10 @@ fun AddWordSetScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-            Text(text = "New Word Set", fontSize = 22.sp, fontWeight = FontWeight.Bold)
-        }
+        Text(text = stringResource(R.string.add_word_set_title), fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Tao bo tu moi de bat dau hoc.",
+            text = stringResource(R.string.add_word_set_description),
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6C757D)
         )
@@ -62,7 +47,7 @@ fun AddWordSetScreen(
 
         if (uiState.errorMessage != null) {
             Text(
-                text = "Khong the luu: ${uiState.errorMessage}",
+                text = stringResource(R.string.add_word_set_save_error, uiState.errorMessage ?: ""),
                 color = Color(0xFFB00020),
                 style = MaterialTheme.typography.bodySmall
             )
@@ -72,21 +57,21 @@ fun AddWordSetScreen(
         OutlinedTextField(
             value = uiState.name,
             onValueChange = viewModel::updateName,
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.add_word_set_name_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedTextField(
             value = uiState.description,
             onValueChange = viewModel::updateDescription,
-            label = { Text("Description") },
+            label = { Text(stringResource(R.string.add_word_set_description_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedTextField(
             value = uiState.tags,
             onValueChange = viewModel::updateTags,
-            label = { Text("Tags (comma separated)") },
+            label = { Text(stringResource(R.string.add_word_set_tags_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -102,7 +87,7 @@ fun AddWordSetScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = if (uiState.isSaving) "Saving..." else "Save")
+            Text(text = if (uiState.isSaving) stringResource(R.string.add_word_set_saving) else stringResource(R.string.add_word_set_save))
         }
     }
 }

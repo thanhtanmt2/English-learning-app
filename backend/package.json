@@ -8,6 +8,7 @@
     "dev": "nodemon app.js",
     "db:create": "node scripts/db-create.js",
     "db:seed": "node scripts/seed.js",
+    "db:seed:grammar": "node scripts/seed-grammar.js",
     "db:setup": "node scripts/db-setup.js"
   },
   "keywords": [],
@@ -22,7 +23,8 @@
     "express": "^5.2.1",
     "google-auth-library": "^10.6.2",
     "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.22.4"
+    "mysql2": "^3.22.4",
+    "nodemailer": "^8.0.10"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

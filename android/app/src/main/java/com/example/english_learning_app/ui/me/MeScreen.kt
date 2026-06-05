@@ -3,8 +3,10 @@ package com.example.english_learning_app.ui.me
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,12 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
-import com.example.english_learning_app.ui.auth.AuthViewModel
+import coil.compose.AsyncImage
 import com.example.english_learning_app.R
+import com.example.english_learning_app.data.local.ProfilePreferences
+import com.example.english_learning_app.data.local.ThemePreferences
+import com.example.english_learning_app.ui.auth.AuthViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MeScreen(
@@ -28,16 +35,24 @@ fun MeScreen(
     onNavigateToLanguage: () -> Unit,
     onNavigateToNotifications: () -> Unit,
     onNavigateToAbout: () -> Unit,
+    onNavigateToServerSettings: () -> Unit,
     onLogout: () -> Unit
 ) {
     val uiState by authViewModel.uiState.collectAsState()
     val user = uiState.currentUser
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val isDarkMode by ThemePreferences.darkModeFlow(context).collectAsState(initial = false)
+    val avatarUri by ProfilePreferences.avatarUriFlow(context).collectAsState(initial = null)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
     ) {
+        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,12 +70,20 @@ fun MeScreen(
                         .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Avatar",
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                    if (avatarUri != null) {
+                        AsyncImage(
+                            model = avatarUri,
+                            contentDescription = stringResource(R.string.me_avatar_cd),
+                            modifier = Modifier.fillMaxSize().clip(CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = stringResource(R.string.me_avatar_cd),
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -91,6 +114,48 @@ fun MeScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         SectionLabel(stringResource(R.string.me_section_settings))
+
+        // Dark mode toggle
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(1.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = if (isDarkMode) Icons.Default.DarkMode else Icons.Default.LightMode,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(14.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = stringResource(R.string.me_dark_mode), fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                    Text(text = if (isDarkMode) stringResource(R.string.me_enabled) else stringResource(R.string.me_disabled), fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
+                }
+                Switch(
+                    checked = isDarkMode,
+                    onCheckedChange = { enabled ->
+                        scope.launch { ThemePreferences.setDarkMode(context, enabled) }
+                    }
+                )
+            }
+        }
+
         SettingItem(
             icon = Icons.Default.Notifications,
             title = stringResource(R.string.me_notifications_title),
@@ -102,6 +167,12 @@ fun MeScreen(
             title = stringResource(R.string.me_language_title),
             subtitle = stringResource(R.string.me_language_subtitle),
             onClick = onNavigateToLanguage
+        )
+        SettingItem(
+            icon = Icons.Default.Dns,
+            title = stringResource(R.string.me_server_settings_title),
+            subtitle = stringResource(R.string.me_server_settings_subtitle),
+            onClick = onNavigateToServerSettings
         )
         SettingItem(
             icon = Icons.Default.Info,
@@ -132,6 +203,8 @@ fun MeScreen(
                 Text(text = stringResource(R.string.me_logout), fontWeight = FontWeight.SemiBold, color = Color(0xFFD32F2F), fontSize = 15.sp)
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -159,7 +232,10 @@ private fun SettingItem(icon: ImageVector, title: String, subtitle: String = "",
     ) {
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(
-                modifier = Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))

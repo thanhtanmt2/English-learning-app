@@ -3,12 +3,25 @@ const db = require('../config/db');
 // GET /api/wordsets
 exports.getWordSets = async (req, res) => {
   try {
-    // Lấy bộ từ của chính User HOẶC bộ từ của Demo User (id=1)
     const [rows] = await db.execute(
-      'SELECT * FROM word_sets WHERE user_id = ? OR user_id = 1 ORDER BY created_at DESC',
+      `SELECT ws.*,
+        COUNT(w.id) AS total_words,
+        COALESCE(SUM(CASE WHEN w.interval_days > 1 THEN 1 ELSE 0 END), 0) AS learned_words
+       FROM word_sets ws
+       LEFT JOIN words w ON w.word_set_id = ws.id
+       WHERE ws.is_default = TRUE OR ws.user_id = ?
+       GROUP BY ws.id
+       ORDER BY ws.is_default DESC, ws.created_at DESC`,
       [req.user.id]
     );
-    res.json(rows);
+    const toInt = (v) => (v == null ? 0 : Number(v.toString()));
+    const result = rows.map(r => ({
+      ...r,
+      total_words: toInt(r.total_words),
+      learned_words: toInt(r.learned_words),
+      is_default: r.is_default === 1 || r.is_default === true,
+    }));
+    res.json(result);
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
@@ -34,9 +47,8 @@ exports.createWordSet = async (req, res) => {
 exports.getWordsBySet = async (req, res) => {
   const setId = req.params.id;
   try {
-    // Cho phép lấy từ nếu bộ từ đó của chính user HOẶC của Demo User (id=1)
     const [[wordSet]] = await db.execute(
-      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      'SELECT * FROM word_sets WHERE id = ? AND (is_default = TRUE OR user_id = ?)',
       [setId, req.user.id]
     );
 
@@ -54,11 +66,11 @@ exports.getWordSetById = async (req, res) => {
   const setId = req.params.id;
   try {
     const [[wordSet]] = await db.execute(
-      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      'SELECT * FROM word_sets WHERE id = ? AND (is_default = TRUE OR user_id = ?)',
       [setId, req.user.id]
     );
     if (!wordSet) return res.status(404).json({ message: 'Không tìm thấy bộ từ' });
-    res.json(wordSet);
+    res.json({ ...wordSet, is_default: wordSet.is_default === 1 || wordSet.is_default === true });
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
@@ -72,7 +84,7 @@ exports.updateWordSet = async (req, res) => {
 
   try {
     const [[wordSet]] = await db.execute(
-      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      'SELECT * FROM word_sets WHERE id = ? AND user_id = ?',
       [setId, req.user.id]
     );
     if (!wordSet) return res.status(404).json({ message: 'Không tìm thấy bộ từ' });
@@ -82,7 +94,7 @@ exports.updateWordSet = async (req, res) => {
       [name, description || '', setId]
     );
     const [[updated]] = await db.execute('SELECT * FROM word_sets WHERE id = ?', [setId]);
-    res.json(updated);
+    res.json({ ...updated, is_default: updated.is_default === 1 || updated.is_default === true });
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
@@ -93,7 +105,7 @@ exports.deleteWordSet = async (req, res) => {
   const setId = req.params.id;
   try {
     const [[wordSet]] = await db.execute(
-      'SELECT * FROM word_sets WHERE id = ? AND (user_id = ? OR user_id = 1)',
+      'SELECT * FROM word_sets WHERE id = ? AND user_id = ?',
       [setId, req.user.id]
     );
     if (!wordSet) return res.status(404).json({ message: 'Không tìm thấy bộ từ' });
@@ -109,8 +121,8 @@ exports.deleteWordSet = async (req, res) => {
 exports.getAllWords = async (req, res) => {
   try {
     const [words] = await db.execute(
-      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id 
-       WHERE ws.user_id = ? OR ws.user_id = 1`,
+      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id
+       WHERE ws.is_default = TRUE OR ws.user_id = ?`,
       [req.user.id]
     );
     res.json(words);
@@ -124,8 +136,8 @@ exports.getWordById = async (req, res) => {
   const wordId = req.params.id;
   try {
     const [[word]] = await db.execute(
-      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id 
-       WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
+      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id
+       WHERE w.id = ? AND (ws.is_default = TRUE OR ws.user_id = ?)`,
       [wordId, req.user.id]
     );
     if (!word) return res.status(404).json({ message: 'Không tìm thấy từ' });
@@ -165,7 +177,7 @@ exports.updateWord = async (req, res) => {
   try {
     // Check ownership - cho phép truy cập word của chính user HOẶC của Demo User (id=1)
     const [[existingWord]] = await db.execute(
-      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
+      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.is_default = TRUE OR ws.user_id = ?)`,
       [wordId, req.user.id]
     );
     if (!existingWord) return res.status(404).json({ message: 'Không tìm thấy từ hoặc không có quyền' });
@@ -185,7 +197,7 @@ exports.deleteWord = async (req, res) => {
   const wordId = req.params.id;
   try {
     const [[existingWord]] = await db.execute(
-      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
+      `SELECT w.id FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.is_default = TRUE OR ws.user_id = ?)`,
       [wordId, req.user.id]
     );
     if (!existingWord) return res.status(404).json({ message: 'Không tìm thấy từ hoặc không có quyền' });
@@ -222,7 +234,7 @@ exports.reviewWord = async (req, res) => {
 
   try {
     const [[word]] = await db.execute(
-      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.user_id = ? OR ws.user_id = 1)`,
+      `SELECT w.* FROM words w JOIN word_sets ws ON w.word_set_id = ws.id WHERE w.id = ? AND (ws.is_default = TRUE OR ws.user_id = ?)`,
       [wordId, req.user.id]
     );
     if (!word) return res.status(404).json({ message: 'Không tìm thấy từ' });

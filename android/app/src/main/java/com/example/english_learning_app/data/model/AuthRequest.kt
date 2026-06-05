@@ -18,5 +18,6 @@ data class RegisterRequest(
     @SerializedName("email") val email: String,
     @SerializedName("password") val password: String,
     @SerializedName("goal") val goal: String,
-    @SerializedName("level") val level: String
+    @SerializedName("level") val level: String,
+    @SerializedName("otp") val otp: String? = null
 )

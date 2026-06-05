@@ -1,6 +1,8 @@
 const db     = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
+const { sendOtpEmail } = require('../utils/emailService');
+const { generateOtp, saveOtp, verifyOtp } = require('../utils/otpHelper');
 
 // POST /api/auth/register
 exports.register = async (req, res) => {
@@ -90,6 +92,125 @@ exports.login = async (req, res) => {
 
   } catch (err) {
     console.error('[Login Error]', err);
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// POST /api/auth/register/send-otp
+exports.sendRegisterOtp = async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ message: 'Email không hợp lệ' });
+  }
+  try {
+    const [[existing]] = await db.execute('SELECT id FROM users WHERE email = ?', [email]);
+    if (existing) {
+      return res.status(409).json({ message: 'Email đã được sử dụng' });
+    }
+    const otp = generateOtp();
+    await saveOtp(email, otp, 'register');
+    await sendOtpEmail(email, otp, 'register');
+    res.json({ message: 'Mã OTP đã được gửi đến email của bạn' });
+  } catch (err) {
+    console.error('[SendRegisterOtp Error]', err);
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// POST /api/auth/register/verify-otp
+exports.verifyRegisterOtp = async (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) {
+    return res.status(400).json({ message: 'Thiếu email hoặc mã OTP' });
+  }
+  try {
+    const valid = await verifyOtp(email, otp, 'register');
+    if (!valid) {
+      return res.status(400).json({ message: 'Mã OTP không hợp lệ hoặc đã hết hạn' });
+    }
+    res.json({ message: 'Xác thực OTP thành công', verified: true });
+  } catch (err) {
+    console.error('[VerifyRegisterOtp Error]', err);
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// POST /api/auth/register/complete
+exports.registerWithOtp = async (req, res) => {
+  const { name, email, password, otp, goal, level } = req.body;
+  if (!name || !email || !password || !otp) {
+    return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
+  }
+  try {
+    const valid = await verifyOtp(email, otp, 'register');
+    if (!valid) {
+      return res.status(400).json({ message: 'Mã OTP không hợp lệ hoặc đã hết hạn' });
+    }
+    const [[existing]] = await db.execute('SELECT id FROM users WHERE email = ?', [email]);
+    if (existing) {
+      return res.status(409).json({ message: 'Email đã được sử dụng' });
+    }
+    const hashed = await bcrypt.hash(password, 10);
+    const [result] = await db.execute(
+      'INSERT INTO users (name, email, password, goal, level) VALUES (?, ?, ?, ?, ?)',
+      [name, email, hashed, goal || 'general', level || null]
+    );
+    const token = jwt.sign(
+      { id: result.insertId, email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+    res.status(201).json({
+      message: 'Đăng ký thành công',
+      token,
+      user: { id: result.insertId, name, email, goal: goal || 'general', level: level || null }
+    });
+  } catch (err) {
+    console.error('[RegisterWithOtp Error]', err);
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// POST /api/auth/forgot-password
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ message: 'Email không hợp lệ' });
+  }
+  try {
+    const [[user]] = await db.execute('SELECT id FROM users WHERE email = ?', [email]);
+    if (!user) {
+      return res.status(404).json({ message: 'Email chưa được đăng ký' });
+    }
+    const otp = generateOtp();
+    await saveOtp(email, otp, 'reset_password');
+    await sendOtpEmail(email, otp, 'reset_password');
+    res.json({ message: 'Mã OTP đã được gửi đến email của bạn' });
+  } catch (err) {
+    console.error('[ForgotPassword Error]', err);
+    res.status(500).json({ message: 'Lỗi server', error: err.message });
+  }
+};
+
+// POST /api/auth/reset-password
+exports.resetPassword = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ message: 'Thiếu thông tin cần thiết' });
+  }
+  if (newPassword.length < 6) {
+    return res.status(400).json({ message: 'Mật khẩu phải dài ít nhất 6 ký tự' });
+  }
+  try {
+    const valid = await verifyOtp(email, otp, 'reset_password');
+    if (!valid) {
+      return res.status(400).json({ message: 'Mã OTP không hợp lệ hoặc đã hết hạn' });
+    }
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await db.execute('UPDATE users SET password = ? WHERE email = ?', [hashed, email]);
+    res.json({ message: 'Đặt lại mật khẩu thành công' });
+  } catch (err) {
+    console.error('[ResetPassword Error]', err);
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
 };

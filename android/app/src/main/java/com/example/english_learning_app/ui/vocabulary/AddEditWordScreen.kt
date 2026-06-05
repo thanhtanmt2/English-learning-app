@@ -18,10 +18,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.R
 
 @Composable
 fun AddEditWordScreen(
@@ -42,26 +44,26 @@ fun AddEditWordScreen(
             .padding(24.dp)
     ) {
         Text(
-            text = if (wordId.isNullOrBlank()) "Add Word" else "Edit Word",
+            text = if (wordId.isNullOrBlank()) stringResource(R.string.add_edit_word_title_add) else stringResource(R.string.add_edit_word_title_edit),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Nhập thông tin từ vựng mới.",
+            text = stringResource(R.string.add_edit_word_subtitle),
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6C757D)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         if (uiState.isLoading) {
-            Text(text = "Dang tai du lieu...", color = Color(0xFF6C757D))
+            Text(text = stringResource(R.string.common_loading), color = Color(0xFF6C757D))
             return@Column
         }
 
         if (uiState.errorMessage != null) {
             Text(
-                text = "Không thể tải dữ liệu: ${uiState.errorMessage}",
+                text = "${stringResource(R.string.learning_load_error)}${uiState.errorMessage}",
                 color = Color(0xFFB00020),
                 style = MaterialTheme.typography.bodySmall
             )
@@ -70,21 +72,21 @@ fun AddEditWordScreen(
         OutlinedTextField(
             value = uiState.word,
             onValueChange = { viewModel.updateWord(it) },
-            label = { Text("Word") },
+            label = { Text(stringResource(R.string.add_edit_word_word_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedTextField(
             value = uiState.meaning,
             onValueChange = { viewModel.updateMeaning(it) },
-            label = { Text("Meaning") },
+            label = { Text(stringResource(R.string.add_edit_word_meaning_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedTextField(
             value = uiState.example,
             onValueChange = { viewModel.updateExample(it) },
-            label = { Text("Example") },
+            label = { Text(stringResource(R.string.add_edit_word_example_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -100,7 +102,7 @@ fun AddEditWordScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = if (uiState.isSaving) "Saving..." else "Save")
+            Text(text = if (uiState.isSaving) stringResource(R.string.add_edit_word_saving) else stringResource(R.string.add_edit_word_save))
         }
     }
 }

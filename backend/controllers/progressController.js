@@ -12,7 +12,7 @@ exports.getProgress = async (req, res) => {
         SUM(w.interval_days > 1)             AS learned_words
        FROM words w
        JOIN word_sets ws ON ws.id = w.word_set_id
-       WHERE ws.user_id = ? OR ws.user_id = 1`,
+       WHERE ws.user_id = ? OR ws.is_default = TRUE`,
       [userId]
     );
 
@@ -20,7 +20,7 @@ exports.getProgress = async (req, res) => {
     const [[reviewToday]] = await db.execute(
       `SELECT COUNT(*) as count FROM words w
        JOIN word_sets ws ON w.word_set_id = ws.id
-       WHERE (ws.user_id = ? OR ws.user_id = 1)
+       WHERE (ws.user_id = ? OR ws.is_default = TRUE)
          AND w.next_review_date <= CURRENT_DATE()`,
       [userId]
     );

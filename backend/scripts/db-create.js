@@ -7,9 +7,12 @@ async function createDb() {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
+      password: (process.env.DB_PASSWORD || '').trim() || undefined,
+      charset: 'utf8mb4',
     });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
+    await connection.query(
+      `CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+    );
     console.log(`Database ${process.env.DB_NAME} created or already exists.`);
 
     // Thêm lệnh xóa bảng cũ để làm mới cấu hình UTF-8
@@ -17,8 +20,9 @@ async function createDb() {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
+      password: (process.env.DB_PASSWORD || '').trim() || undefined,
       database: process.env.DB_NAME,
+      charset: 'utf8mb4',
       multipleStatements: true
     });
 

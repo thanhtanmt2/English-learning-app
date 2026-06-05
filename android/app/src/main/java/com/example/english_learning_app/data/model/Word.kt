@@ -15,5 +15,10 @@ data class Word(
     @SerializedName("ease_factor")
     val easeFactor: Double? = null,
     @SerializedName("next_review_date")
-    val nextReviewDate: String? = null
-)
+    val nextReviewDate: String? = null,
+    @SerializedName("interval_days")
+    val intervalDays: Int? = null
+) {
+    // Từ được coi là "đã học" khi interval_days > 1 (đã ôn tập ít nhất 1 lần thành công theo SM-2)
+    val isLearned: Boolean get() = (intervalDays ?: 1) > 1
+}

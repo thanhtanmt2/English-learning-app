@@ -17,11 +17,14 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path as RetrofitPath
 import com.example.english_learning_app.data.model.LoginRequest
 import com.example.english_learning_app.data.model.AuthResponse
+import com.example.english_learning_app.data.model.UpdateProfilePayload
 import com.example.english_learning_app.data.model.WordSet
 import com.example.english_learning_app.data.model.Word
 import com.example.english_learning_app.data.model.WordPayload
 import com.example.english_learning_app.data.model.WordSetPayload
 import com.example.english_learning_app.data.model.NotificationSettings
+import com.example.english_learning_app.data.model.MessageResponse
+import com.example.english_learning_app.data.model.ResetPasswordRequest
 
 /**
  * Interface này là nơi liệt kê tất cả các API mà Frontend sẽ gọi.
@@ -41,9 +44,26 @@ interface ApiService {
     @POST("auth/google")
     suspend fun googleLogin(@Body request: Map<String, String>): AuthResponse
 
-    // Cập nhật User
+    // API OTP đăng ký
+    @POST("auth/register/send-otp")
+    suspend fun sendRegisterOtp(@Body body: Map<String, String>): MessageResponse
+
+    @POST("auth/register/verify-otp")
+    suspend fun verifyRegisterOtp(@Body body: Map<String, String>): MessageResponse
+
+    @POST("auth/register/complete")
+    suspend fun registerComplete(@Body request: RegisterRequest): AuthResponse
+
+    // API quên mật khẩu
+    @POST("auth/forgot-password")
+    suspend fun forgotPassword(@Body body: Map<String, String>): MessageResponse
+
+    @POST("auth/reset-password")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): MessageResponse
+
+    // Cập nhật User — dùng payload riêng để không gửi email/id không cần thiết (Bug #7)
     @PATCH("users/{id}")
-    suspend fun updateUser(@RetrofitPath("id") id: String, @Body user: User): User
+    suspend fun updateUser(@RetrofitPath("id") id: String, @Body payload: UpdateProfilePayload): User
 
     // --- VOCABULARY API ---
     

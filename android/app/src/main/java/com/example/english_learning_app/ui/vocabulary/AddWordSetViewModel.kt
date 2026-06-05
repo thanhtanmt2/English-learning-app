@@ -40,9 +40,8 @@ class AddWordSetViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = state.copy(isSaving = true, errorMessage = null)
             try {
-                val user = repository.loadUser()
                 val payload = WordSetPayload(
-                    userId = user.id,
+                    userId = "",
                     name = state.name.trim(),
                     description = state.description.trim(),
                     tags = state.tags.split(',').map { it.trim() }.filter { it.isNotBlank() }

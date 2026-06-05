@@ -23,9 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.R
 import com.example.english_learning_app.data.model.WordQuizQuestion
 
 @Composable
@@ -57,7 +58,7 @@ fun WordQuizScreen(
             onClick = { navController.popBackStack() },
             contentPadding = PaddingValues(0.dp)
         ) {
-            Text("<- Quay lai", fontSize = 16.sp)
+            Text(stringResource(R.string.common_back_arrow), fontSize = 16.sp)
         }
 
         val score = uiState.questions.count { selectedAnswers[it.id] == it.correctAnswer }
@@ -71,7 +72,7 @@ fun WordQuizScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "TRẮC NGHIỆM TỪ VỰNG",
+                text = stringResource(R.string.word_quiz_title).uppercase(),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier.weight(1f)
@@ -83,7 +84,7 @@ fun WordQuizScreen(
                     shape = MaterialTheme.shapes.medium
                 ) {
                     Text(
-                        text = "Diem: $score/$total",
+                        text = stringResource(R.string.word_quiz_score, score, total),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -95,7 +96,7 @@ fun WordQuizScreen(
 
         if (uiState.actualCount > 0 && uiState.actualCount < uiState.requestedCount) {
             Text(
-                text = "Da tao ${uiState.actualCount} cau (toi da tu bo tu duoc chon).",
+                text = stringResource(R.string.word_quiz_actual_count, uiState.actualCount),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color(0xFF6C757D)
             )
@@ -108,7 +109,7 @@ fun WordQuizScreen(
                 CircularProgressIndicator()
             }
         } else if (!uiState.errorMessage.isNullOrBlank()) {
-            WordQuizErrorState(message = uiState.errorMessage ?: "Khong the tai du lieu.") {
+            WordQuizErrorState(message = uiState.errorMessage ?: "Không thể tải dữ liệu.") {
                 isSubmitted = false
                 selectedAnswers.clear()
                 viewModel.reload()
@@ -128,7 +129,7 @@ fun WordQuizScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Câu ${pagerState.currentPage + 1} / ${uiState.questions.size}",
+                    text = stringResource(R.string.grammar_quiz_question_counter, pagerState.currentPage + 1, uiState.questions.size),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 16.sp
@@ -210,11 +211,11 @@ fun WordQuizScreen(
                             enabled = allAnswered,
                             shape = MaterialTheme.shapes.large
                         ) {
-                            Text("NỘP BÀI", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.grammar_quiz_submit), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         }
                         if (!allAnswered) {
                             Text(
-                                text = "Hoàn thành ${selectedAnswers.size}/${uiState.questions.size} câu để nộp bài",
+                                text = "${selectedAnswers.size}/${uiState.questions.size}",
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.secondary,
                                 modifier = Modifier.padding(top = 8.dp)
@@ -242,7 +243,7 @@ fun WordQuizCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Hỏi: ${quiz.question}",
+                text = stringResource(R.string.word_quiz_question_prefix) + quiz.question,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 24.sp,
@@ -309,7 +310,7 @@ fun WordQuizCard(
                 Column(modifier = Modifier.padding(top = 12.dp)) {
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     Text(
-                        text = "Dap an: ${quiz.correctAnswer}",
+                        text = stringResource(R.string.word_quiz_answer_prefix) + quiz.correctAnswer,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -326,8 +327,8 @@ fun WordQuizErrorState(message: String, onRetry: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Lỗi: $message", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
-        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Thử lại") }
+        Text(text = "${stringResource(R.string.common_error_prefix)}$message", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
+        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text(stringResource(R.string.grammar_quiz_retry)) }
     }
 }
 
@@ -338,8 +339,8 @@ fun WordQuizEmptyState(onRetry: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Khong co du lieu cau hoi.")
-        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text("Tai lai") }
+        Text(text = stringResource(R.string.grammar_quiz_no_data))
+        Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) { Text(stringResource(R.string.grammar_quiz_reload)) }
     }
 }
 

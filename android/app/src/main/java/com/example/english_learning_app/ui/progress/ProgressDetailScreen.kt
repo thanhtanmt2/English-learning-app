@@ -18,16 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.english_learning_app.R
 import com.example.english_learning_app.data.model.ProgressRecord
 
 @Composable
 fun ProgressDetailScreen(
     date: String?,
     viewModel: ProgressViewModel,
-    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val record = uiState.progressRecords.find { it.date == date }
@@ -51,32 +52,20 @@ fun ProgressDetailScreen(
                     color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
                 )
-                .padding(top = 40.dp, bottom = 20.dp, start = 8.dp, end = 16.dp)
+                .padding(top = 40.dp, bottom = 20.dp, start = 16.dp, end = 16.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Text(
+                text = stringResource(R.string.progress_detail_title),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Quay lại",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                Text(
-                    text = "Chi tiết tiến độ",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            )
         }
 
         if (record == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Không tìm thấy dữ liệu cho ngày này.", color = MaterialTheme.colorScheme.secondary)
+                Text(text = stringResource(R.string.progress_detail_not_found), color = MaterialTheme.colorScheme.secondary)
             }
             return
         }
@@ -108,13 +97,14 @@ fun ProgressDetailScreen(
                 }
             }
 
-            // Điểm bài kiểm tra
-            val isPerfect = record.quizScore == 5
+            // Hiển thị tổng số từ đã học
+            val learnedWordsDisplay = uiState.progressOverview?.learnedWords ?: 0
+            
             Card(
                 shape = RoundedCornerShape(20.dp),
                 elevation = CardDefaults.cardElevation(4.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isPerfect) Color(0xFFF1F8E9) else MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -122,7 +112,7 @@ fun ProgressDetailScreen(
                     modifier = Modifier.fillMaxWidth().padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Điểm Quiz", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.secondary)
+                    Text(stringResource(R.string.progress_detail_learned_words), fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.secondary)
                     Spacer(modifier = Modifier.height(12.dp))
                     Box(
                         modifier = Modifier
@@ -132,7 +122,7 @@ fun ProgressDetailScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "${record.quizScore}/5",
+                            text = "$learnedWordsDisplay",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -140,13 +130,13 @@ fun ProgressDetailScreen(
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = if (isPerfect) "Xuất sắc! Bạn đã nhớ hết từ vựng." else "Cố gắng ôn tập thêm nhé!",
-                        color = if (isPerfect) Color(0xFF2E7D32) else MaterialTheme.colorScheme.onSurface,
+                        text = stringResource(R.string.progress_detail_keep_going),
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(24.dp))
 
             // Lưới thống kê
@@ -156,17 +146,17 @@ fun ProgressDetailScreen(
             ) {
                 DetailStatCard(
                     modifier = Modifier.weight(1f),
-                    title = "Từ vựng",
+                    title = stringResource(R.string.progress_detail_vocabulary_title),
                     value = "${record.wordsLearned}",
-                    subtitle = "từ mới",
+                    subtitle = stringResource(R.string.progress_detail_vocabulary_subtitle),
                     icon = Icons.Default.MenuBook,
                     iconTint = Color(0xFF2196F3)
                 )
                 DetailStatCard(
                     modifier = Modifier.weight(1f),
-                    title = "Ngữ pháp",
+                    title = stringResource(R.string.progress_detail_grammar_title),
                     value = "${record.grammarCompleted}",
-                    subtitle = "bài tập",
+                    subtitle = stringResource(R.string.progress_detail_grammar_subtitle),
                     icon = Icons.Default.Edit,
                     iconTint = Color(0xFFFF9800)
                 )
@@ -196,9 +186,9 @@ fun ProgressDetailScreen(
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text("Thời gian học", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
+                        Text(stringResource(R.string.progress_detail_study_time), fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
                         Text(
-                            text = "${record.studyTimeMinutes} Phút",
+                            text = stringResource(R.string.progress_detail_minutes_format, record.studyTimeMinutes),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface

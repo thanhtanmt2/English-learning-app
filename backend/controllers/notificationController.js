@@ -1,5 +1,14 @@
 const db = require('../config/db');
 
+function normalizeBooleans(row) {
+  return {
+    ...row,
+    daily_reminder: Boolean(row.daily_reminder),
+    quiz_reminders: Boolean(row.quiz_reminders),
+    progress_updates: Boolean(row.progress_updates),
+  };
+}
+
 // GET /api/notifications/settings
 exports.getSettings = async (req, res) => {
   const userId = req.user.id;
@@ -19,10 +28,10 @@ exports.getSettings = async (req, res) => {
         'SELECT * FROM notification_settings WHERE user_id = ?',
         [userId]
       );
-      return res.json(created[0]);
+      return res.json(normalizeBooleans(created[0]));
     }
 
-    res.json(rows[0]);
+    res.json(normalizeBooleans(rows[0]));
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
@@ -49,7 +58,7 @@ exports.updateSettings = async (req, res) => {
       'SELECT * FROM notification_settings WHERE user_id = ?',
       [userId]
     );
-    res.json(updated[0]);
+    res.json(normalizeBooleans(updated[0]));
   } catch (err) {
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }

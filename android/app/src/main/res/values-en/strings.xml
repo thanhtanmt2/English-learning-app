@@ -27,6 +27,9 @@
     <string name="language_option_vi">Vietnamese</string>
     <string name="language_option_en">English</string>
     <string name="common_back">Back</string>
+    <string name="common_back_arrow">← Back</string>
+    <string name="common_loading">Loading…</string>
+    <string name="common_error_prefix">Error: </string>
 
     <string name="notification_settings_title">Notifications</string>
     <string name="notification_settings_login_required">Please log in to manage notifications</string>
@@ -47,7 +50,278 @@
     <string name="notification_settings_enable_email">Enable email</string>
     <string name="notification_settings_email_subject">Email subject</string>
     <string name="notification_settings_email_message">Email message</string>
-    <string name="notification_settings_saving">Saving...</string>
+    <string name="notification_settings_saving">Saving…</string>
     <string name="notification_settings_save">Save settings</string>
     <string name="notification_settings_recent_in_app">Recent in-app</string>
+
+    <!-- Home -->
+    <string name="home_greeting">Hello!</string>
+    <string name="home_default_learner">Learner</string>
+    <string name="home_stat_streak">Streak</string>
+    <string name="home_stat_accuracy">Accuracy</string>
+    <string name="home_stat_learned">Learned</string>
+    <string name="home_stat_streak_days">%1$d Days</string>
+    <string name="home_stat_learned_words">%1$d words</string>
+    <string name="home_daily_activity_title">Daily Activity (Minutes)</string>
+    <string name="home_no_data">No data yet</string>
+    <string name="home_retention_rate_title">Retention Rate</string>
+    <string name="home_retention_rate_desc">Memory retention in recent study sessions</string>
+    <string name="home_retention_excellent">Excellent! You\'re remembering well</string>
+    <string name="home_retention_good">Good, keep practicing</string>
+    <string name="home_retention_poor">Need more practice</string>
+    <string name="home_level_estimation">Level Estimation</string>
+    <string name="home_level_beginner_desc">You\'re at the beginner level. Study daily!</string>
+    <string name="home_level_intermediate_desc">You have a good foundation. Keep going!</string>
+    <string name="home_level_advanced_desc">Great! You\'re at an advanced level.</string>
+    <string name="home_level_default_desc">Start your learning journey!</string>
+    <string name="home_study_history">Study History</string>
+    <string name="home_history_words_time">%1$d words • %2$d min</string>
+    <string name="home_quiz_score">✓ %1$d/5</string>
+    <string name="home_beginner">Beginner</string>
+    <string name="home_intermediate">Intermediate</string>
+    <string name="home_advanced">Advanced</string>
+
+    <!-- Auth error messages -->
+    <string name="auth_error_empty_email_password">Please enter both Email and Password!</string>
+    <string name="auth_error_invalid_email">Invalid email format!</string>
+    <string name="auth_error_empty_name_email_password">Please enter your Name, Email and Password!</string>
+    <string name="auth_error_password_too_short">Password must be at least 6 characters!</string>
+    <string name="auth_google_login_success">Google Login successful! Hello %1$s</string>
+    <string name="auth_update_success">Profile updated successfully!</string>
+    <string name="auth_update_error">Update error: %1$s</string>
+
+    <!-- Auth -->
+    <string name="login_title">LOGIN TO MINLISH</string>
+    <string name="login_or">Or</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="register_title">CREATE ACCOUNT</string>
+    <string name="register_goal_daily">Daily conversation</string>
+    <string name="register_goal_ielts">IELTS/TOEIC preparation</string>
+    <string name="register_goal_work">Business English</string>
+    <string name="register_goal_study_abroad">Study abroad</string>
+    <string name="register_goal_hobby">Personal interest</string>
+
+    <!-- Vocabulary -->
+    <string name="word_list_title">Word List</string>
+    <string name="word_list_subtitle">Words in the selected set.</string>
+    <string name="word_list_add">Add</string>
+    <string name="word_list_flashcard">Flashcard</string>
+    <string name="word_list_dictation">Dictation</string>
+    <string name="word_list_listen">Listen</string>
+    <string name="word_list_delete">Delete</string>
+    <string name="word_list_learned">✓ Learned</string>
+    <string name="word_list_example_prefix">Example: </string>
+    <string name="word_set_list_delete_title">Delete word set</string>
+    <string name="word_set_list_delete_confirm">This will delete the word set and all its words. Are you sure?</string>
+    <string name="word_set_list_quiz">Quiz</string>
+    <string name="word_set_list_add">Add</string>
+    <string name="word_set_list_edit">Edit</string>
+    <string name="word_set_list_delete">Delete</string>
+    <string name="add_edit_word_title_add">Add New Word</string>
+    <string name="add_edit_word_title_edit">Edit Word</string>
+    <string name="add_edit_word_subtitle">Enter new word information.</string>
+    <string name="add_edit_word_saving">Saving…</string>
+    <string name="add_edit_word_save">Save</string>
+    <string name="word_quiz_title">Vocabulary Quiz</string>
+
+    <!-- Grammar -->
+    <string name="grammar_list_title">GRAMMAR LESSONS</string>
+    <string name="grammar_list_add">Add new lesson</string>
+    <string name="grammar_detail_structure">Structure / Formula</string>
+    <string name="grammar_detail_explanation">Detailed Explanation</string>
+    <string name="grammar_detail_examples">Examples</string>
+    <string name="grammar_detail_common_errors">Common Errors</string>
+    <string name="grammar_detail_level">Level</string>
+    <string name="grammar_detail_take_quiz">Take Quiz</string>
+    <string name="grammar_add_edit_title_add">ADD NEW LESSON</string>
+    <string name="grammar_add_edit_title_edit">EDIT LESSON</string>
+    <string name="grammar_add_edit_confirm_exit_title">Confirm Exit</string>
+    <string name="grammar_add_edit_confirm_exit_body">You have unsaved changes. Exit anyway?</string>
+    <string name="grammar_add_edit_exit">Exit</string>
+    <string name="grammar_add_edit_stay">Stay</string>
+    <string name="grammar_add_edit_saving">Saving…</string>
+    <string name="grammar_quiz_title">GRAMMAR QUIZ</string>
+    <string name="grammar_quiz_question_counter">Question %1$d / %2$d</string>
+    <string name="grammar_quiz_submit">SUBMIT</string>
+    <string name="grammar_quiz_explanation">Explanation: </string>
+    <string name="grammar_quiz_retry">Retry</string>
+    <string name="grammar_quiz_reload">Reload</string>
+    <string name="grammar_quiz_no_data">No question data available.</string>
+
+    <!-- Learning (Flashcard + Dictation) -->
+    <string name="learning_loading">Loading…</string>
+    <string name="learning_no_words">This word set has no words yet.</string>
+    <string name="learning_load_error">Could not load data: </string>
+    <string name="learning_choose_set">Select a word set to begin</string>
+    <string name="learning_change_set">Change Set</string>
+    <string name="learning_choose_another_set">Choose Another Set</string>
+    <string name="learning_meaning_prefix">Meaning: </string>
+    <string name="learning_enter_english">Enter English word</string>
+    <string name="learning_check">Check</string>
+    <string name="learning_correct">Correct!</string>
+    <string name="learning_wrong">Incorrect, try again</string>
+    <string name="learning_session_score">Session score: </string>
+    <string name="flashcard_cd_back">Back</string>
+    <string name="flashcard_cd_home">Home</string>
+    <string name="flashcard_cd_change_set">Change set</string>
+    <string name="flashcard_cd_prev">Previous word</string>
+    <string name="flashcard_cd_listen">Listen</string>
+    <string name="flashcard_cd_next">Next word</string>
+
+    <!-- Progress -->
+    <string name="progress_title">STUDY PROGRESS</string>
+    <string name="progress_study_time_chart">Study Time (Minutes)</string>
+    <string name="progress_day_details">Day Details</string>
+    <string name="progress_no_data">No data yet</string>
+    <string name="progress_detail_title">Progress Details</string>
+    <string name="progress_detail_quiz_score">Quiz Score</string>
+    <string name="progress_detail_study_time">Study Time</string>
+    <string name="progress_detail_not_found">No data found for this day.</string>
+
+    <!-- Me screens -->
+    <string name="profile_title">MY PROFILE</string>
+    <string name="about_title">About</string>
+    <string name="notif_settings_title">Notification Settings</string>
+    <string name="notif_daily_reminder">Daily Reminder</string>
+    <string name="notif_daily_subtitle">Daily study reminder</string>
+    <string name="notif_time_label">Reminder Time (HH:mm)</string>
+    <string name="notif_study_notifications">Study Notifications</string>
+    <string name="notif_grammar_quiz">Grammar quiz reminder</string>
+    <string name="notif_progress_update">Progress update</string>
+
+    <!-- Common shared -->
+    <string name="common_cancel">Cancel</string>
+
+    <!-- Login screen -->
+    <string name="login_tagline">Learn English every day</string>
+    <string name="login_subtitle">Sign in</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_processing">Processing...</string>
+    <string name="login_google_logo_cd">Google logo</string>
+    <string name="login_no_account">Don\'t have an account? Sign up</string>
+
+    <!-- Register screen -->
+    <string name="register_name_label">Full Name</string>
+    <string name="register_goal_label">Learning goal</string>
+    <string name="register_level_label">Current level</string>
+    <string name="register_sending_code">Sending code...</string>
+    <string name="register_send_code">Send verification code</string>
+    <string name="register_has_account">Already have an account? Sign in</string>
+
+    <!-- Forgot password / OTP -->
+    <string name="forgot_password_topbar_title">Forgot Password</string>
+    <string name="forgot_password_heading">Forgot your password?</string>
+    <string name="forgot_password_instruction">Enter the email address you registered with.\nWe\'ll send you an OTP to reset your password.</string>
+    <string name="forgot_sending">Sending...</string>
+    <string name="forgot_send_otp">Send OTP code</string>
+    <string name="otp_verify_title_register">Verify Email</string>
+    <string name="otp_verify_title_reset">Reset Password</string>
+    <string name="otp_otp_label">OTP code</string>
+    <string name="otp_new_password_label">New password</string>
+    <string name="otp_confirm_password_label">Confirm password</string>
+    <string name="otp_sent_message">We\'ve sent a 6-digit OTP to\n%1$s</string>
+    <string name="otp_processing">Processing...</string>
+    <string name="otp_complete_register">Complete registration</string>
+    <string name="otp_reset_password">Reset password</string>
+    <string name="otp_passwords_dont_match">Passwords do not match</string>
+
+    <!-- Me / Settings -->
+    <string name="me_dark_mode">Dark mode</string>
+    <string name="me_enabled">On</string>
+    <string name="me_disabled">Off</string>
+    <string name="me_server_settings_title">Server Settings</string>
+    <string name="me_server_settings_subtitle">Configure server URL</string>
+    <string name="me_avatar_cd">Avatar</string>
+
+    <!-- Profile -->
+    <string name="profile_name_label">Full Name</string>
+    <string name="profile_goal_label">Learning goal</string>
+    <string name="profile_level_label">Level</string>
+    <string name="profile_change_avatar_hint">Tap photo to change</string>
+    <string name="profile_pick_image_cd">Choose photo</string>
+
+    <!-- Server settings -->
+    <string name="server_settings_base_url_label">Base URL</string>
+    <string name="server_settings_url_empty_error">URL cannot be empty</string>
+    <string name="server_settings_url_invalid_error">URL must start with http:// or https://</string>
+    <string name="server_settings_saved">Saved. Restart the app to apply.</string>
+    <string name="server_settings_save_button">Save</string>
+    <string name="server_settings_description">Default (emulator): %1$s\n\nFor a real device, enter your server\'s WiFi IP, e.g.:\nhttp://192.168.1.xxx:3000/api/</string>
+
+    <!-- Flashcard -->
+    <string name="flashcard_recall_question">How well do you remember this word?</string>
+    <string name="flashcard_difficulty_hard">Hard</string>
+    <string name="flashcard_difficulty_ok">Ok</string>
+    <string name="flashcard_difficulty_easy">Easy</string>
+
+    <!-- Add/Edit Word field labels -->
+    <string name="add_edit_word_word_label">Word</string>
+    <string name="add_edit_word_meaning_label">Meaning</string>
+    <string name="add_edit_word_example_label">Example</string>
+
+    <!-- Word Set List -->
+    <string name="word_set_list_title">Word Sets</string>
+    <string name="word_set_list_progress">%1$d/%2$d words learned</string>
+
+    <!-- Add/Edit Grammar field labels -->
+    <string name="grammar_add_edit_title_label">Lesson name (e.g. Present Simple)</string>
+    <string name="grammar_add_edit_category_label">Category (e.g. Verb tenses)</string>
+    <string name="grammar_add_edit_formula_label">Formula (e.g. S + V + O)</string>
+    <string name="grammar_add_edit_explanation_label">Detailed explanation</string>
+    <string name="grammar_add_edit_example_label">Examples</string>
+    <string name="grammar_add_edit_mistakes_label">Common mistakes (Optional)</string>
+    <string name="grammar_add_edit_save_button">Save lesson</string>
+    <string name="grammar_add_edit_update_button">Update lesson</string>
+
+    <!-- Grammar Quiz -->
+    <string name="grammar_quiz_score">Score: %1$d/%2$d</string>
+    <string name="grammar_quiz_question_prefix">Question: </string>
+
+    <!-- Word Quiz -->
+    <string name="word_quiz_score">Score: %1$d/%2$d</string>
+    <string name="word_quiz_question_prefix">Question: </string>
+    <string name="word_quiz_answer_prefix">Answer: </string>
+    <string name="word_quiz_actual_count">Generated %1$d questions (maximum from selected sets).</string>
+
+    <!-- Word Quiz Setup -->
+    <string name="word_quiz_setup_title">Create Quiz</string>
+    <string name="word_quiz_setup_description">Select word sets and choose between 5 and 100 questions.</string>
+    <string name="word_quiz_setup_question_count">Questions: %1$d</string>
+    <string name="word_quiz_setup_word_sets_label">Word sets</string>
+    <string name="word_quiz_setup_loading">Loading...</string>
+    <string name="word_quiz_setup_load_error">Could not load data: %1$s</string>
+    <string name="word_quiz_setup_start">Start</string>
+    <string name="word_quiz_setup_select_hint">Please select at least 1 word set.</string>
+
+    <!-- Add/Edit Word Set -->
+    <string name="add_word_set_title">New Word Set</string>
+    <string name="add_word_set_description">Create a new word set to start learning.</string>
+    <string name="edit_word_set_title">Edit Word Set</string>
+    <string name="edit_word_set_description">Update word set information.</string>
+    <string name="add_word_set_name_label">Name</string>
+    <string name="add_word_set_description_label">Description</string>
+    <string name="add_word_set_tags_label">Tags (comma separated)</string>
+    <string name="add_word_set_saving">Saving...</string>
+    <string name="add_word_set_save">Save</string>
+    <string name="add_word_set_save_error">Could not save: %1$s</string>
+
+    <!-- About -->
+    <string name="about_app_full_name">Minlish - Learn English</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_description">Minlish is a smart English learning app that helps you improve your vocabulary, grammar, and track your daily progress. We aim to provide the best learning experience for you.</string>
+    <string name="about_copyright">© 2026 Minlish Team.\nAll rights reserved.</string>
+    <string name="about_logo_cd">App Logo</string>
+
+    <!-- Progress Detail -->
+    <string name="progress_detail_perfect">Excellent! You remembered all the words.</string>
+    <string name="progress_detail_keep_going">Keep studying to improve!</string>
+    <string name="progress_detail_vocabulary_title">Vocabulary</string>
+    <string name="progress_detail_vocabulary_subtitle">new words</string>
+    <string name="progress_detail_grammar_title">Grammar</string>
+    <string name="progress_detail_grammar_subtitle">exercises</string>
+    <string name="progress_detail_minutes_format">%1$d min</string>
 </resources>

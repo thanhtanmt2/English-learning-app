@@ -10,18 +10,11 @@ async function seed() {
 
   // 1. Tạo user demo
   const hashed = await bcrypt.hash('demo123', 10);
-  const [userResult] = await db.execute(
+  await db.execute(
     'INSERT IGNORE INTO users (name, email, password, goal) VALUES (?, ?, ?, ?)',
     ['Demo User', 'demo@minlish.com', hashed, 'general']
   );
-
-  // Lấy userId — dù user đã tồn tại hay mới tạo
-  const [[user]] = await db.execute(
-    'SELECT id FROM users WHERE email = ?',
-    ['demo@minlish.com']
-  );
-  const userId = user.id;
-  console.log(`✓ Demo user: demo@minlish.com / demo123 (id: ${userId})\n`);
+  console.log(`✓ Demo user: demo@minlish.com / demo123\n`);
 
   // 2. Đọc CSV, gom theo Topic
   const wordsByTopic = {};
@@ -46,10 +39,10 @@ async function seed() {
   // 3. Tạo Word Set + insert từng từ
   for (const [topic, words] of Object.entries(wordsByTopic)) {
 
-    // Tạo word set
+    // Tạo word set mặc định (không thuộc user nào)
     const [setResult] = await db.execute(
-      'INSERT INTO word_sets (user_id, name, description) VALUES (?, ?, ?)',
-      [userId, topic, `Từ vựng chủ đề: ${topic}`]
+      'INSERT INTO word_sets (user_id, name, description, is_default) VALUES (NULL, ?, ?, TRUE)',
+      [topic, `Từ vựng chủ đề: ${topic}`]
     );
     const wordSetId = setResult.insertId;
 
@@ -121,14 +114,13 @@ async function seed() {
       const title = sentenceType ? `${grammarPoint} (${sentenceType})` : grammarPoint;
 
       await db.execute(
-        'INSERT INTO grammar_notes (user_id, title, formula, explanation, example, common_mistake) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO grammar_notes (user_id, title, formula, explanation, example, common_mistake, is_default) VALUES (NULL, ?, ?, ?, ?, ?, TRUE)',
         [
-          userId,
           title,
-          clean(note['Structure']),      
-          clean(note['Meaning (VI)']),  
+          clean(note['Structure']),
+          clean(note['Meaning (VI)']),
           clean(note['Grammar Example']),
-          null                           
+          null
         ]
       );
     }

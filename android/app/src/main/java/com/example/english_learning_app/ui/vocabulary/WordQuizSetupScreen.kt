@@ -29,12 +29,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.english_learning_app.R
 import kotlin.math.roundToInt
 
 @Composable
@@ -60,20 +62,17 @@ fun WordQuizSetupScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Tao bai kiem tra", fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            TextButton(onClick = { navController.popBackStack() }) {
-                Text(text = "Huy")
-            }
+            Text(text = stringResource(R.string.word_quiz_setup_title), fontSize = 22.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Chon nhieu word set va so cau hoi tu 5 den 100.",
+            text = stringResource(R.string.word_quiz_setup_description),
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6C757D)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "So cau: $questionCount", fontWeight = FontWeight.SemiBold)
+        Text(text = stringResource(R.string.word_quiz_setup_question_count, questionCount), fontWeight = FontWeight.SemiBold)
         Slider(
             value = questionCount.toFloat(),
             onValueChange = { value ->
@@ -83,17 +82,17 @@ fun WordQuizSetupScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Word sets", fontWeight = FontWeight.SemiBold)
+        Text(text = stringResource(R.string.word_quiz_setup_word_sets_label), fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (uiState.isLoading) {
-            Text(text = "Dang tai du lieu...", color = Color(0xFF6C757D))
+            Text(text = stringResource(R.string.word_quiz_setup_loading), color = Color(0xFF6C757D))
             return@Column
         }
 
         if (uiState.errorMessage != null) {
             Text(
-                text = "Khong the tai du lieu: ${uiState.errorMessage}",
+                text = stringResource(R.string.word_quiz_setup_load_error, uiState.errorMessage ?: ""),
                 color = Color(0xFFB00020),
                 style = MaterialTheme.typography.bodySmall
             )
@@ -132,7 +131,7 @@ fun WordQuizSetupScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(text = wordSet.name, fontWeight = FontWeight.SemiBold)
                             Text(
-                                text = "${wordSet.learnedWords}/${wordSet.totalWords} words learned",
+                                text = stringResource(R.string.word_set_list_progress, wordSet.learnedWords, wordSet.totalWords),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF6C757D)
                             )
@@ -152,11 +151,11 @@ fun WordQuizSetupScreen(
             modifier = Modifier.fillMaxWidth().height(54.dp),
             enabled = canStart
         ) {
-            Text(text = "Bat dau", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.word_quiz_setup_start), fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
         if (!canStart) {
             Text(
-                text = "Hay chon it nhat 1 word set.",
+                text = stringResource(R.string.word_quiz_setup_select_hint),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color(0xFFB00020),
                 modifier = Modifier.padding(top = 8.dp)
